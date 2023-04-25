@@ -1,4 +1,5 @@
 .Rproj.user
 .Rhistory
 .RData
-rsconnec
+rsconnect
+R/test.R

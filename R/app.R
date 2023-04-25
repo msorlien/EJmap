@@ -31,13 +31,13 @@ EJmap <- function(...){
       
       # * Side panel ----
       sidebarPanel(
-        "hewwo??"
+        SELECT_UI('select_blank')
         
       ),
       
       # * Main panel ----
       mainPanel(
-        "hewwo world"
+        "hewwo world uwu",
       )
     )
   )
@@ -50,7 +50,7 @@ EJmap <- function(...){
   ########################################################################.
   server <- function(input, output, session) {
     # Add module servers ----
-    
+    SELECT_SERVER('select_blank')
   }
   
   ########################################################################.

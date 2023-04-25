@@ -1,0 +1,28 @@
+﻿METRIC,METRIC_CODE,CATEGORY,CAT_CODE,DATA_SOURCE,SOURCE_YEAR
+People of Color,MINORPCT,Social Vulnerability,SOCVUL,ACS,2018
+Low Income,LWINCPCT,Social Vulnerability,SOCVUL,ACS,2018
+Less Than High School Education,LESHSPCT,Social Vulnerability,SOCVUL,ACS,2018
+Limited English Speaking,LNGISPCT,Social Vulnerability,SOCVUL,ACS,2018
+Under Age 5,UNDR5PCT,Social Vulnerability,SOCVUL,ACS,2018
+Over Age 64,OVR64PCT,Social Vulnerability,SOCVUL,ACS,2018
+Unemployment Rate,UNEMPPCT,Social Vulnerability,SOCVUL,ACS,2018
+Cancer,CANCER,Health,HEALTH,CDC,2020
+Asthma,ASTHMA,Health,HEALTH,CDC,2020
+Diabetes,DIABE,Health,HEALTH,CDC,2020
+Mental Health,MHEALTH,Health,HEALTH,CDC,2020
+High Blood Pressure,BPHIGH,Health,HEALTH,CDC,2019
+Lead Paint,LDPNT,Environmental Burden,ENVBUR,ACS,2018
+Diesel Particulate Matter,DSLPM,Environmental Burden,ENVBUR,EPA,2017
+Traffic Proximity,PTRAF,Environmental Burden,ENVBUR,DOT,2019
+Wastewater Discharge,PWDIS,Environmental Burden,ENVBUR,EPA,2019
+Superfund Proximity,PNPL,Environmental Burden,ENVBUR,EPA,2022
+RMP Facility Proximity,PRMP,Environmental Burden,ENVBUR,EPA,2022
+Hazardous Waste Proximity,PTSDF,Environmental Burden,ENVBUR,EPA,2022
+Ozone,OZONE,Environmental Burden,ENVBUR,EPA,2018
+Particulate Matter 2.5,PM25,Environmental Burden,ENVBUR,EPA,2018
+Underground Storage Tanks,UST,Environmental Burden,ENVBUR,EPA,2022
+Impervious Surfaces,IMPER,Environmental Burden,ENVBUR,NLCD,2019
+Tree Cover,TREE,Climate Risk,CLIMATE,"NLCD, USFS",2016
+Flood risk,FLOOD,Climate Risk,CLIMATE,First Street,2022
+Heat risk,HEAT,Climate Risk,CLIMATE,First Street,2022
+Sea Level Rise,SLR,Climate Risk,CLIMATE,NOAA,2019
