@@ -1,4 +1,4 @@
-﻿METRIC,METRIC_CODE,CATEGORY,CAT_CODE,DATA_SOURCE,SOURCE_YEAR
+METRIC,METRIC_CODE,CATEGORY,CAT_CODE,DATA_SOURCE,SOURCE_YEAR
 People of Color,MINORPCT,Social Vulnerability,SOCVUL,ACS,2018
 Low Income,LWINCPCT,Social Vulnerability,SOCVUL,ACS,2018
 Less Than High School Education,LESHSPCT,Social Vulnerability,SOCVUL,ACS,2018
@@ -22,7 +22,7 @@ Ozone,OZONE,Environmental Burden,ENVBUR,EPA,2018
 Particulate Matter 2.5,PM25,Environmental Burden,ENVBUR,EPA,2018
 Underground Storage Tanks,UST,Environmental Burden,ENVBUR,EPA,2022
 Impervious Surfaces,IMPER,Environmental Burden,ENVBUR,NLCD,2019
-Tree Cover,TREE,Climate Risk,CLIMATE,"NLCD, USFS",2016
+Tree Cover,TREE,Environmental Burden,ENVBUR,"NLCD, USFS",2016
 Flood risk,FLOOD,Climate Risk,CLIMATE,First Street,2022
 Heat risk,HEAT,Climate Risk,CLIMATE,First Street,2022
 Sea Level Rise,SLR,Climate Risk,CLIMATE,NOAA,2019

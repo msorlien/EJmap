@@ -40,11 +40,13 @@ SELECT_UI <- function(id) {
                 tabPanel("Advanced Options",
                          h2('Percentiles'),
                          'Minimum value, state vs NBEP',
+                         
                          h2('Categories'),
                          CAT_WEIGHT_UI('socvul_weight', 'Social Vulnerability'),
                          CAT_WEIGHT_UI('health_weight', 'Health'),
                          CAT_WEIGHT_UI('envbur_weight', 'Environmental Burden'),
                          CAT_WEIGHT_UI('climate_weight', 'Climate'),
+                         
                          h2('Metrics'),
                          METRIC_WEIGHT_UI(ns('socvul_metric_weight'),
                                           'Social Vulnerability'),
@@ -73,10 +75,10 @@ SELECT_SERVER <- function(id) {
     cat_envbur <- SELECT_METRIC_SERVER('envbur_metrics')
     cat_climate <- SELECT_METRIC_SERVER('climate_metrics')
     
-    CAT_WEIGHT_SERVER('socvul_weight', 'SOCVUL')
-    CAT_WEIGHT_SERVER('health_weight', "HEALTH")
-    CAT_WEIGHT_SERVER('envbur_weight', "ENVBUR")
-    CAT_WEIGHT_SERVER('climate_weight', "CLIMATE")
+    CAT_WEIGHT_SERVER('socvul_weight', 'SOCVUL', cat_socvul)
+    CAT_WEIGHT_SERVER('health_weight', "HEALTH", cat_health)
+    CAT_WEIGHT_SERVER('envbur_weight', "ENVBUR", cat_envbur)
+    CAT_WEIGHT_SERVER('climate_weight', "CLIMATE", cat_climate)
     
     METRIC_WEIGHT_SERVER('socvul_metric_weight', "SOCVUL", cat_socvul)
     METRIC_WEIGHT_SERVER('health_metric_weight', "HEALTH", cat_health)

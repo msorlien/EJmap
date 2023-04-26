@@ -27,18 +27,13 @@ EJmap <- function(...){
       class = "col-sm-12 title-panel",
       tags$h1("NBEP Environmental Justice Mapper")
     ),
-    sidebarLayout(
-      
-      # * Side panel ----
-      sidebarPanel(
-        SELECT_UI('select_blank')
-        
-      ),
-      
-      # * Main panel ----
-      mainPanel(
-        "hewwo world uwu",
-      )
+    tabsetPanel(type = "tabs",
+                # Location ----
+                tabPanel("Select Variables", 
+                         SELECT_UI('select_blank')
+                ),
+                tabPanel("Map",
+                         "to be added")
     )
   )
   

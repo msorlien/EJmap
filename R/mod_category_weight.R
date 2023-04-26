@@ -44,7 +44,7 @@ CAT_WEIGHT_UI <- function(id, cat_name) {
 ###                         MODULE SERVER                           ####
 ########################################################################.
 
-CAT_WEIGHT_SERVER <- function(id, cat_code) {
+CAT_WEIGHT_SERVER <- function(id, cat_code, metrics) {
   moduleServer(id, function(input, output, session) {
     
     # Create dataframe ----
