@@ -2,7 +2,7 @@
 #  TITLE: mod_select.R
 #  DESCRIPTION: Module to select location & parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-04-25
+#  DATE LAST UPDATED: 2023-04-27
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -42,14 +42,11 @@ SELECT_UI <- function(id) {
                          'Minimum value, state vs NBEP',
                          
                          h2('Categories'),
-                         CAT_WEIGHT_UI('socvul_weight', 'Social Vulnerability'),
-                         CAT_WEIGHT_UI('health_weight', 'Health'),
-                         CAT_WEIGHT_UI('envbur_weight', 'Environmental Burden'),
-                         CAT_WEIGHT_UI('climate_weight', 'Climate'),
+                         weightVar_ui(ns("weight_cat"), "category", "all"),
                          
                          h2('Metrics'),
-                         METRIC_WEIGHT_UI(ns('socvul_metric_weight'),
-                                          'Social Vulnerability'),
+                         weightVar_ui(ns("socvul_metric_weight"), "metrics", 
+                           "Social Vulnerability"),
                          METRIC_WEIGHT_UI(ns('health_metric_weight'), 'Health'),
                          METRIC_WEIGHT_UI(ns('envbur_metric_weight'),
                                           'Environmental Burden'),
@@ -70,26 +67,35 @@ SELECT_SERVER <- function(id) {
   moduleServer(id, function(input, output, session) {
     
     # Add module servers ----
-    cat_socvul <- SELECT_METRIC_SERVER('socvul_metrics')
-    cat_health <- SELECT_METRIC_SERVER('health_metrics')
-    cat_envbur <- SELECT_METRIC_SERVER('envbur_metrics')
-    cat_climate <- SELECT_METRIC_SERVER('climate_metrics')
+    select_socvul <- SELECT_METRIC_SERVER('socvul_metrics')
+    select_health <- SELECT_METRIC_SERVER('health_metrics')
+    select_envbur <- SELECT_METRIC_SERVER('envbur_metrics')
+    select_climate <- SELECT_METRIC_SERVER('climate_metrics')
     
-    CAT_WEIGHT_SERVER('socvul_weight', 'SOCVUL', cat_socvul)
-    CAT_WEIGHT_SERVER('health_weight', "HEALTH", cat_health)
-    CAT_WEIGHT_SERVER('envbur_weight', "ENVBUR", cat_envbur)
-    CAT_WEIGHT_SERVER('climate_weight', "CLIMATE", cat_climate)
+    select_all <- reactive({
+      c(select_socvul(), select_health(), select_envbur(), select_climate())
+    })
     
-    METRIC_WEIGHT_SERVER('socvul_metric_weight', "SOCVUL", cat_socvul)
-    METRIC_WEIGHT_SERVER('health_metric_weight', "HEALTH", cat_health)
-    METRIC_WEIGHT_SERVER('envbur_metric_weight', "ENVBUR", cat_envbur)
-    METRIC_WEIGHT_SERVER('climate_metric_weight', "CLIMATE", cat_climate)
+    weight_cat <- weightVar_server("weight_cat", "category", NULL, select_all)
     
-    # Output reactive values ----
-    return(
-      list(
-      )
-    )
+    weight_socvul <- weightVar_server(
+      'socvul_metric_weight', "metrics", "SOCVUL", select_socvul)
+    weight_health <- METRIC_WEIGHT_SERVER('health_metric_weight', "HEALTH", 
+                                          select_health)
+    weight_envbur <- METRIC_WEIGHT_SERVER('envbur_metric_weight', "ENVBUR", 
+                                          select_envbur)
+    weight_climate <- METRIC_WEIGHT_SERVER('climate_metric_weight', "CLIMATE", 
+                                           select_climate)
+    weight_all <- reactive({
+      rbind(weight_socvul(), weight_health(), weight_envbur(), weight_climate())
+    }) 
+
+    
+    # # Output reactive values ----
+    # return(
+    #   list(
+    #   )
+    # )
     
   })
 }
