@@ -1,6 +1,6 @@
 ################################### HEADER ###################################
-#  TITLE: mod_metric_weight.R
-#  DESCRIPTION: Module to assign weight, minimum value to categories/metrics
+#  TITLE: weight_metrics.R
+#  DESCRIPTION: Module to assign weight, minimum value to metrics
 #  AUTHOR(S): Mariel Sorlien
 #  DATE LAST UPDATED: 2023-04-27
 #  GIT REPO:
@@ -15,7 +15,7 @@ library(htmltools)
 ###                       User Interface                            ####
 ########################################################################.
 
-weightVar_ui <- function(id, category_or_metrics, cat_name) {
+weightMetric_ui <- function(id, cat_name) {
   
   ns <- NS(id)
   
@@ -24,9 +24,7 @@ weightVar_ui <- function(id, category_or_metrics, cat_name) {
     conditionalPanel(
       condition = paste0('output["', ns('metric_count'), '"] > 0'),
       # Title ----
-      if (category_or_metrics == "metrics") {
-        heading <- h3(cat_name)
-      },
+      h3(cat_name),
       # Edit button ---- 
       actionButton(inputId = ns("edit"),
                    label = "Edit Selected Row"),
@@ -41,29 +39,25 @@ weightVar_ui <- function(id, category_or_metrics, cat_name) {
 ###                         MODULE SERVER                           ####
 ########################################################################.
 
-weightVar_server <- function(id, category_or_metrics, cat_code, selected_var) {
+weightMetric_server <- function(id, cat_code, selected_var) {
   moduleServer(id, function(input, output, session) {
     
     # Set namespace ----
     ns <- session$ns
     
     # Count selected variables ----
-    output$metric_count <- renderText({ length(selected_var()) })
+    
+    # * Count rows ----
+    output$metric_count <- renderText({ nrow(selected_var()) })
     
     outputOptions(output, "metric_count", suspendWhenHidden = FALSE)
     
     # Create dataframe ----
-    if (category_or_metrics == "metrics") {
-      df_var <- metric_table %>%
-        filter(CAT_CODE == cat_code) %>%
-        select(METRIC, WEIGHT) %>%
-        rename(Metric=METRIC, Weight=WEIGHT)
-    } else {
-      df_var <- cat_table %>%
-        select(CATEGORY, WEIGHT, MIN_VALUE) %>%
-        rename(Category=CATEGORY, Weight=WEIGHT, "Minimum Score"=MIN_VALUE)
-    }
-    
+    df_var <- metric_table %>%
+      filter(CAT_CODE == cat_code) %>%
+      select(METRIC) %>%
+      rename(Metric=METRIC) %>%
+      add_column("Weight" = 1)
     
     # Reactable table ----
     # Code for reactable edits by DeepanshKhurana
@@ -73,17 +67,10 @@ weightVar_server <- function(id, category_or_metrics, cat_code, selected_var) {
     selected_row <- reactive({
       getReactableState("table")$selected
     })
-
+    
     # * Dataframe as reactive values -----
     values <- reactiveValues(dataframe = df_var)
-
-    # * Set variables ----
-    if (category_or_metrics == "metrics") {
-      var_name <- reactive({ values$dataframe[selected_row(), "Metric"] })
-    } else {
-      var_name <- reactive({ values$dataframe[selected_row(), "Category"] })
-    }
-
+    
     # * Edit data ----
     observeEvent(input$edit, {
       if (!is.null(selected_row())) {
@@ -91,7 +78,7 @@ weightVar_server <- function(id, category_or_metrics, cat_code, selected_var) {
           modalDialog(
             title = "Edit Values",
             # Metric name
-            p(var_name()),
+            p(values$dataframe[selected_row(), "Metric"]),
             # Edit weight
             numericInput(
               inputId=ns("weight"),
@@ -100,34 +87,18 @@ weightVar_server <- function(id, category_or_metrics, cat_code, selected_var) {
               min = 0,
               max = 10
             ),
-            if (category_or_metrics == "category") {
-              # Edit minimum Score
-              numericInput(
-                inputId=ns("min_value"),
-                label="Minimum Score",
-                value=values$dataframe[selected_row(), "Minimum Score"],
-                min = 0,
-                max = 1,
-                step = 0.1
-              )
-            },
             easyClose = TRUE,
             footer = actionButton(ns("save"), "Save")
           )
         )
       }
     })
-
+    
     # * Save edits ----
     observeEvent(input$save, {
       # Update weight if between 0 and 10
       if(between(input$weight, 0, 10)) {
         values$dataframe[selected_row(), "Weight"] <- input$weight
-      }
-      if(category_or_metrics == "category") {
-        if (between(input$min_value, 0, 1)) {
-          values$dataframe[selected_row(), "Minimum Score"] <- input$min_value
-        }
       }
       # Close module
       removeModal()
@@ -138,15 +109,15 @@ weightVar_server <- function(id, category_or_metrics, cat_code, selected_var) {
       reactable(values$dataframe,
                 selection = "single")
     })
-
+    
     output$table <- renderReactable(
       reactable_table()
     )
     
-    # # Output reactive values ----
-    # return(
-    #   reactive({ values$dataframe })
-    # )
+    # Output reactive values ----
+    return(
+      reactive({ values$dataframe })
+    )
     
   })
 }

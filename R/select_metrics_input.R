@@ -1,8 +1,8 @@
 ################################### HEADER ###################################
-#  TITLE: mod_category_weight.R
-#  DESCRIPTION: Module to assign weight, minimum value to each metric category
+#  TITLE: select_parameter_input.R
+#  DESCRIPTION: Module to select metrics within given category
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-04-25
+#  DATE LAST UPDATED: 2023-04-27
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -13,28 +13,32 @@ library(shinyWidgets)
 ###                       User Interface                            ####
 ########################################################################.
 
-CAT_WEIGHT_UI <- function(id, cat_name) {
+selectParInput_ui <- function(id, cat_code) {
   
   ns <- NS(id)
   
+  # Filter for metrics in category
+  df_metric <- metric_table %>% 
+    filter(CAT_CODE == cat_code)
+  
+  # Find category name
+  cat_name <- df_metric$CATEGORY[1]
+  
+  # Generate METRIC/METRIC_CODE list
+  metric_choices <- df_metric$METRIC_CODE
+  names(metric_choices) <- df_metric$METRIC
+  
+  # Select metrics
   tagList(
-    # Title ----
-    h3(cat_name),
-    # Weight ----
-    numericInput(
-      inputId=ns("cat_weight"),
-      label="Weight",
-      value=1,
-      min = 0
-    ),
-    # Min Value ----
-    numericInput(
-      inputId=ns("cat_min"),
-      label="Minimum Score",
-      value=0,
-      min = 0,
-      max = 1,
-      step = .1
+    pickerInput(
+      ns('metricSelect'),
+      label = h2(cat_name),
+      choices = metric_choices,
+      selected = df_metric$METRIC_CODE,
+      options = list(
+        `actions-box` = TRUE,
+        `live-search` = TRUE),
+      multiple = TRUE
     )
   )
   
@@ -44,22 +48,12 @@ CAT_WEIGHT_UI <- function(id, cat_name) {
 ###                         MODULE SERVER                           ####
 ########################################################################.
 
-CAT_WEIGHT_SERVER <- function(id, cat_code, metrics) {
+selectParInput_server <- function(id) {
   moduleServer(id, function(input, output, session) {
-    
-    # Create dataframe ----
-    df_cat <- reactive({
-      df_cat <- data.frame(CAT_CODE = cat_code,
-                           WEIGHT = input$cat_weight,
-                           MIN_VALUE = input$cat_min)
-      return(df_cat)
-    })
     
     # Output reactive values ----
     return(
-      list(
-        catWeight = reactive({ df_cat() })
-      )
+      reactive({ input$metricSelect })
     )
     
   })
