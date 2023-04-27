@@ -95,23 +95,37 @@ advancedSelect_server <- function(id, metric_list) {
       df_weight <- cat() %>%
         rename(Category=CATEGORY, Weight=WEIGHT, "Minimum Score"=MIN_SCORE)
       
-      df_cat <- merge(df_metric, df_weight, by="CATEGORY")
+      df_join <- merge(df_metric, df_weight, by="CATEGORY")
       
-      return(df_cat)
+      return(df_join)
       
     })
     
     # Metric weight dataframe ----
-    # weight_all <- reactive({
-    #   rbind(weight_socvul(), weight_health(), weight_envbur(), weight_climate())
-    # }) 
+    df_metrics <- reactive({
+      
+      df_metric <- metric_list() 
+      
+      df_weight <- rbind(socvul(), health(), envbur(), climate()) %>%
+        rename(Metric=METRIC, Weight=WEIGHT)
+      
+      df_join <- merge(df_metric, df_weight, by="METRIC")
+      
+      return(df_join)
+    })
     
     
-    # # Output reactive values ----
-    # return(
-    #   list(
-    #   )
-    # )
+    # Output reactive values ----
+    return(
+      list(
+        
+        percentile_type = reactive({ input$percentile_type }),
+        percentile_min = reactive({ input$percentile_min }),
+        df_cat = reactive({ df_cat() }),
+        df_metric = reactive({ df_metrics() })
+        
+      )
+    )
     
   })
 }

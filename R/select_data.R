@@ -1,5 +1,5 @@
 ################################### HEADER ###################################
-#  TITLE: mod_select.R
+#  TITLE: select_data.R
 #  DESCRIPTION: Module to select location & parameters
 #  AUTHOR(S): Mariel Sorlien
 #  DATE LAST UPDATED: 2023-04-27
@@ -50,7 +50,7 @@ SELECT_SERVER <- function(id) {
     # Add module servers ----
     df_par <- selectPar_server("select_metrics")
     
-    advancedSelect_server("advanced_options", df_par)
+    df_advanced <- advancedSelect_server("advanced_options", df_par)
     
     # # Output reactive values ----
     # return(
