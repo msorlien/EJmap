@@ -49,9 +49,7 @@ advancedSelect_ui <- function(id) {
     weightMetric_ui(ns("socvul"), "Social Vulnerability"),
     weightMetric_ui(ns("health"), "Health"),
     weightMetric_ui(ns("envbur"), "Environmental Burden"),
-    weightMetric_ui(ns("climate"), "Climate"),
-    
-    '(calculate) (cancel? reset?)'
+    weightMetric_ui(ns("climate"), "Climate")
   )
   
 }
@@ -93,7 +91,7 @@ advancedSelect_server <- function(id, metric_list) {
         distinct()  # Drop duplicate rows
       
       df_weight <- cat() %>%
-        rename(Category=CATEGORY, Weight=WEIGHT, "Minimum Score"=MIN_SCORE)
+        rename(CATEGORY=Category, WEIGHT=Weight, MIN_SCORE="Minimum Score")
       
       df_join <- merge(df_metric, df_weight, by="CATEGORY")
       
@@ -107,7 +105,7 @@ advancedSelect_server <- function(id, metric_list) {
       df_metric <- metric_list() 
       
       df_weight <- rbind(socvul(), health(), envbur(), climate()) %>%
-        rename(Metric=METRIC, Weight=WEIGHT)
+        rename(METRIC=Metric, WEIGHT=Weight)
       
       df_join <- merge(df_metric, df_weight, by="METRIC")
       

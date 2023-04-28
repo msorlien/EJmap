@@ -15,8 +15,10 @@ LazyData: true
 Imports: 
     dplyr,
     glue,
+    htmltools,
     leaflet,
     pkgload,
     reactable,
     shiny,
+    shinyjs,
     shinyWidgets

@@ -45,7 +45,7 @@ EJmap <- function(...){
   ########################################################################.
   server <- function(input, output, session) {
     # Add module servers ----
-    SELECT_SERVER('select_blank')
+    SELECT_SERVER('select_blank', shp_raw)
   }
   
   ########################################################################.
