@@ -20,11 +20,16 @@ map_ui <- function(id) {
   ns <- NS(id)
 
   tagList(
-    # List metrics ----
-    tagList(
-      uiOutput(ns("ui_select_layer")),
-      leafletOutput(ns("map"), width='100%', height = "70vh")
-    )
+    pickerInput(
+      inputId = ns("select_layer"),
+      label = "Select Layer",
+      choices = NULL,
+      selected = NULL,
+      options = list(
+        `live-search` = TRUE),
+      multiple = FALSE
+    ),
+    leafletOutput(ns("map"), width='100%', height = "70vh")
   )
   
 }
@@ -33,33 +38,28 @@ map_ui <- function(id) {
 ###                         MODULE SERVER                           ####
 ########################################################################.
 
-map_server <- function(id, shp_input, edit_metrics=TRUE) {
+map_server <- function(id, ejvar, input_shp, edit_metrics=TRUE) {
   moduleServer(id, function(input, output, session) {
     
-    # Select parameter/score ----
-    # * List columns, column names ---
-    col_codes <- reactive({
+    ns <- NS(id)
+    
+    # Update list of parameters ----
+    observeEvent(ejvar$btn_metrics(), {
       df_columns <- column_table %>%
-        filter(COL_CODE %in% colnames(shp_input()))
+        filter(COL_CODE %in% colnames(input_shp()))
       col_codes <- df_columns$COL_CODE
       names(col_codes) <- df_columns$COL_NAME
       
-      return(col_codes)
+      updatePickerInput(session = session,
+                        inputId = "select_layer",
+                        choices = col_codes, 
+                        selected = "S_SCORE")
     })
     
-    # * UI
-    output$ui_select_layer <- renderUI({
-      pickerInput(
-        inputId = "select_layer",
-        label = "Select Layer",
-        choices = col_codes(),
-        selected = "S_SCORE",
-        options = list(
-          `live-search` = TRUE),
-        multiple = FALSE
-        )
-    })
-    
+    # Selected parameter ----
+    output$display_layer <- renderPrint({ input$select_layer })
+    outputOptions(output, "display_layer", suspendWhenHidden = FALSE)
+
     # Leaflet basemap ----
     output$map <- renderLeaflet({
       leaflet() %>%
@@ -74,22 +74,22 @@ map_server <- function(id, shp_input, edit_metrics=TRUE) {
         # * Add scale bar ----
       addScaleBar(position='bottomleft')
     })
-    
+
     # Leaflet polygons ----
     pal <- reactive({
-      colorBin("YlOrRd", 
-               domain = shp_input()$S_SCORE)
+      colorBin("YlOrRd",
+               domain = input_shp()[[ns("display_layer")]])
     })
-    
+
     observe({
       leafletProxy("map") %>%
         clearShapes() %>%
         # * EJ map ----
         addPolygons(
-          data = shp_input(),
-          layerId = shp_input(),
+          data = input_shp(),
+          layerId = input_shp(),
           # Label
-          label = "Label",
+          label = ~paste(Town, State, S_SCORE),
           labelOptions = labelOptions(textsize = "15px"),
           # Popup
           popup = "Popup",
@@ -106,9 +106,8 @@ map_server <- function(id, shp_input, edit_metrics=TRUE) {
                                               weight = 2,
                                               bringToFront = TRUE)
       )
-      
     })
-    
+
     # # Output reactive values ----
     # return(
     #   list(

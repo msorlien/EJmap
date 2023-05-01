@@ -2,7 +2,7 @@
 #  TITLE: app.R
 #  DESCRIPTION: R shiny app for mapping EJ areas
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-04-21
+#  DATE LAST UPDATED: 2023-05-01
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -33,7 +33,8 @@ EJmap <- function(...){
                          SELECT_UI('select_blank')
                 ),
                 tabPanel("Map",
-                         map_ui('dynamic_map'))
+                         map_ui('dynamic_map')
+                         )
     )
   )
   
@@ -48,8 +49,8 @@ EJmap <- function(...){
     fixed_metrics <- FALSE
     
     # Add module servers ----
-    ejvar <- SELECT_SERVER('select_blank', shp_raw)
-    map_server('dynamic_map', ejvar$shp_ejzones)
+    ejvar <- SELECT_SERVER('select_blank', shp_raw_simple)
+    map_server('dynamic_map', ejvar, ejvar$shp_ejzones)
   }
   
   ########################################################################.

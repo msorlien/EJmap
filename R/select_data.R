@@ -89,7 +89,8 @@ SELECT_SERVER <- function(id, shp_input, edit_metrics=TRUE) {
       list(
         
         percentile_min = reactive({ df_advanced$percentile_min() }),
-        shp_ejzones = reactive({ shp_output() })
+        shp_ejzones = reactive({ shp_output() }),
+        btn_metrics = reactive({ input$update_map })
         
       )
     )

@@ -2,7 +2,7 @@
 #  TITLE: shp_ejmetrics.R
 #  DESCRIPTION: Adds EJ metric shapefile 
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-04-28
+#  DATE LAST UPDATED: 2023-05-01
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt) x86_64
 ##############################################################################.
@@ -24,7 +24,7 @@ df_cats <- df_metrics %>%
 
 # Shp raw ----
 shp_raw <- read_sf(dsn = "data-raw", 
-                         layer = "EJMETRICS_2022_NBEP2023") %>%
+                   layer = "EJMETRICS_2022_NBEP2023") %>%
   # Rename column
   rename(Block_Group=GEOID) %>%
   # Add new column (Town_Code)
@@ -34,6 +34,19 @@ shp_raw <- read_sf(dsn = "data-raw",
   mutate(across(where(is.numeric), ~na_if(., -999999)))
 
 usethis::use_data(shp_raw, overwrite=TRUE)
+
+# Shp raw (500m simplification)
+shp_raw_simple <- read_sf(dsn="data-raw",
+                          layer = "EJMETRICS_2022_NBEP2023_SIMPLIFY_500m") %>%
+  # Rename column
+  rename(Block_Group=GEOID) %>%
+  # Add new column (Town_Code)
+  add_column(Town_Code = "ABC", .after="State") %>%
+  mutate(Town_Code = paste0(Town, ", ", State)) %>%
+  # Replace -999999 with NA
+  mutate(across(where(is.numeric), ~na_if(., -999999)))
+
+usethis::use_data(shp_raw_simple, overwrite=TRUE)
 
 # Shp default ----
 # * Default metric, category weights
