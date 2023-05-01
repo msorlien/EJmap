@@ -2,12 +2,12 @@
 #  TITLE: select_data.R
 #  DESCRIPTION: Module to select location & parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-04-28
+#  DATE LAST UPDATED: 2023-05-01
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
 
-# library(shinyjs)
+library(shinyjs)
 
 ########################################################################.
 ###                       User Interface                            ####
@@ -88,8 +88,7 @@ SELECT_SERVER <- function(id, shp_input, edit_metrics=TRUE) {
     return(
       list(
         
-        percentile_type = reactive({ df_advanced$percentile_type() }),
-        df_metric = reactive({ df_advanced$df_metric() }),
+        percentile_min = reactive({ df_advanced$percentile_min() }),
         shp_ejzones = reactive({ shp_output() })
         
       )

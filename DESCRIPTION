@@ -19,6 +19,7 @@ Imports:
     leaflet,
     pkgload,
     reactable,
+    sf,
     shiny,
     shinyjs,
     shinyWidgets

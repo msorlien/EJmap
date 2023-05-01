@@ -33,7 +33,7 @@ EJmap <- function(...){
                          SELECT_UI('select_blank')
                 ),
                 tabPanel("Map",
-                         "to be added")
+                         map_ui('dynamic_map'))
     )
   )
   
@@ -44,8 +44,12 @@ EJmap <- function(...){
   #                         Server Function                              #
   ########################################################################.
   server <- function(input, output, session) {
+    # Set variables
+    fixed_metrics <- FALSE
+    
     # Add module servers ----
-    SELECT_SERVER('select_blank', shp_raw)
+    ejvar <- SELECT_SERVER('select_blank', shp_raw)
+    map_server('dynamic_map', ejvar$shp_ejzones)
   }
   
   ########################################################################.
