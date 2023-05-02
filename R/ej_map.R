@@ -29,6 +29,7 @@ map_ui <- function(id) {
         `live-search` = TRUE),
       multiple = FALSE
     ),
+    verbatimTextOutput(ns("test")),
     leafletOutput(ns("map"), width='100%', height = "70vh")
   )
   
@@ -55,10 +56,6 @@ map_server <- function(id, ejvar, input_shp, edit_metrics=TRUE) {
                         choices = col_codes, 
                         selected = "S_SCORE")
     })
-    
-    # Selected parameter ----
-    output$display_layer <- renderPrint({ input$select_layer })
-    outputOptions(output, "display_layer", suspendWhenHidden = FALSE)
 
     # Leaflet basemap ----
     output$map <- renderLeaflet({
@@ -71,17 +68,29 @@ map_server <- function(id, ejvar, input_shp, edit_metrics=TRUE) {
                 ) %>%
       # * Add basemap tiles ----
       addProviderTiles(providers$CartoDB.Positron) %>%
-        # * Add scale bar ----
+      # * Add scale bar ----
       addScaleBar(position='bottomleft')
     })
 
-    # Leaflet polygons ----
+    # Color ramp ----
     pal <- reactive({
+      req(input$select_layer)
+      
+      if(substring(input$select_layer, 1, 1)=="S"){
+        bins = c(0,0.2,0.4,0.6,0.8,1)
+      } else {
+        bins = c(0,80,100)
+      }
+      
       colorBin("YlOrRd",
-               domain = input_shp()[[ns("display_layer")]])
+               domain = input_shp()[[input$select_layer]],
+               bins=bins)
     })
 
+    # Add polygons ----
     observe({
+      req(input$select_layer)
+      
       leafletProxy("map") %>%
         clearShapes() %>%
         # * EJ map ----
@@ -89,7 +98,9 @@ map_server <- function(id, ejvar, input_shp, edit_metrics=TRUE) {
           data = input_shp(),
           layerId = input_shp(),
           # Label
-          label = ~paste(Town, State, S_SCORE),
+          label = ~paste(Town, State, 
+                         round(input_shp()[[input$select_layer]], 2)
+                         ),
           labelOptions = labelOptions(textsize = "15px"),
           # Popup
           popup = "Popup",
@@ -100,7 +111,7 @@ map_server <- function(id, ejvar, input_shp, edit_metrics=TRUE) {
           opacity = 0.2,
           # Fill
           fillOpacity = 0.8,
-          fillColor = ~pal()(S_SCORE),
+          fillColor = ~pal()(input_shp()[[input$select_layer]]),
           # Highlight
           highlightOptions = highlightOptions(fillColor = '#f7fbff',
                                               weight = 2,

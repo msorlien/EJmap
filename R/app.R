@@ -27,14 +27,14 @@ EJmap <- function(...){
       class = "col-sm-12 title-panel",
       tags$h1("NBEP Environmental Justice Mapper")
     ),
-    tabsetPanel(type = "tabs",
-                # Location ----
-                tabPanel("Select Variables", 
-                         SELECT_UI('select_blank')
-                ),
-                tabPanel("Map",
-                         map_ui('dynamic_map')
-                         )
+    sidebarLayout(
+      # Select variables ----
+      sidebarPanel("Select Variables", 
+                   SELECT_UI('select_blank')
+                   ),
+      mainPanel("Map",
+                map_ui('dynamic_map')
+                )
     )
   )
   
