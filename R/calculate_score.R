@@ -10,7 +10,7 @@
 library(dplyr)
 library(glue)
 
-calculate_score <- function(shp_blockgroups, percentile_type, percentile_min, 
+calculate_score <- function(input_shp, percentile_type="NBEP", percentile_min, 
                             df_metrics, df_categories){
   
   # Define variables ----
