@@ -2,7 +2,7 @@
 #  TITLE: calculate_score.R
 #  DESCRIPTION: Calculates scores
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-04-28
+#  DATE LAST UPDATED: 2023-05-02
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -37,7 +37,8 @@ calculate_score <- function(shp_blockgroups, percentile_type, percentile_min,
     # Drop extra columns
     select(col_list) %>%
     # Add new columns
-    add_column(S_SCORE = 0, temp_score = 0, temp_score_max = 0)
+    add_column(S_SCORE = 0, temp_score = 0, temp_score_max = 0, 
+               temp_status = "keep")
 
   # Add columns for each category ----
   for (cat in cat_list) {
@@ -104,18 +105,26 @@ calculate_score <- function(shp_blockgroups, percentile_type, percentile_min,
       df_ej[[cat_score]] >= 0,
       df_ej[["temp_score_max"]] + cat_weight,
       df_ej[["temp_score_max"]])
+    
+    # * Mark status as "drop" if below min cat score
+    df_ej[["temp_status"]] <- if_else(
+      cat_min > 0 & df_ej[[cat_score]] < cat_min,
+      "drop",
+      df_ej[["temp_status"]]
+    )
   }
 
   # * Calculate overall score ----
   df_ej <- df_ej %>%
     # Replace -999999 with NA
     mutate(across(where(is.numeric), ~na_if(., -999999))) %>%
-    # Calculate score
-    mutate(S_SCORE = if_else(temp_score_max > 0,
-                             temp_score/temp_score_max,
-                             -999999
-                             ))
-  
+    # Calculate score; mark as 0 if status marked as "drop"
+    mutate(S_SCORE = case_when(
+      temp_score_max == 0 ~ -999999,
+      temp_status == "drop" ~ 0,
+      TRUE ~ temp_score/temp_score_max
+      ))
+    
   # Tidy data ----
   df_ej <- df_ej %>%
     # Drop temp columns

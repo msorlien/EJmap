@@ -80,6 +80,9 @@ SELECT_SERVER <- function(id, shp_input, edit_metrics=TRUE) {
       } else {
         shp_output <- shp_input
       }
+      
+      shp_output <- shp_output %>%
+        mutate(across(where(is.numeric), ~na_if(., -999999)))
 
       return(shp_output)
     })
