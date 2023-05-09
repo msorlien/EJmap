@@ -2,7 +2,7 @@
 #  TITLE: select_parameter_input.R
 #  DESCRIPTION: Module to select metrics within given category
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-04-27
+#  DATE LAST UPDATED: 2023-05-08
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -32,7 +32,7 @@ selectParInput_ui <- function(id, cat_code) {
   tagList(
     pickerInput(
       ns('metricSelect'),
-      label = h2(cat_name),
+      label = h3(cat_name),
       choices = metric_choices,
       selected = df_metric$METRIC_CODE,
       options = list(

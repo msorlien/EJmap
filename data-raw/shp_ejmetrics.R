@@ -2,7 +2,7 @@
 #  TITLE: shp_ejmetrics.R
 #  DESCRIPTION: Adds EJ metric shapefiles
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-05
+#  DATE LAST UPDATED: 2023-05-08
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt) x86_64
 ##############################################################################.
@@ -24,12 +24,13 @@ df_cats <- df_metrics %>%
 
 # Shp raw ---------------------------------------------------------------------
 
-shp_raw <- read_sf(dsn = "data-raw", 
-                   layer = "EJMETRICS_2022_NBEP2023") %>%
-  rename(Block_Group=GEOID) %>%
+shp_raw <- read_sf(dsn = 'data-raw', 
+                   layer = 'EJMETRICS_2022_NBEP2023') %>%
+  # Rename column
+  rename(BlockGroup=GEOID) %>%
   # Add new column (Town_Code)
-  add_column(Town_Code = "ABC", .after="State") %>%
-  mutate(Town_Code = paste0(Town, ", ", State)) %>%
+  add_column(Town_Code = 'ABC', .after='State') %>%
+  mutate(Town_Code = paste0(Town, ', ', State)) %>%
   # Replace -999999 with NA
   mutate(across(where(is.numeric), ~na_if(., -999999)))
 
@@ -37,13 +38,13 @@ usethis::use_data(shp_raw, overwrite=TRUE)
 
 # Shp raw (simple) ------------------------------------------------------------
 
-shp_raw_simple <- read_sf(dsn="data-raw",
-                          layer = "EJMETRICS_2022_LOWRES_NBEP2023") %>%
+shp_raw_simple <- read_sf(dsn='data-raw',
+                          layer = 'EJMETRICS_2022_LOWRES_NBEP2023') %>%
   # Rename column
-  rename(Block_Group=GEOID) %>%
+  rename(BlockGroup=GEOID) %>%
   # Add new column (Town_Code)
-  add_column(Town_Code = "ABC", .after="State") %>%
-  mutate(Town_Code = paste0(Town, ", ", State)) %>%
+  add_column(Town_Code = 'ABC', .after='State') %>%
+  mutate(Town_Code = paste0(Town, ', ', State)) %>%
   # Replace -999999 with NA
   mutate(across(where(is.numeric), ~na_if(., -999999)))
 
@@ -61,7 +62,7 @@ df_cats_default <- df_cats %>%
 # Calculate score
 shp_default_simple <- calculate_score(
   input_shp = shp_raw_simple, 
-  minimum_percentile = 80, 
+  percentile_min = 80, 
   df_metrics = df_metrics_default, 
   df_categories = df_cats_default)
 
@@ -69,20 +70,20 @@ usethis::use_data(shp_default_simple, overwrite=TRUE)
 
 # Shp NBEP --------------------------------------------------------------------
 # Define metric/cat weights
-df_metrics_nbep <- merge(df_metrics, df_nbep_metrics, by="METRIC_CODE")
-df_cats_nbep <- merge(df_cats, df_nbep_cats, by="CAT_CODE")
+df_metrics_nbep <- merge(df_metrics, df_nbep_metrics, by='METRIC_CODE')
+df_cats_nbep <- merge(df_cats, df_nbep_cats, by='CAT_CODE')
 
 # Calculate score
 shp_nbep <- calculate_score(
   input_shp = shp_raw,
-  minimum_percentile = 80, 
-  df_metrics = df_metrics_default, 
-  df_categories = df_cats_default)
+  percentile_min = 80, 
+  prefix_list = 'N_',
+  df_metrics = df_metrics_nbep, 
+  df_categories = df_cats_nbep)
 
 # Drop extra rows, columns
 shp_nbep <- shp_nbep %>%
-  filter(Study_Area != "Outside Study Area") %>%
-  select(-starts_with('P_'))
+  filter(Study_Area != 'Outside Study Area')
 
 usethis::use_data(shp_nbep, overwrite=TRUE)
 
@@ -90,13 +91,14 @@ usethis::use_data(shp_nbep, overwrite=TRUE)
 # Calculate score
 shp_nbep_simple <- calculate_score(
   input_shp = shp_raw_simple,
-  minimum_percentile = 80, 
-  df_metrics = df_metrics_default, 
-  df_categories = df_cats_default)
+  percentile_min = 80, 
+  prefix_list = 'N_',
+  df_metrics = df_metrics_nbep, 
+  df_categories = df_cats_nbep)
 
 # Drop extra rows, columns
 shp_nbep_simple <- shp_nbep_simple %>%
-  filter(Study_Area != "Outside Study Area") %>%
-  select(-starts_with('P_'))
+  filter(Study_Area != 'Outside Study Area') %>%
+  select(-starts_with('P_'))  # Drop state percentiles
 
 usethis::use_data(shp_nbep_simple, overwrite=TRUE)

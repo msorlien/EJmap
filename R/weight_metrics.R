@@ -24,7 +24,7 @@ weightMetric_ui <- function(id, cat_name) {
     conditionalPanel(
       condition = paste0('output["', ns('metric_count'), '"] > 0'),
       # Title ----
-      h3(cat_name),
+      h5(cat_name),
       # Edit button ---- 
       actionButton(inputId = ns("edit"),
                    label = "Edit Selected Row"),
@@ -85,7 +85,7 @@ weightMetric_server <- function(id, cat_code, selected_var) {
               label="Weight",
               value=values$dataframe[selected_row(), "Weight"],
               min = 0,
-              max = 10
+              step = 0.5
             ),
             easyClose = TRUE,
             footer = actionButton(ns("save"), "Save")
@@ -96,8 +96,8 @@ weightMetric_server <- function(id, cat_code, selected_var) {
     
     # * Save edits ----
     observeEvent(input$save, {
-      # Update weight if between 0 and 10
-      if(between(input$weight, 0, 10)) {
+      # Update weight if greater than 0
+      if(input$weight > 0) {
         values$dataframe[selected_row(), "Weight"] <- input$weight
       }
       # Close module

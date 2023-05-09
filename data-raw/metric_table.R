@@ -17,14 +17,37 @@ usethis::use_data(metric_table, overwrite=TRUE)
 
 # Create list of column/name substitutions 
 
-COL_CODE <- c(paste0("N_", metric_table$METRIC_CODE),
-               paste0("P_", metric_table$METRIC_CODE),
-               paste0("S_", unique(metric_table$CAT_CODE)),
-               "S_SCORE")
-COL_NAME <- c(metric_table$METRIC, 
-               metric_table$METRIC, 
-               paste(unique(metric_table$CATEGORY), "Score"),
-               "Overall Score")
+# THIS PART OF THE SCRIPT IS MID TRANSITION & THEREFOR SUPER BROKEN VVV
 
-column_table <- data.frame(COL_CODE, COL_NAME)
+# List metrics
+df_cats <- metric_table %>%
+  select(CATEGORY, CAT_CODE) %>%
+  rename(COL_NAME = CATEGORY) %>%
+  add_column(TYPE='CATEGORY', COL_CODE = 'placeholder') %>%
+  mutate(COL_CODE = CAT_CODE)
+
+# List categories
+df_metrics <- metric_table %>%
+  select(METRIC, METRIC_CODE, CAT_CODE) %>%
+  rename(COL_CODE = METRIC_CODE, COL_NAME = METRIC) %>%
+  mutate(COL_NAME = paste('-', COL_NAME)) %>%
+  add_column(TYPE='METRIC')
+
+# Join tables
+df_all <- rbind(unique(df_cats), df_metrics) 
+
+# Set order
+cat_order <- c('SOCVUL', 'HEALTH', 'ENVBUR', 'CLIMATE')
+type_order = c('CATEGORY', 'METRIC')
+
+# Tweak table
+column_table <- df_all %>%
+  arrange(match(CAT_CODE, cat_order), 
+          match(TYPE, type_order))%>%
+  select(COL_CODE, COL_NAME) %>%
+  add_row(COL_CODE = 'SCORE', COL_NAME = 'Overall Score')
+
+# Drop row names
+rownames(column_table) <- NULL
+  
 usethis::use_data(column_table, overwrite=TRUE)

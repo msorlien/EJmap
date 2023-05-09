@@ -22,4 +22,5 @@ Imports:
     sf,
     shiny,
     shinyjs,
-    shinyWidgets
+    shinyWidgets,
+    stringr
