@@ -2,16 +2,14 @@
 #  TITLE: sidebar_map.R
 #  DESCRIPTION: Module to select location & parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-09
+#  DATE LAST UPDATED: 2023-05-15
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
 
 library(shinyjs)
 
-########################################################################.
-###                       User Interface                            ####
-########################################################################.
+# UI --------------------------------------------------------------------------
 
 map_sidebar_ui <- function(id) {
   
@@ -24,6 +22,7 @@ map_sidebar_ui <- function(id) {
     
     # Select location ----
     h2('Select Location'),
+    # select_location_ui(ns('select_location')),
     
     # Select data ----
     selectPar_ui(ns('select_metrics')),
@@ -34,44 +33,34 @@ map_sidebar_ui <- function(id) {
   
 }
 
-########################################################################.
-###                         MODULE SERVER                           ####
-########################################################################.
+# Server ----------------------------------------------------------------------
 
-map_sidebar_server <- function(id) {
+map_sidebar_server <- function(id, input_shp, input_shp_simple, 
+                               select_metrics = TRUE) {
   moduleServer(id, function(input, output, session) {
     
-    # Add module servers ----
-    df_par <- selectPar_server("select_metrics")
-    
-    # * Edit shapefile ----
-    shp_output <- eventReactive(df_par$button(), {
-      
-      shp_output <- calculate_score(
-        input_shp = shp_raw_simple, 
-        percentile_min = df_par$percentile_min(), 
-        exceed_all_min_scores = df_par$exceed_all(), 
-        df_metrics = df_par$df_metric(), 
-        df_categories = df_par$df_cat()
-        ) 
-      
-      shp_output <- shp_output %>%
-        mutate(across(where(is.numeric), ~na_if(., -999999)))
+    # Select parameters ----
+    # * Add module ----
+    df_par <- selectPar_server('select_metrics', input_shp_simple)
 
-      return(shp_output)
-    })
+    # * Filter data ----
+    shp_metrics <- reactive({ df_par$output_shp() })
+    
+    # Filter location ----
+    # * Add module
+    # df_loc <- select_location_server('select_location', df_par$output_shp())
 
     # Output reactive values ----
     return(
       list(
 
-        shp_ejzones = reactive({ shp_output() }),
-        btn_metrics = reactive({ df_par$button() })
+        output_shp = reactive({ df_par$output_shp() }),
+        btn_metrics = reactive({ df_par$button() }),
+        # location_type = reactive({ df_loc$location_type() }),
+        percentile_min = reactive({ df_par$percentile_min() })
 
       )
     )
     
   })
 }
-
-# end Server Function

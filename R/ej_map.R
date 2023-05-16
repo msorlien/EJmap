@@ -55,7 +55,7 @@ map_server <- function(id, ejvar, edit_metrics=TRUE) {
     ns <- NS(id)
     
     input_shp <- reactive({
-      ejvar$shp_ejzones()
+      ejvar$output_shp()
     })
     
     # Update list of parameters ----
@@ -63,7 +63,7 @@ map_server <- function(id, ejvar, edit_metrics=TRUE) {
 
       # List col names in input_shp, minus first two letters
       # (drops N_, P_)
-      input_col <- str_sub(colnames(ejvar$shp_ejzones()), 3, -1)
+      input_col <- str_sub(colnames(input_shp()), 3, -1)
 
       # Filter column table for col in input_shp
       df_columns <- column_table %>%

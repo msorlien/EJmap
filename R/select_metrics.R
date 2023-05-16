@@ -2,16 +2,14 @@
 #  TITLE: select_metrics.R
 #  DESCRIPTION: Module to select parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-08
+#  DATE LAST UPDATED: 2023-05-15
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
 
 library(shinyWidgets)
 
-########################################################################.
-###                       User Interface                            ####
-########################################################################.
+# UI --------------------------------------------------------------------------
 
 selectPar_ui <- function(id) {
   
@@ -28,13 +26,11 @@ selectPar_ui <- function(id) {
     selectParInput_ui(ns('envbur_metrics'), 'ENVBUR'),
     selectParInput_ui(ns('climate_metrics'), 'CLIMATE'),
     
-    # Button ----
-    'BUTTON PLACEHOLDER',
-    
     # Advanced options ----
     advancedSelect_ui(ns('advanced_options')),
     
-    # Button ----
+    # Button (calculate score) ----
+    tags$br(),
     tags$br(),
     actionButton(ns('btn_calculate'),
                  label = 'Calculate Score')
@@ -42,11 +38,9 @@ selectPar_ui <- function(id) {
   
 }
 
-########################################################################.
-###                         MODULE SERVER                           ####
-########################################################################.
+# Server -----------------------------------------------------------------------
 
-selectPar_server <- function(id) {
+selectPar_server <- function(id, input_shp) {
   moduleServer(id, function(input, output, session) {
     
     # Add metric servers ----
@@ -74,21 +68,37 @@ selectPar_server <- function(id) {
     shinyjs::disable('btn_calculate')
 
     observe({
-      if (nrow(df_metrics()>0)) {
+      if (nrow(df_metrics()) > 0) {
         shinyjs::enable('btn_calculate')
       } else {
         shinyjs::disable('btn_calculate')
       }
     })
     
+    # Calculate score ----
+    shp_output <- eventReactive(input$btn_calculate, {
+      
+      shp_output <- calculate_score(
+        input_shp = input_shp, 
+        percentile_min = adv_opt$percentile_min(), 
+        exceed_all_min_scores = adv_opt$exceed_all(), 
+        df_metrics = adv_opt$df_metric(), 
+        df_categories = adv_opt$df_cat()
+      ) 
+      
+      shp_output <- shp_output %>%
+        mutate(across(where(is.numeric), ~na_if(., -999999)))
+      
+      return(shp_output)
+    })
+    
+    
     # Output reactive values ----
     return(
       list(
         
+        output_shp = reactive({ shp_output() }),
         percentile_min = reactive({ adv_opt$percentile_min() }),
-        exceed_all = reactive({ adv_opt$exceed_all() }),
-        df_cat = reactive({ adv_opt$df_cat() }),
-        df_metric = reactive({ adv_opt$df_metric() }),
         button = reactive({ input$btn_calculate })
         
       )
@@ -96,5 +106,3 @@ selectPar_server <- function(id) {
     
   })
 }
-
-# end Server Function

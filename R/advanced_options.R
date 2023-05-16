@@ -2,7 +2,7 @@
 #  TITLE: advanced_options.R
 #  DESCRIPTION: Module to select location & parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-08
+#  DATE LAST UPDATED: 2023-05-15
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -19,39 +19,46 @@ advancedSelect_ui <- function(id) {
   
   tagList(
     
-    h3('Advanced Options'),
+    # Button to show/hide advanced options ----
+    actionButton(ns('btn_advanced'),
+                 label = 'Show Advanced Options'),
     
-    # Percentiles ----
-    h4('Percentiles'),
-    
-    # * Minimum value ----
-    numericInput(
-      inputId=ns('percentile_min'),
-      label='Minimum Value',
-      value=80,
-      min = 50,
-      max = 95
-    ),
-    
-    # Categories ----
-    h4('Categories'),
-    weightCat_ui(ns('cat')),
-    awesomeRadio(
-      inputId = ns('exceed_all'),
-      label = 'Must match all minimum scores?', 
-      choices = c('Yes'='AND', 'No'='OR'),
-      selected = 'AND',
-      inline = TRUE, 
-      checkbox = TRUE
-    ),
-    
-    h4('Metrics'),
-    weightMetric_ui(ns('socvul'), 'Social Vulnerability'),
-    weightMetric_ui(ns('health'), 'Health'),
-    weightMetric_ui(ns('envbur'), 'Environmental Burden'),
-    weightMetric_ui(ns('climate'), 'Climate')
-  )
-  
+    # Conditional Panel 
+    conditionalPanel(
+      condition = paste0('input["', ns('btn_advanced'), '"] % 2 != 0'), 
+      
+      # Title ----
+      h3('Advanced Options'),
+      
+      # Categories ----
+      h4('Categories'),
+      weightCat_ui(ns('cat')),
+      awesomeRadio(
+        inputId = ns('exceed_all'),
+        label = 'Must match all minimum scores?', 
+        choices = c('Yes'='AND', 'No'='OR'),
+        selected = 'AND',
+        inline = TRUE, 
+        checkbox = TRUE),
+      
+      # Percentiles ----
+      h4('Percentiles'),
+      
+      # * Minimum value ----
+      pickerInput(
+        ns('percentile_min'),
+        label = 'Minimum Value',
+        choices = c(50, 60, 70, 80, 90, 95),
+        selected = 80),
+      
+      h4('Metrics'),
+      weightMetric_ui(ns('socvul'), 'Social Vulnerability'),
+      weightMetric_ui(ns('health'), 'Health'),
+      weightMetric_ui(ns('envbur'), 'Environmental Burden'),
+      weightMetric_ui(ns('climate'), 'Climate')
+      
+      )
+    )
 }
 
 ########################################################################.
@@ -60,8 +67,19 @@ advancedSelect_ui <- function(id) {
 
 advancedSelect_server <- function(id, metric_list) {
   moduleServer(id, function(input, output, session) {
+
+    # Toggle button text ----
+    observeEvent(input$btn_advanced, {
+      if (input$btn_advanced %% 2 != 0) {
+        updateActionButton(session, 'btn_advanced', 
+                           label = 'Hide Advanced Options')
+      } else {
+        updateActionButton(session, 'btn_advanced', 
+                           label = 'Show Advanced Options')
+      }
+    })
     
-    # Divide metrics by category ----
+    # Split metrics by category ----
     socvul_metrics <- reactive({
       metric_list() %>% filter(CAT_CODE == 'SOCVUL')
     }) 

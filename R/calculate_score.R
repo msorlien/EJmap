@@ -2,7 +2,7 @@
 #  TITLE: calculate_score.R
 #  DESCRIPTION: Calculates scores
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-08
+#  DATE LAST UPDATED: 2023-05-15
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -33,13 +33,13 @@ calculate_score <- function(
   for (col_prefix in prefix_list){
     
     # Define variables ----
-    final_score <- paste0(col_prefix, "SCORE")
+    final_score <- paste0(col_prefix, 'SCORE')
     
     # Add columns for each category ----
     for (cat in cat_list) {
       cat_col <- paste0(col_prefix, cat)
-      cat_temp <- paste0("temp_", cat)
-      cat_max <- paste0("temp_", cat, "_max")
+      cat_temp <- paste0('temp_', cat)
+      cat_max <- paste0('temp_', cat, '_max')
       
       df_ej[[cat_col]] <- 0
       df_ej[[cat_temp]] <- 0 
@@ -58,8 +58,8 @@ calculate_score <- function(
       
       cat <- metric_info$CAT_CODE[1]
       cat_col <- paste0(col_prefix, cat)
-      cat_temp <- paste0("temp_", cat)
-      cat_max <- paste0("temp_", cat, "_max")
+      cat_temp <- paste0('temp_', cat)
+      cat_max <- paste0('temp_', cat, '_max')
       
       # * Calculate raw score ----
       df_ej[[cat_temp]] <- if_else(
@@ -76,18 +76,18 @@ calculate_score <- function(
   
     # Add columns ----
     df_ej[[final_score]] <- 0
-    df_ej[["temp_score"]] <- 0
-    df_ej[["temp_score_max"]] <- 0
-    df_ej[["temp_fail"]] <- 0
-    df_ej[["temp_fail_max"]] <- 0
+    df_ej[['temp_score']] <- 0
+    df_ej[['temp_score_max']] <- 0
+    df_ej[['temp_fail']] <- 0
+    df_ej[['temp_fail_max']] <- 0
     
     # Calculate final scores ----
     for (cat in cat_list) {
 
       # * Define variables ----
       cat_score <- paste0(col_prefix, cat)
-      cat_temp <- paste0("temp_", cat)
-      cat_max <- paste0("temp_", cat, "_max")
+      cat_temp <- paste0('temp_', cat)
+      cat_max <- paste0('temp_', cat, '_max')
 
       cat_info <- df_categories %>%
         filter(CAT_CODE == cat)
@@ -101,51 +101,56 @@ calculate_score <- function(
         -999999)
 
       # * Calculate raw overall score ----
-      df_ej[["temp_score"]] <- if_else(
+      df_ej[['temp_score']] <- if_else(
         df_ej[[cat_score]] >= cat_min,
-        df_ej[["temp_score"]] + cat_weight * df_ej[[cat_score]],
-        df_ej[["temp_score"]])
+        df_ej[['temp_score']] + cat_weight * df_ej[[cat_score]],
+        df_ej[['temp_score']])
 
       # * Calculate max overall score ----
       # Do not add weight if category score is NA! (eg -999999)
-      df_ej[["temp_score_max"]] <- if_else(
+      df_ej[['temp_score_max']] <- if_else(
         df_ej[[cat_score]] >= 0,
-        df_ej[["temp_score_max"]] + cat_weight,
-        df_ej[["temp_score_max"]]
+        df_ej[['temp_score_max']] + cat_weight,
+        df_ej[['temp_score_max']]
         )
 
       # * Check if above min cat score ----
-      df_ej[["temp_fail"]] <- if_else(
+      df_ej[['temp_fail']] <- if_else(
         cat_min > 0 & 
           df_ej[[cat_score]] < cat_min &
           df_ej[[cat_score]] >= 0,  # Filter out NA values
-        df_ej[["temp_fail"]] + 1,
-        df_ej[["temp_fail"]]
+        df_ej[['temp_fail']] + 1,
+        df_ej[['temp_fail']]
         )
 
       # * Check max # of fail cat score ----
       # Check for NA! 
-      df_ej[["temp_fail_max"]] <- if_else(
+      df_ej[['temp_fail_max']] <- if_else(
         cat_min > 0 & df_ej[[cat_score]] >= 0,
-        df_ej[["temp_fail_max"]] + 1,
-        df_ej[["temp_fail_max"]]
+        df_ej[['temp_fail_max']] + 1,
+        df_ej[['temp_fail_max']]
       )
     }
 
     # * Calculate overall score ----
     df_ej[[final_score]] <- case_when(
-      df_ej[["temp_score_max"]] == 0 ~ -999999,
-      exceed_all_min_scores == TRUE & df_ej[["temp_fail"]] > 0 ~ 0,
-      df_ej[["temp_fail_max"]] > 0 & 
-        df_ej[["temp_fail"]] >= df_ej[["temp_fail_max"]] ~ 0,
-      TRUE ~ df_ej[["temp_score"]] / df_ej[["temp_score_max"]]
+      df_ej[['temp_score_max']] == 0 ~ -999999,
+      exceed_all_min_scores == TRUE & df_ej[['temp_fail']] > 0 ~ 0,
+      df_ej[['temp_fail_max']] > 0 & 
+        df_ej[['temp_fail']] >= df_ej[['temp_fail_max']] ~ 0,
+      TRUE ~ df_ej[['temp_score']] / df_ej[['temp_score_max']]
     )
   }
+
+  # List skipped metrics ----
+  drop_columns <- metric_table %>%
+    filter(!METRIC_CODE %in% metric_list)
   
   # Tidy data ----
   df_ej <- df_ej %>%
-    # Drop temp columns
+    # Drop temp columns, skipped metrics
     select(-starts_with('temp_')) %>%
+    select(-contains(drop_columns$METRIC_CODE)) %>%
     # Replace NA values with -999999
     mutate(across(where(is.numeric), ~replace_na(.x, -999999)))
 
