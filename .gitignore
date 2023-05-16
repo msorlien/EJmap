@@ -2,4 +2,11 @@
 .Rhistory
 .RData
 rsconnect
-data-raw/EJMETRICS_*
+data-raw/*.cpg
+data-raw/*.dbf
+data-raw/*.prj
+data-raw/*.sbn
+data-raw/*.sbx
+data-raw/*.shp
+data-raw/*.shp.xml
+data-raw/*.shx
