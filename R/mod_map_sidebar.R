@@ -2,7 +2,7 @@
 #  TITLE: sidebar_map.R
 #  DESCRIPTION: Module to select location & parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-16
+#  DATE LAST UPDATED: 2023-05-18
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -22,10 +22,15 @@ map_sidebar_ui <- function(id) {
     
     # Select location ----
     h2('Select Location'),
-    select_location_ui(ns('select_location')),
+    select_location_ui(ns('location')),
     
     # Select data ----
-    selectPar_ui(ns('select_metrics')),
+    conditionalPanel(
+      condition = paste0('output["', ns('show_metrics'), '"] == "TRUE"'),
+      h2('Select Metrics'),
+      selectPar_ui(ns('metrics'))
+      ),
+    
     
     # Download ----
     h2('Download Data')
@@ -37,23 +42,29 @@ map_sidebar_ui <- function(id) {
 
 map_sidebar_server <- function(id, input_shp, input_shp_simple, 
                                select_metrics = TRUE) {
-  moduleServer(id, function(input, output, session) {
+  moduleServer(id, function(input, output, session) { 
     
-    # Create reactiveValues ----
+    # Pass info to ui ----
+    output$show_metrics <- renderText({ paste0(select_metrics) })
+    
+    outputOptions(output, 'show_metrics', suspendWhenHidden = FALSE)
+    
+    
+    # Default shp ----
     shp_reactive <- reactiveValues(shp = input_shp_simple)
     
     # Select parameters ----
     # * Add module ----
-    df_par <- selectPar_server('select_metrics', input_shp_simple)
+    df_par <- selectPar_server('metrics', input_shp_simple)
     
-    # * Update reactiveValues ----
-    observeEvent(df_par$button, {
+    # * Update shp ----
+    observeEvent(df_par$button(), {
       shp_reactive$shp <- df_par$output_shp()
     })
     
     # Filter location ----
     # * Add module
-    df_loc <- select_location_server('select_location', shp_reactive$shp)
+    df_loc <- select_location_server('location', shp_reactive)
 
     # Output reactive values ----
     return(

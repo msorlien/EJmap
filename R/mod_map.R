@@ -2,7 +2,7 @@
 #  TITLE: ej_map.R
 #  DESCRIPTION: Module to display EJ map
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-09
+#  DATE LAST UPDATED: 2023-05-18
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -15,7 +15,7 @@ library(leaflet)
 ###                       User Interface                            ####
 ########################################################################.
 
-map_ui <- function(id) {
+map_ui <- function(id, input_shp, percentiles = c('N_', 'P_')) {
   
   ns <- NS(id)
 
@@ -24,8 +24,8 @@ map_ui <- function(id) {
     pickerInput(
       inputId = ns('select_layer'),
       label = 'Select Layer',
-      choices = NULL,
-      selected = NULL,
+      choices = list_col_codes(input_shp),
+      selected = 'SCORE',
       options = list(
         `live-search` = TRUE),
       multiple = FALSE
@@ -49,7 +49,7 @@ map_ui <- function(id) {
 ###                         MODULE SERVER                           ####
 ########################################################################.
 
-map_server <- function(id, ejvar, edit_metrics=TRUE) {
+map_server <- function(id, ejvar, min_overall_score = 0) {
   moduleServer(id, function(input, output, session) {
     
     ns <- NS(id)
@@ -61,17 +61,7 @@ map_server <- function(id, ejvar, edit_metrics=TRUE) {
     # Update list of parameters ----
     observeEvent(ejvar$btn_metrics(), {
 
-      # List col names in input_shp, minus first two letters
-      # (drops N_, P_)
-      input_col <- str_sub(colnames(input_shp()), 3, -1)
-
-      # Filter column table for col in input_shp
-      df_columns <- column_table %>%
-        filter(COL_CODE %in% input_col)
-
-      # Make named list
-      col_codes <- df_columns$COL_CODE
-      names(col_codes) <- df_columns$COL_NAME
+      col_codes <- list_col_codes(input_shp())
 
       # Update picker input (choices, selected)
       updatePickerInput(session = session,

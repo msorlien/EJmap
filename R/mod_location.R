@@ -2,7 +2,7 @@
 #  TITLE: select_location.R
 #  DESCRIPTION: Module to select location
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-16
+#  DATE LAST UPDATED: 2023-05-18
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -72,7 +72,7 @@ select_location_server <- function(id, input_shp) {
       req(input$select_town)
       
       shp_town <- filter_location(
-        input_shp = input_shp, 
+        input_shp = input_shp$shp, 
         town_or_watershed = 'town', 
         selected_towns = input$select_town)
       
@@ -83,7 +83,7 @@ select_location_server <- function(id, input_shp) {
       req(input$select_watershed)
 
       filter_location(
-        input_shp = input_shp,
+        input_shp = input_shp$shp,
         town_or_watershed = 'watershed',
         selected_watersheds = input$select_watershed)
     })
@@ -101,6 +101,8 @@ select_location_server <- function(id, input_shp) {
       list(
         
         location_type = reactive({ input$location_type }),
+        selected_towns = reactive({ input$select_town }),
+        selected_watersheds = reactive ({ input$select_watershed }),
         output_shp = reactive({ shp_output() })
         
       )

@@ -2,7 +2,7 @@
 #  TITLE: app.R
 #  DESCRIPTION: R shiny app for mapping EJ areas
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-15
+#  DATE LAST UPDATED: 2023-05-18
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -28,14 +28,51 @@ EJmap <- function(...){
       tags$h1('NBEP Environmental Justice Mapper')
     ),
     
-    sidebarLayout(
-      # Select variables ----
-      sidebarPanel(map_sidebar_ui('custom_sidebar')),
-      mainPanel('lalala',
-        map_ui('dynamic_map')
+    tabsetPanel(
+      type = 'tabs',
+      id = 'tabset',
+      
+      # Tab: About ----
+      tabPanel(
+        'About',
+        value='about',
+        'lorem ipsum'
+        ),
+      
+      # Tab: NBEP map ----
+      tabPanel(
+        'NBEP Map',
+        value = 'nbep',
+        sidebarLayout(
+          sidebarPanel(
+            map_sidebar_ui('nbep_sidebar')
+            ),
+          mainPanel(
+            map_ui(
+              'nbep_map', 
+              input_shp = shp_nbep_simple, 
+              percentiles = c('N_'))
+            )
+          )
+        ),
+      
+      # Tab: Custom map -----
+      tabPanel(
+        'Custom Map',
+        value = 'diy',
+        sidebarLayout(
+          sidebarPanel(
+            map_sidebar_ui('custom_sidebar')
+            ),
+          mainPanel(
+            map_ui(
+              'custom_map', 
+              input_shp = shp_default_simple)
+            )
+          )
         )
+      )
     )
-  )
   
   # Set language -----
   attr(ui, 'lang')='en'
@@ -48,12 +85,21 @@ EJmap <- function(...){
     fixed_metrics <- FALSE
     
     # Add module servers ----
-    ej_score <- map_sidebar_server(
+    # NBEP map
+    nbep_score <- map_sidebar_server(
+      'nbep_sidebar',
+      input_shp = shp_nbep, 
+      input_shp_simple = shp_nbep_simple,
+      select_metrics = FALSE
+      )
+    map_server('nbep_map', nbep_score, 20)
+    
+    # Custom map
+    custom_score <- map_sidebar_server(
       'custom_sidebar',
       input_shp = shp_raw, 
-      input_shp_simple = shp_raw_simple)
-    
-    map_server('dynamic_map', ej_score)
+      input_shp_simple = shp_default_simple)
+    map_server('custom_map', custom_score)
   }
   
   ########################################################################.

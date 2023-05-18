@@ -20,7 +20,6 @@ selectPar_ui <- function(id) {
     useShinyjs(),
     
     # Select metrics ----
-    h2('Select Metrics'),
     selectParInput_ui(ns('socvul_metrics'), 'SOCVUL'),
     selectParInput_ui(ns('health_metrics'), 'HEALTH'),
     selectParInput_ui(ns('envbur_metrics'), 'ENVBUR'),
@@ -78,14 +77,21 @@ selectPar_server <- function(id, input_shp) {
     # Calculate score ----
     shp_output <- eventReactive(input$btn_calculate, {
       
+      # Drop pre-existing score columns
+      shp_output <- input_shp %>%
+        select(-contains(c('_SOCVUL', '_HEALTH', '_ENVBUR', '_CLIMATE', 
+                           '_SCORE')))
+      
+      # Calculate score
       shp_output <- calculate_score(
-        input_shp = input_shp, 
+        input_shp = shp_output, 
         percentile_min = adv_opt$percentile_min(), 
         exceed_all_min_scores = adv_opt$exceed_all(), 
         df_metrics = adv_opt$df_metric(), 
         df_categories = adv_opt$df_cat()
       ) 
       
+      # Set -999999 to NA
       shp_output <- shp_output %>%
         mutate(across(where(is.numeric), ~na_if(., -999999)))
       

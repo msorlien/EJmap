@@ -2,7 +2,7 @@
 #  TITLE: shp_ejmetrics.R
 #  DESCRIPTION: Adds EJ metric shapefiles
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-16
+#  DATE LAST UPDATED: 2023-05-18
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt) x86_64
 ##############################################################################.
@@ -10,7 +10,7 @@
 library(sf)
 library(tidyverse)
 
-source('R/calculate_score.R')
+source('R/fun_calculate_score.R')
 
 # Read in csv data ------------------------------------------------------------
 df_metrics <- read.csv('data-raw/metric_list.csv')
@@ -62,8 +62,6 @@ shp_raw_simple <- read_sf(dsn='data-raw',
   # Replace -999999 with NA
   mutate(across(where(is.numeric), ~na_if(., -999999)))
 
-usethis::use_data(shp_raw_simple, overwrite=TRUE)
-
 # Shp default (simple) --------------------------------------------------------
 
 # Define metric/cat weights
@@ -92,6 +90,7 @@ shp_nbep <- calculate_score(
   input_shp = shp_raw,
   percentile_min = 80, 
   prefix_list = 'N_',
+  exceed_all_min_scores = FALSE,
   df_metrics = df_metrics_nbep, 
   df_categories = df_cats_nbep)
 
@@ -107,6 +106,7 @@ shp_nbep_simple <- calculate_score(
   input_shp = shp_raw_simple,
   percentile_min = 80, 
   prefix_list = 'N_',
+  exceed_all_min_scores = FALSE,
   df_metrics = df_metrics_nbep, 
   df_categories = df_cats_nbep)
 
