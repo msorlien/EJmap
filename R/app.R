@@ -31,7 +31,9 @@ EJmap <- function(...){
     sidebarLayout(
       # Select variables ----
       sidebarPanel(map_sidebar_ui('custom_sidebar')),
-      mainPanel(map_ui('dynamic_map'))
+      mainPanel('lalala',
+        map_ui('dynamic_map')
+        )
     )
   )
   

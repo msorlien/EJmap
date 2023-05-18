@@ -2,7 +2,7 @@
 #  TITLE: select_location.R
 #  DESCRIPTION: Module to select location
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-15
+#  DATE LAST UPDATED: 2023-05-16
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -57,6 +57,8 @@ select_location_ui <- function(id) {
     )
   )
   
+
+  
 }
 
 ########################################################################.
@@ -70,36 +72,36 @@ select_location_server <- function(id, input_shp) {
       req(input$select_town)
       
       shp_town <- filter_location(
-        input_shp = input_shp(), 
+        input_shp = input_shp, 
         town_or_watershed = 'town', 
         selected_towns = input$select_town)
       
       return(shp_town)
     })
     
-    # shp_watershed <- reactive({
-    #   req(input$select_watershed)
-    #   
-    #   filter_location(
-    #     input_shp = input_shp, 
-    #     town_or_watershed = 'watershed', 
-    #     selected_watersheds = input$select_watershed)
-    # })
-    # 
-    # shp_output <- reactive({
-    #   if (input$location_type == 'town') {
-    #     shp_town()
-    #   } else {
-    #     shp_watershed()
-    #   }
-    # })
+    shp_watershed <- reactive({
+      req(input$select_watershed)
+
+      filter_location(
+        input_shp = input_shp,
+        town_or_watershed = 'watershed',
+        selected_watersheds = input$select_watershed)
+    })
+
+    shp_output <- reactive({
+      if (input$location_type == 'town') {
+        shp_town()
+      } else {
+        shp_watershed()
+      }
+    })
     
     # Output reactive values ----
     return(
       list(
         
         location_type = reactive({ input$location_type }),
-        output_shp = reactive({ shp_town() })
+        output_shp = reactive({ shp_output() })
         
       )
     )

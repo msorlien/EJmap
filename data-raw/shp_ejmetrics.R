@@ -2,7 +2,7 @@
 #  TITLE: shp_ejmetrics.R
 #  DESCRIPTION: Adds EJ metric shapefiles
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-08
+#  DATE LAST UPDATED: 2023-05-16
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt) x86_64
 ##############################################################################.
@@ -30,7 +30,14 @@ shp_raw <- read_sf(dsn = 'data-raw',
   rename(BlockGroup=GEOID) %>%
   # Add new column (Town_Code)
   add_column(Town_Code = 'ABC', .after='State') %>%
-  mutate(Town_Code = paste0(Town, ', ', State)) %>%
+  mutate(
+    Town_Code = case_when(
+      State == 'Rhode Island' ~ paste0(Town, ', RI'),
+      State == 'Massachusetts' ~ paste0(Town, ', MA'),
+      State == 'Connecticut' ~ paste0(Town, ', CT'),
+      TRUE ~ paste0(Town, ', ', State)
+    )
+  ) %>%
   # Replace -999999 with NA
   mutate(across(where(is.numeric), ~na_if(., -999999)))
 
@@ -44,7 +51,14 @@ shp_raw_simple <- read_sf(dsn='data-raw',
   rename(BlockGroup=GEOID) %>%
   # Add new column (Town_Code)
   add_column(Town_Code = 'ABC', .after='State') %>%
-  mutate(Town_Code = paste0(Town, ', ', State)) %>%
+  mutate(
+    Town_Code = case_when(
+      State == 'Rhode Island' ~ paste0(Town, ', RI'),
+      State == 'Massachusetts' ~ paste0(Town, ', MA'),
+      State == 'Connecticut' ~ paste0(Town, ', CT'),
+      TRUE ~ paste0(Town, ', ', State)
+    )
+  ) %>%
   # Replace -999999 with NA
   mutate(across(where(is.numeric), ~na_if(., -999999)))
 
