@@ -10,6 +10,7 @@
 library(shinyjs)
 library(sf)
 library(leaflet)
+library(shinycssloaders)
 
 ########################################################################.
 ###                       User Interface                            ####
@@ -17,8 +18,19 @@ library(leaflet)
 
 map_ui <- function(id, input_shp, percentiles = c('N_', 'P_')) {
   
+  # Set var ----
+  percentile_codes <- c('N_', 'P_')
+  percentile_names <- c('Compare to Narragansett Bay Watershed',
+                        'Compare to State')
+  df_percentiles <- data.frame(percentile_codes, percentile_names) %>%
+    filter(percentile_codes %in% percentiles)
+  
+  percentile_list <- df_percentiles$percentile_codes
+  names(percentile_list) <- df_percentiles$percentile_names
+  
   ns <- NS(id)
 
+  # UI ----
   tagList(
     # Metric/Category ----
     pickerInput(
@@ -34,13 +46,15 @@ map_ui <- function(id, input_shp, percentiles = c('N_', 'P_')) {
     awesomeRadio(
       inputId = ns('percentile_type'),
       label = NULL, 
-      choices = c('Compare to NBEP'='N_', 'Compare to State'='P_'),
-      selected = 'N_',
+      choices = percentile_list,
+      selected = percentile_list[1],
       inline = TRUE, 
       checkbox = TRUE
     ),
     # Map ----
-    leafletOutput(ns('map'), width='100%', height = '75vh')
+    shinycssloaders::withSpinner(
+      leafletOutput(ns('map'), width='100%', height = '75vh')
+    )
   )
   
 }
@@ -84,18 +98,12 @@ map_server <- function(id, ejvar, min_overall_score = 0) {
     })
     
     # Color ramp ----
-    pal <- colorNumeric (
-        palette=colorRamp(
-          # Iridescent color palette by Paul Tol
-          # https://personal.sron.nl/~pault/data/colourschemes.pdf
-          c('#FEFBE9', '#FCF7D5', '#F5F3C1', '#EAF0B5', '#DDECBF', '#D0E7CA',
-            '#C2E3D2', '#B4DDD8', '#A8D8DC', '#9BD2E1', '#8DCBE4', '#81C4E7',
-            '#7BBCE7', '#7EB2E4', '#88A5DD', '#9398D2', '#9B8AC4', '#9D7DB2',
-            '#9A709E', '#906388', '#805770', '#684957', '#46353A'), 
-          interpolate = 'spline'),
-        na.color = '#999999',
-        domain = c(0,100)
-        )
+    pal <- reactive({ 
+      req(input$select_layer)
+      
+      pal_colors(input$select_layer, ejvar$percentile_min(), min_overall_score) 
+      
+      })
 
     # Leaflet basemap ----
     output$map <- renderLeaflet({
@@ -109,7 +117,7 @@ map_server <- function(id, ejvar, min_overall_score = 0) {
       # * Add basemap tiles ----
       addProviderTiles(providers$CartoDB.Positron) %>%
       # * Add legend ----
-      addLegend(pal = pal, values = c(0,100),
+      addLegend(pal = pal(), values = c(0,100),
                 position = 'bottomright') %>%
       # * Add scale bar ----
       addScaleBar(position='bottomleft') 
@@ -142,7 +150,7 @@ map_server <- function(id, ejvar, min_overall_score = 0) {
           opacity = 0.2,
           # Fill
           fillOpacity = 0.8,
-          fillColor = ~pal(display_layer()),
+          fillColor = ~pal()(display_layer()),
           # Highlight
           highlightOptions = highlightOptions(fillColor = '#ffffff',
                                               weight = 2,

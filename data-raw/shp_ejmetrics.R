@@ -78,6 +78,10 @@ shp_default_simple <- calculate_score(
   df_metrics = df_metrics_default, 
   df_categories = df_cats_default)
 
+# Replace -999999 with NA
+shp_default_simple <- shp_default_simple %>%
+  mutate(across(where(is.numeric), ~na_if(., -999999)))
+
 usethis::use_data(shp_default_simple, overwrite=TRUE)
 
 # Shp NBEP --------------------------------------------------------------------
@@ -110,9 +114,13 @@ shp_nbep_simple <- calculate_score(
   df_metrics = df_metrics_nbep, 
   df_categories = df_cats_nbep)
 
-# Drop extra rows, columns
+# Tidy data
 shp_nbep_simple <- shp_nbep_simple %>%
+  # Drop rows outside study area
   filter(Study_Area != 'Outside Study Area') %>%
-  select(-starts_with('P_'))  # Drop state percentiles
+  # Drop columns for state percentiles
+  select(-starts_with('P_')) %>%
+  # Replace -999999 with NA
+  mutate(across(where(is.numeric), ~na_if(., -999999)))
 
 usethis::use_data(shp_nbep_simple, overwrite=TRUE)
