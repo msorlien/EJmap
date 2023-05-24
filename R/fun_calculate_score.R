@@ -1,5 +1,5 @@
 ################################### HEADER ###################################
-#  TITLE: calculate_score.R
+#  TITLE: fun_calculate_score.R
 #  DESCRIPTION: Calculates scores
 #  AUTHOR(S): Mariel Sorlien
 #  DATE LAST UPDATED: 2023-05-15

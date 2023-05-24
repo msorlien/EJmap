@@ -59,7 +59,7 @@ EJmap <- function(...){
             map_ui(
               'nbep_map', 
               input_shp = shp_nbep_simple, 
-              percentiles = c('N_'))
+              percentiles = 'N_')
             )
           )
         ),

@@ -17,6 +17,7 @@ Imports:
     glue,
     htmltools,
     leaflet,
+    leaflet.extras2,
     pkgload,
     reactable,
     sf,

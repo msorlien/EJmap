@@ -89,7 +89,7 @@ selectPar_server <- function(id, input_shp) {
         exceed_all_min_scores = adv_opt$exceed_all(), 
         df_metrics = adv_opt$df_metric(), 
         df_categories = adv_opt$df_cat()
-      ) 
+        ) 
       
       # Set -999999 to NA
       shp_output <- shp_output %>%

@@ -2,7 +2,7 @@
 #  TITLE: ej_map.R
 #  DESCRIPTION: Module to display EJ map
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-18
+#  DATE LAST UPDATED: 2023-05-23
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -10,6 +10,7 @@
 library(shinyjs)
 library(sf)
 library(leaflet)
+library(leaflet.extras2)
 library(shinycssloaders)
 
 ########################################################################.
@@ -20,8 +21,8 @@ map_ui <- function(id, input_shp, percentiles = c('N_', 'P_')) {
   
   # Set var ----
   percentile_codes <- c('N_', 'P_')
-  percentile_names <- c('Compare to Narragansett Bay Watershed',
-                        'Compare to State')
+  percentile_names <- c('Compare to region',
+                        'Compare to state')
   df_percentiles <- data.frame(percentile_codes, percentile_names) %>%
     filter(percentile_codes %in% percentiles)
   
@@ -53,7 +54,8 @@ map_ui <- function(id, input_shp, percentiles = c('N_', 'P_')) {
     ),
     # Map ----
     shinycssloaders::withSpinner(
-      leafletOutput(ns('map'), width='100%', height = '75vh')
+      leafletOutput(ns('map'), width='100%', height = '75vh'),
+      type = 5
     )
   )
   
@@ -116,19 +118,22 @@ map_server <- function(id, ejvar, min_overall_score = 0) {
                 ) %>%
       # * Add basemap tiles ----
       addProviderTiles(providers$CartoDB.Positron) %>%
+      # * Add spinner ----
+      leaflet.extras2::addSpinner() %>%
       # * Add legend ----
       addLegend(pal = pal(), values = c(0,100),
                 position = 'bottomright') %>%
       # * Add scale bar ----
-      addScaleBar(position='bottomleft') 
+      addScaleBar(position='bottomleft')
     })
 
     # Add polygons ----
     observe({
-      req(input$select_layer)
-      req(input$percentile_type)
-
       leafletProxy('map') %>%
+        leaflet.extras2::startSpinner(
+          list('length' = 0, 'lines' = 8, 'width' = 20, 'radius' = 40,
+               'color' = '#0275D8')
+        ) %>%
         clearShapes() %>%
         # * EJ map ----
         addPolygons(
@@ -155,7 +160,9 @@ map_server <- function(id, ejvar, min_overall_score = 0) {
           highlightOptions = highlightOptions(fillColor = '#ffffff',
                                               weight = 2,
                                               bringToFront = TRUE)
-      )
+          ) %>%
+        leaflet.extras2::stopSpinner()
+        
     })
     
   })

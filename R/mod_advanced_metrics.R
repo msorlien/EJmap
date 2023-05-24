@@ -2,7 +2,7 @@
 #  TITLE: advanced_options.R
 #  DESCRIPTION: Module to select location & parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-15
+#  DATE LAST UPDATED: 2023-05-24
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -135,7 +135,7 @@ advancedSelect_server <- function(id, metric_list) {
     return(
       list(
         
-        percentile_min = reactive({ input$percentile_min }),
+        percentile_min = reactive({ as.numeric(input$percentile_min) }),
         exceed_all = reactive({ input$exceed_all }),
         df_cat = reactive({ df_cat() }),
         df_metric = reactive({ df_metrics() })

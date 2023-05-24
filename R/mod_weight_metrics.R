@@ -97,7 +97,7 @@ weightMetric_server <- function(id, cat_code, selected_var) {
     # * Save edits ----
     observeEvent(input$save, {
       # Update weight if greater than 0
-      if(input$weight > 0) {
+      if(input$weight >= 0) {
         values$dataframe[selected_row(), "Weight"] <- input$weight
       }
       # Close module

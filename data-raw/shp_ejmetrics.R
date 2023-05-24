@@ -11,6 +11,7 @@ library(sf)
 library(tidyverse)
 
 source('R/fun_calculate_score.R')
+source('R/fun_add_metadata.R')
 
 # Read in csv data ------------------------------------------------------------
 df_metrics <- read.csv('data-raw/metric_list.csv')
@@ -98,7 +99,10 @@ shp_nbep <- calculate_score(
   df_metrics = df_metrics_nbep, 
   df_categories = df_cats_nbep)
 
-# Drop extra rows, columns
+# Add metadata
+shp_nbep <- add_metadata(shp_nbep, df_metrics_nbep)
+
+# Tidy data
 shp_nbep <- shp_nbep %>%
   filter(Study_Area != 'Outside Study Area')
 
