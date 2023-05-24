@@ -19,16 +19,6 @@ library(shinycssloaders)
 
 map_ui <- function(id, input_shp, percentiles = c('N_', 'P_')) {
   
-  # Set var ----
-  percentile_codes <- c('N_', 'P_')
-  percentile_names <- c('Compare to region',
-                        'Compare to state')
-  df_percentiles <- data.frame(percentile_codes, percentile_names) %>%
-    filter(percentile_codes %in% percentiles)
-  
-  percentile_list <- df_percentiles$percentile_codes
-  names(percentile_list) <- df_percentiles$percentile_names
-  
   ns <- NS(id)
 
   # UI ----
@@ -47,8 +37,8 @@ map_ui <- function(id, input_shp, percentiles = c('N_', 'P_')) {
     awesomeRadio(
       inputId = ns('percentile_type'),
       label = NULL, 
-      choices = percentile_list,
-      selected = percentile_list[1],
+      choices = list_percentile_codes(percentiles),
+      selected = list_percentile_codes(percentiles)[1],
       inline = TRUE, 
       checkbox = TRUE
     ),
@@ -120,48 +110,63 @@ map_server <- function(id, ejvar, min_overall_score = 0) {
       addProviderTiles(providers$CartoDB.Positron) %>%
       # * Add spinner ----
       leaflet.extras2::addSpinner() %>%
-      # * Add legend ----
-      addLegend(pal = pal(), values = c(0,100),
-                position = 'bottomright') %>%
       # * Add scale bar ----
       addScaleBar(position='bottomleft')
     })
 
-    # Add polygons ----
+    # Update polygons ----
     observe({
+      # * Clear polygons, legend ----
       leafletProxy('map') %>%
-        leaflet.extras2::startSpinner(
-          list('length' = 0, 'lines' = 8, 'width' = 20, 'radius' = 40,
-               'color' = '#0275D8')
-        ) %>%
         clearShapes() %>%
-        # * EJ map ----
-        addPolygons(
-          data = input_shp(),
-          layerId = input_shp(),
-          # Label
-          label = ~paste(Town, State,
-                         display_layer()),
-          labelOptions = labelOptions(textsize = '15px'),
-          # Popup
-          popup = ~paste0('<b>Block Group: </b>', BlockGroup,
-                          '<br/><b>Town: </b>', Town, ', ', State,
-                          '<br/><br/><b>', input$select_layer, ': </b>',
-                          display_layer()),
-          # Stroke
-          color = '#000000',
-          weight = 0.5,
-          smoothFactor = 0.5,
-          opacity = 0.2,
-          # Fill
-          fillOpacity = 0.8,
-          fillColor = ~pal()(display_layer()),
-          # Highlight
-          highlightOptions = highlightOptions(fillColor = '#ffffff',
-                                              weight = 2,
-                                              bringToFront = TRUE)
+        removeControl('legend')
+      
+      # * Add legend ----
+      leafletProxy('map') %>%
+        addLegend(
+          layerId = 'legend',
+          pal = pal(), 
+          values = c(0,100),
+          position = 'bottomright')
+      
+      # * Add EJ map ----
+      if (nrow(input_shp()) > 0) {
+        leafletProxy('map') %>%
+          # Add spinner
+          leaflet.extras2::startSpinner(
+            list('length' = 0, 'lines' = 8, 'width' = 20, 'radius' = 40,
+                 'color' = '#0275D8')
           ) %>%
-        leaflet.extras2::stopSpinner()
+          # Add polygons
+          addPolygons(
+            data = input_shp(),
+            layerId = input_shp(),
+            # Label
+            label = ~paste(Town, State,
+                           display_layer()),
+            labelOptions = labelOptions(textsize = '15px'),
+            # Popup
+            popup = ~paste0('<b>Block Group: </b>', BlockGroup,
+                            '<br/><b>Town: </b>', Town, ', ', State,
+                            '<br/><b>Watersheds: </b>', HUC10_Name,
+                            '<br/><br/><b>', input$select_layer, ': </b>',
+                            display_layer()),
+            # Stroke
+            color = '#000000',
+            weight = 0.5,
+            smoothFactor = 0.5,
+            opacity = 0.2,
+            # Fill
+            fillOpacity = 0.8,
+            fillColor = ~pal()(display_layer()),
+            # Highlight
+            highlightOptions = highlightOptions(fillColor = '#ffffff',
+                                                weight = 2,
+                                                bringToFront = TRUE)
+          ) %>%
+          # Stop spinner
+          leaflet.extras2::stopSpinner()
+      }
         
     })
     

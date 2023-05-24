@@ -23,41 +23,26 @@ advancedSelect_ui <- function(id) {
     actionButton(ns('btn_advanced'),
                  label = 'Show Advanced Options'),
     
-    # Conditional Panel 
-    conditionalPanel(
-      condition = paste0('input["', ns('btn_advanced'), '"] % 2 != 0'), 
+    # Title ----
+    h3('Advanced Options'),
       
-      # Title ----
-      h3('Advanced Options'),
-      
-      # Categories ----
-      h4('Categories'),
-      weightCat_ui(ns('cat')),
-      awesomeRadio(
-        inputId = ns('exceed_all'),
-        label = 'Must match all minimum scores?', 
-        choices = c('Yes'='AND', 'No'='OR'),
-        selected = 'AND',
-        inline = TRUE, 
-        checkbox = TRUE),
-      
-      # Percentiles ----
-      h4('Percentiles'),
-      
-      # * Minimum value ----
-      pickerInput(
-        ns('percentile_min'),
-        label = 'Minimum Value',
-        choices = c(50, 60, 70, 80, 90, 95),
-        selected = 80),
-      
-      h4('Metrics'),
-      weightMetric_ui(ns('socvul'), 'Social Vulnerability'),
-      weightMetric_ui(ns('health'), 'Health'),
-      weightMetric_ui(ns('envbur'), 'Environmental Burden'),
-      weightMetric_ui(ns('climate'), 'Climate')
-      
-      )
+    # Categories ----
+    h4('Categories'),
+    weightCat_ui(ns('cat')),
+    awesomeRadio(
+      inputId = ns('exceed_all'),
+      label = 'Must match all minimum scores?', 
+      choices = c('Yes'='AND', 'No'='OR'),
+      selected = 'AND',
+      inline = TRUE, 
+      checkbox = TRUE),
+    
+    h4('Metrics'),
+    weightMetric_ui(ns('socvul'), 'Social Vulnerability'),
+    weightMetric_ui(ns('health'), 'Health'),
+    weightMetric_ui(ns('envbur'), 'Environmental Burden'),
+    weightMetric_ui(ns('climate'), 'Climate')
+    
     )
 }
 
@@ -67,16 +52,40 @@ advancedSelect_ui <- function(id) {
 
 advancedSelect_server <- function(id, metric_list) {
   moduleServer(id, function(input, output, session) {
-
-    # Toggle button text ----
+    
+    # Set namespace ----
+    ns <- session$ns
+    
+    # Define variables ----
+    adv_opt <- reactiveValues(
+      percentile_min=80
+      )
+    
     observeEvent(input$btn_advanced, {
-      if (input$btn_advanced %% 2 != 0) {
-        updateActionButton(session, 'btn_advanced', 
-                           label = 'Hide Advanced Options')
-      } else {
-        updateActionButton(session, 'btn_advanced', 
-                           label = 'Show Advanced Options')
-      }
+      # display a modal dialog with a header, textinput and action buttons
+      showModal(modalDialog(
+        tags$h2('Advanced Options'),  # Title defaults to H4 - unacceptable
+        h3('Category Weight'),
+        h3('Minimum Category Scores'),
+        h3('Minimum Percentile'),
+        'Percentiles are... yada yada',
+        pickerInput(
+          ns('percentile_min'),
+          label = 'Minimum Percentile',
+          choices = c(50, 60, 70, 80, 90, 95),
+          selected = adv_opt$percentile_min),
+        h3('Metric Weight'),
+        footer=tagList(
+          actionButton(ns('submit'), 'Submit'),
+          modalButton('Cancel')
+        )
+      ))
+    })
+    
+    # Save edits on submit
+    observeEvent(input$submit, {
+      adv_opt$percentile_min <- input$percentile_min
+      removeModal()
     })
     
     # Split metrics by category ----
@@ -135,7 +144,7 @@ advancedSelect_server <- function(id, metric_list) {
     return(
       list(
         
-        percentile_min = reactive({ as.numeric(input$percentile_min) }),
+        percentile_min = reactive({ as.numeric(adv_opt$percentile_min) }),
         exceed_all = reactive({ input$exceed_all }),
         df_cat = reactive({ df_cat() }),
         df_metric = reactive({ df_metrics() })
