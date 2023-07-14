@@ -30,7 +30,8 @@ map_ui <- function(id, input_shp, percentiles = c('N_', 'P_')) {
       choices = list_col_codes(input_shp),
       selected = 'SCORE',
       options = list(
-        `live-search` = TRUE),
+        `live-search` = TRUE,
+        container = 'body'),  # Allows dropdown overflow
       multiple = FALSE
     ),
     # Percentile type ----

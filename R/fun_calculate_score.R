@@ -102,7 +102,7 @@ calculate_score <- function(
 
       # * Calculate raw overall score ----
       df_ej[['temp_score']] <- if_else(
-        df_ej[[cat_score]] >= cat_min,
+        df_ej[[cat_score]] >= 0,
         df_ej[['temp_score']] + cat_weight * df_ej[[cat_score]],
         df_ej[['temp_score']])
 

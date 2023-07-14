@@ -26,7 +26,7 @@ df_cats <- df_metrics %>%
 # Shp raw ---------------------------------------------------------------------
 
 shp_raw <- read_sf(dsn = 'data-raw', 
-                   layer = 'EJMETRICS_2022_NBEP2023') %>%
+                   layer = 'EJMETRICS_2023_NBEP2023') %>%
   # Rename column
   rename(BlockGroup=GEOID) %>%
   # Add new column (Town_Code)
@@ -47,7 +47,7 @@ usethis::use_data(shp_raw, overwrite=TRUE)
 # Shp raw (simple) ------------------------------------------------------------
 
 shp_raw_simple <- read_sf(dsn='data-raw',
-                          layer = 'EJMETRICS_2022_LOWRES_NBEP2023') %>%
+                          layer = 'EJMETRICS_2023_LOWRES_NBEP2023') %>%
   # Rename column
   rename(BlockGroup=GEOID) %>%
   # Add new column (Town_Code)

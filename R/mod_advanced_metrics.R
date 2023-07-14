@@ -2,7 +2,7 @@
 #  TITLE: advanced_options.R
 #  DESCRIPTION: Module to select location & parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-24
+#  DATE LAST UPDATED: 2023-07-13
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -19,15 +19,13 @@ advancedSelect_ui <- function(id) {
   
   tagList(
     
-    # Button to show/hide advanced options ----
-    actionButton(ns('btn_advanced'),
-                 label = 'Show Advanced Options'),
-    
     # Title ----
     h3('Advanced Options'),
-      
+        
     # Categories ----
-    h4('Categories'),
+    h4('Category Weight'),
+    # test_ui(ns('aaa')),
+    h4('Minimum Category Score'),
     weightCat_ui(ns('cat')),
     awesomeRadio(
       inputId = ns('exceed_all'),
@@ -36,14 +34,31 @@ advancedSelect_ui <- function(id) {
       selected = 'AND',
       inline = TRUE, 
       checkbox = TRUE),
+      
+    h4('Minimum Percentile'),
+    'Percentiles indicate what percent of block groups have a lower 
+      score than the selected block group.',
+    pickerInput(
+      ns('percentile_min'),
+      label = 'Minimum Percentile',
+      choices = c(50, 60, 70, 80, 90, 95),
+      selected = 80),
     
     h4('Metrics'),
     weightMetric_ui(ns('socvul'), 'Social Vulnerability'),
     weightMetric_ui(ns('health'), 'Health'),
     weightMetric_ui(ns('envbur'), 'Environmental Burden'),
-    weightMetric_ui(ns('climate'), 'Climate')
+    weightMetric_ui(ns('climate'), 'Climate'),
     
-    )
+    
+    # * Save Button ----
+    actionButton(ns('btn_save'),
+                 label = 'Save'),
+    
+    # * Cancel Button ----
+    actionButton(ns('btn_cancel'),
+                 label = 'Cancel')
+  )
 }
 
 ########################################################################.
@@ -56,37 +71,17 @@ advancedSelect_server <- function(id, metric_list) {
     # Set namespace ----
     ns <- session$ns
     
-    # Define variables ----
-    adv_opt <- reactiveValues(
-      percentile_min=80
-      )
-    
-    observeEvent(input$btn_advanced, {
-      # display a modal dialog with a header, textinput and action buttons
-      showModal(modalDialog(
-        tags$h2('Advanced Options'),  # Title defaults to H4 - unacceptable
-        h3('Category Weight'),
-        h3('Minimum Category Scores'),
-        h3('Minimum Percentile'),
-        'Percentiles are... yada yada',
-        pickerInput(
-          ns('percentile_min'),
-          label = 'Minimum Percentile',
-          choices = c(50, 60, 70, 80, 90, 95),
-          selected = adv_opt$percentile_min),
-        h3('Metric Weight'),
-        footer=tagList(
-          actionButton(ns('submit'), 'Submit'),
-          modalButton('Cancel')
-        )
-      ))
+    # Create category dataframe ---
+    df_test <- reactive({
+      df_test <- metric_list() %>%
+        select(CATEGORY, CAT_CODE) %>%
+        distinct() # Drop duplicate rows
+      
+      return(df_test)
     })
     
-    # Save edits on submit
-    observeEvent(input$submit, {
-      adv_opt$percentile_min <- input$percentile_min
-      removeModal()
-    })
+    # Add module servers ----
+    test_server('aaa', df_test)
     
     # Split metrics by category ----
     socvul_metrics <- reactive({
@@ -144,7 +139,10 @@ advancedSelect_server <- function(id, metric_list) {
     return(
       list(
         
-        percentile_min = reactive({ as.numeric(adv_opt$percentile_min) }),
+        btn_save = reactive({ input$btn_save }),
+        btn_cancel = reactive({ input$btn_cancel }),
+        
+        percentile_min = reactive({ as.numeric(input$percentile_min) }),
         exceed_all = reactive({ input$exceed_all }),
         df_cat = reactive({ df_cat() }),
         df_metric = reactive({ df_metrics() })

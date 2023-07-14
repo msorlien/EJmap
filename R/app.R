@@ -19,65 +19,47 @@ EJmap <- function(...){
   #                         User Interface                               #
   ########################################################################.
   
-  ui <- fluidPage(
-    #theme = bslib::bs_theme(bootswatch = 'sandstone'),
-    use_tota11y(),
+  ui <- bslib::page_navbar(
+    shinya11y::use_tota11y(),
     
-    tags$header(
-      class = 'col-sm-12 title-panel',
-      tags$h1('NBEP Environmental Justice Mapper')
+    theme = bslib::bs_theme(version = 5),
+    
+    title = h1('EJmap'),
+    
+    # Tab: About ----
+    bslib::nav_panel(
+      'About',
+      value='about',
+      'This app is under development and subject to frequent changes.'
     ),
     
-    tabsetPanel(
-      type = 'tabs',
-      id = 'tabset',
-      
-      # Tab: About ----
-      tabPanel(
-        'About',
-        value='about',
-        'row scuttle parrel provost Sail ho shrouds spirits boom mizzenmast 
-        yardarm. Pinnace holystone mizzenmast quarter crow\'s nest nipperkin 
-        grog yardarm hempen halter furl. Swab barque interloper chantey 
-        doubloon starboard grog black jack gangway rutters. Deadlights jack lad 
-        schooner scallywag dance the hempen jig carouser broadside cable strike 
-        colors. Bring a spring upon her cable holystone blow the man down 
-        spanker Shiver me timbers to go on account lookout wherry doubloon 
-        chase. Belay yo-ho-ho keelhaul squiffy black spot yardarm spyglass 
-        sheet transom heave to.'
+    # Tab: NBEP map ----
+    bslib::nav_panel(
+      'NBEP Map',
+      bslib::layout_sidebar(
+        sidebar = bslib::sidebar(
+          width = 300,
+          # style = css(overflow = "visible"),
+          map_sidebar_ui('nbep_sidebar')
+          ),
+        map_ui(
+          'nbep_map',
+          input_shp = shp_nbep_simple,
+          percentiles = 'N_')
+      )
+    ),
+    
+    # Tab: Custom map ----
+    bslib::nav_panel(
+      'Custom Map',
+      bslib::layout_sidebar(
+        sidebar = bslib::sidebar(
+          width = 300,
+          map_sidebar_ui('custom_sidebar')
         ),
-      
-      # Tab: NBEP map ----
-      tabPanel(
-        'NBEP Map',
-        value = 'nbep',
-        sidebarLayout(
-          sidebarPanel(
-            map_sidebar_ui('nbep_sidebar')
-            ),
-          mainPanel(
-            map_ui(
-              'nbep_map', 
-              input_shp = shp_nbep_simple, 
-              percentiles = 'N_')
-            )
-          )
-        ),
-      
-      # Tab: Custom map -----
-      tabPanel(
-        'Custom Map',
-        value = 'diy',
-        sidebarLayout(
-          sidebarPanel(
-            map_sidebar_ui('custom_sidebar')
-            ),
-          mainPanel(
-            map_ui(
-              'custom_map', 
-              input_shp = shp_default_simple)
-            )
-          )
+        map_ui(
+          'custom_map',
+          input_shp = shp_default_simple)
         )
       )
     )
@@ -93,6 +75,8 @@ EJmap <- function(...){
     fixed_metrics <- FALSE
     
     # Add module servers ----
+    # NBEP tab
+    nbep_tab_server('nbep', shp_nbep, shp_nbep_simple)
     # NBEP map
     nbep_score <- map_sidebar_server(
       'nbep_sidebar',
@@ -100,7 +84,7 @@ EJmap <- function(...){
       input_shp_simple = shp_nbep_simple,
       select_metrics = FALSE
       )
-    map_server('nbep_map', nbep_score, 20)
+    map_server('nbep_map', nbep_score, 1)
     
     # Custom map
     custom_score <- map_sidebar_server(

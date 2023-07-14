@@ -37,7 +37,9 @@ selectParInput_ui <- function(id, cat_code) {
       selected = df_metric$METRIC_CODE,
       options = list(
         `actions-box` = TRUE,
-        `live-search` = TRUE),
+        `live-search` = TRUE,
+        `selected-text-format` = 'count > 2',
+        container = 'body'),  # Allows dropdown overflow
       multiple = TRUE
     )
   )

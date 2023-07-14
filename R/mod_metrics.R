@@ -2,7 +2,7 @@
 #  TITLE: select_metrics.R
 #  DESCRIPTION: Module to select parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-15
+#  DATE LAST UPDATED: 2023-07-13
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -19,28 +19,42 @@ selectPar_ui <- function(id) {
     # Enable javascript ----
     useShinyjs(),
     
-    # Select metrics ----
-    selectParInput_ui(ns('socvul_metrics'), 'SOCVUL'),
-    selectParInput_ui(ns('health_metrics'), 'HEALTH'),
-    selectParInput_ui(ns('envbur_metrics'), 'ENVBUR'),
-    selectParInput_ui(ns('climate_metrics'), 'CLIMATE'),
-    
-    # Advanced options ----
-    advancedSelect_ui(ns('advanced_options')),
-    
-    # Button (calculate score) ----
-    tags$br(),
-    tags$br(),
-    actionButton(ns('btn_calculate'),
-                 label = 'Calculate Score')
+    # Secret tabs ----
+    bslib::navset_hidden(
+      id = ns('tabset_metrics'),
+      # Tab 1 ----
+      bslib::nav_panel_hidden(
+        'tab_metrics',
+        # * Select metrics ----
+        selectParInput_ui(ns('socvul_metrics'), 'SOCVUL'),
+        selectParInput_ui(ns('health_metrics'), 'HEALTH'),
+        selectParInput_ui(ns('envbur_metrics'), 'ENVBUR'),
+        selectParInput_ui(ns('climate_metrics'), 'CLIMATE'),
+        
+        # * Advanced Options Button ----
+        actionButton(ns('btn_advanced'),
+                     label = 'Show Advanced Options'),
+        
+        # * Calculate Button ----
+        actionButton(ns('btn_calculate'),
+                     label = 'Calculate Score')
+      ),
+      # Tab 2 ----
+      bslib::nav_panel_hidden(
+        'tab_advanced',
+        # * Advanced Options ----
+        advancedSelect_ui(ns('advanced_options'))
+      )
+    )
   )
-  
 }
 
 # Server -----------------------------------------------------------------------
 
 selectPar_server <- function(id, input_shp) {
   moduleServer(id, function(input, output, session) {
+    
+    ns <- NS(id)  # Set namespace
     
     # Add metric servers ----
     socvul <- selectParInput_server('socvul_metrics')
@@ -62,6 +76,16 @@ selectPar_server <- function(id, input_shp) {
     # Add server for advanced options ----
     adv_opt <- advancedSelect_server('advanced_options', df_metrics)
     
+    # Button: View Advanced Options
+    observeEvent(input$btn_advanced, {
+      bslib::nav_select('tabset_metrics', 'tab_advanced')
+    })
+    
+    # Button: Hide advanced options
+    observeEvent(c(adv_opt$btn_save(), adv_opt$btn_cancel()), {
+      bslib::nav_select('tabset_metrics', 'tab_metrics')
+    })
+    
     # Button: Calculate score ----
     # * Toggle button on/off ----
     shinyjs::disable('btn_calculate')
@@ -74,7 +98,7 @@ selectPar_server <- function(id, input_shp) {
       }
     })
     
-    # Calculate score ----
+    # * Calculate score ----
     shp_output <- eventReactive(input$btn_calculate, {
       
       # Drop pre-existing score columns

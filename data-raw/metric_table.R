@@ -17,8 +17,6 @@ usethis::use_data(metric_table, overwrite=TRUE)
 
 # Create list of column/name substitutions 
 
-# THIS PART OF THE SCRIPT IS MID TRANSITION & THEREFOR SUPER BROKEN VVV
-
 # List metrics
 df_cats <- metric_table %>%
   select(CATEGORY, CAT_CODE) %>%

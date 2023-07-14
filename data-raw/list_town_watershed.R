@@ -11,7 +11,7 @@ library(tidyverse)
 
 # Import shapefile
 input_shp <- read_sf(dsn = 'data-raw',
-                     layer = 'EJMETRICS_2022_NBEP2023') %>%
+                     layer = 'EJMETRICS_2023_NBEP2023') %>%
   # Add new column (Town_Code)
   add_column(Town_Code = 'ABC', .after='State') %>%
   mutate(
