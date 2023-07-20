@@ -8,10 +8,7 @@
 ##############################################################################.
 
 library(shiny)
-library(tidyverse)
-
-# For testing
-library(shinya11y)
+library(dplyr)
 
 EJmap <- function(...){
   
@@ -24,7 +21,7 @@ EJmap <- function(...){
     
     theme = bslib::bs_theme(version = 5),
     
-    title = h1('EJmap'),
+    title = h1('NBEP EJmap'),
     
     # Tab: About ----
     bslib::nav_panel(

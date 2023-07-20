@@ -1,8 +1,8 @@
 ################################### HEADER ###################################
-#  TITLE: advanced_options.R
-#  DESCRIPTION: Module to select location & parameters
+#  TITLE: mod_advanced_options.R
+#  DESCRIPTION: Module to select advanced options for selected metrics
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-13
+#  DATE LAST UPDATED: 2023-07-19
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -24,7 +24,9 @@ advancedSelect_ui <- function(id) {
         
     # Categories ----
     h4('Category Weight'),
-    # test_ui(ns('aaa')),
+    'Double click on a cell to edit.',
+    weightVar_ui(ns('cat_weight')),
+    
     h4('Minimum Category Score'),
     weightCat_ui(ns('cat')),
     awesomeRadio(
@@ -50,7 +52,6 @@ advancedSelect_ui <- function(id) {
     weightMetric_ui(ns('envbur'), 'Environmental Burden'),
     weightMetric_ui(ns('climate'), 'Climate'),
     
-    
     # * Save Button ----
     actionButton(ns('btn_save'),
                  label = 'Save'),
@@ -71,17 +72,43 @@ advancedSelect_server <- function(id, metric_list) {
     # Set namespace ----
     ns <- session$ns
     
-    # Create category dataframe ---
-    df_test <- reactive({
-      df_test <- metric_list() %>%
-        select(CATEGORY, CAT_CODE) %>%
-        distinct() # Drop duplicate rows
-      
-      return(df_test)
+    # List selected categories ----
+    cat_list <- reactive({ unique(metric_list()$CAT_CODE) })
+    
+    # Add row names to default tables ----
+    row.names(cat_table) = cat_table$CATEGORY
+    row.names(metric_table) = metric_table$METRIC
+    
+    # Create reactiveValues object ----
+    values <- reactiveValues(cats = cat_table, metrics = metric_table, 
+                             min_percentile = 80, min_pass = 0)
+    
+    # Table: category weight ----
+    df_cat_weight <- reactive({
+      values$cats %>%
+        filter(CAT_CODE %in% cat_list()) %>%
+        select(WEIGHT)
     })
     
-    # Add module servers ----
-    test_server('aaa', df_test)
+    weightVar_server('cat_weight', df_cat_weight(), c('Weight' = 'WEIGHT'), 
+                     input$btn_cancel)
+    
+    # output$cat_weight <- DT::renderDataTable({
+    #   DT::datatable(
+    #     df_cat_weight(),
+    #     colnames = c('Weight' = 'WEIGHT'),
+    #     options = list(
+    #       dom = 't',
+    #       # scrollY = '250px',
+    #       ordering = F,
+    #       pageLength = nrow(df_cat_weight())
+    #       ),
+    #     editable = list(
+    #       target = 'column',
+    #       disable = list(columns = 0)
+    #     )
+    #     )
+    # })
     
     # Split metrics by category ----
     socvul_metrics <- reactive({

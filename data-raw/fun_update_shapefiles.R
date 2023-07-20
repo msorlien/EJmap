@@ -1,5 +1,5 @@
 ################################### HEADER ###################################
-#  TITLE: shp_ejmetrics.R
+#  TITLE: fun_update_shapefiles.R
 #  DESCRIPTION: Adds EJ metric shapefiles
 #  AUTHOR(S): Mariel Sorlien
 #  DATE LAST UPDATED: 2023-05-18

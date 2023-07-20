@@ -57,7 +57,7 @@ weightMetric_server <- function(id, cat_code, selected_var) {
       filter(CAT_CODE == cat_code) %>%
       select(METRIC) %>%
       rename(Metric=METRIC) %>%
-      add_column("Weight" = 1)
+      tibble::add_column("Weight" = 1)
     
     # Reactable table ----
     # Code for reactable edits by DeepanshKhurana

@@ -1,32 +1,32 @@
-METRIC,METRIC_CODE,CATEGORY,CAT_CODE,DATA_SOURCE,SOURCE_YEAR
-People of Color,POCPCT,Social Vulnerability,SOCVUL,ACS,2017-2021
-Low Income,LWINCPCT,Social Vulnerability,SOCVUL,ACS,2017-2021
-Less Than High School Education,LESHSPCT,Social Vulnerability,SOCVUL,ACS,2017-2021
-Limited English Speaking,LNGISPCT,Social Vulnerability,SOCVUL,ACS,2017-2021
-Under Age 5,UNDR5PCT,Social Vulnerability,SOCVUL,ACS,2017-2021
-Over Age 64,OVR64PCT,Social Vulnerability,SOCVUL,ACS,2017-2021
-Unemployment Rate,UNEMPPCT,Social Vulnerability,SOCVUL,ACS,2017-2021
-Life Expectancy,LIFEEXPT,Health,HEALTH,ACS,2017-2021
-Cancer,CANCER_2,Health,HEALTH,CDC,2020
-Asthma,ASTHMA,Health,HEALTH,CDC,2020
-Diabetes,DIABE,Health,HEALTH,CDC,2020
-High Blood Pressure,BPHIGH,Health,HEALTH,CDC,2019
-Mental Health,MHEALTH,Health,HEALTH,CDC,2020
-Diesel Particulate Matter,DSLPM,Environmental Burden,ENVBUR,EPA,2019
-Particulate Matter 2.5,PM25,Environmental Burden,ENVBUR,EPA,2019
-Ozone,OZONE,Environmental Burden,ENVBUR,EPA,2019
-Air Toxics Cancer Risk,CANCER,Environmental Burden,ENVBUR,EPA,2019
-Respiratory Hazard Index,RESP,Environmental Burden,ENVBUR,EPA,2019
-Toxic Releases to Air,RSEIAIR,Environmental Burden,ENVBUR,EPA,2021
-Lead Paint,LDPNT,Environmental Burden,ENVBUR,ACS,2017-2021
-Traffic Proximity,PTRAF,Environmental Burden,ENVBUR,DOT,2020
-RMP Facility Proximity,PRMP,Environmental Burden,ENVBUR,EPA,2022
-Hazardous Waste Proximity,PTSDF,Environmental Burden,ENVBUR,EPA,2022
-Superfund Proximity,PNPL,Environmental Burden,ENVBUR,EPA,2022
-Wastewater Discharge,PWDIS,Environmental Burden,ENVBUR,EPA,2020
-Underground Storage Tanks,UST,Environmental Burden,ENVBUR,EPA,2022
-Impervious Surfaces,IMPER,Environmental Burden,ENVBUR,NLCD,2019
-Lack of Trees,TREE,Environmental Burden,ENVBUR,"NLCD, USFS",2021
-Flood Risk,FLOOD,Climate Risk,CLIMATE,First Street,2022
-Heat Risk,HEAT,Climate Risk,CLIMATE,First Street,2022
-Sea Level Rise,SLR,Climate Risk,CLIMATE,NOAA,2019
+METRIC,METRIC_CODE,DESCRIPTION,CATEGORY,CAT_CODE,DATA_SOURCE,SOURCE_YEAR
+People of Color,POCPCT,% people of color,Social Vulnerability,SOCVUL,ACS,2017-2021
+Low Income,LWINCPCT,% low income,Social Vulnerability,SOCVUL,ACS,2017-2021
+Less Than High School Education,LESHSPCT,% less than high school education,Social Vulnerability,SOCVUL,ACS,2017-2021
+Limited English Speaking,LNGISPCT,% limited english speaking households,Social Vulnerability,SOCVUL,ACS,2017-2021
+Under Age 5,UNDR5PCT,% under age 5,Social Vulnerability,SOCVUL,ACS,2017-2021
+Over Age 64,OVR64PCT,% over age 64,Social Vulnerability,SOCVUL,ACS,2017-2021
+Unemployment Rate,UNEMPPCT,% unemployed,Social Vulnerability,SOCVUL,ACS,2017-2021
+Life Expectancy,LIFEEXPT,% low life expectancy,Health,HEALTH,ACS,2017-2021
+Cancer,CANCER_2,Cancer,Health,HEALTH,CDC,2020
+Asthma,ASTHMA,Asthma,Health,HEALTH,CDC,2020
+Diabetes,DIABE,Diabetes,Health,HEALTH,CDC,2020
+High Blood Pressure,BPHIGH,High blood pressure,Health,HEALTH,CDC,2019
+Mental Health,MHEALTH,Mental health,Health,HEALTH,CDC,2020
+Diesel Particulate Matter,DSLPM,Disel particulate matter,Environmental Burden,ENVBUR,EPA,2019
+Particulate Matter 2.5,PM25,Particulate matter 2.5,Environmental Burden,ENVBUR,EPA,2019
+Ozone,OZONE,Ozone,Environmental Burden,ENVBUR,EPA,2019
+Air Toxics Cancer Risk,CANCER,Air toxics respiratory hazard index,Environmental Burden,ENVBUR,EPA,2019
+Respiratory Hazard Index,RESP,Air toxics respiratory hazard index,Environmental Burden,ENVBUR,EPA,2019
+Toxic Releases to Air,RSEIAIR,Toxic releases to air,Environmental Burden,ENVBUR,EPA,2021
+Lead Paint,LDPNT,Lead paint,Environmental Burden,ENVBUR,ACS,2017-2021
+Traffic Proximity,PTRAF,Traffic proximity,Environmental Burden,ENVBUR,DOT,2020
+RMP Facility Proximity,PRMP,RMP facility proximity,Environmental Burden,ENVBUR,EPA,2022
+Hazardous Waste Proximity,PTSDF,Hazardous waste proximity,Environmental Burden,ENVBUR,EPA,2022
+Superfund Proximity,PNPL,Superfund proximity,Environmental Burden,ENVBUR,EPA,2022
+Wastewater Discharge,PWDIS,Wastewater discharge,Environmental Burden,ENVBUR,EPA,2020
+Underground Storage Tanks,UST,Underground storage tanks,Environmental Burden,ENVBUR,EPA,2022
+Impervious Surfaces,IMPER,% impervious surfaces,Environmental Burden,ENVBUR,NLCD,2019
+Lack of Trees,TREE,% tree cover,Environmental Burden,ENVBUR,"NLCD, USFS",2021
+Flood Risk,FLOOD,Flood risk,Climate Risk,CLIMATE,First Street,2022
+Heat Risk,HEAT,Heat risk,Climate Risk,CLIMATE,First Street,2022
+Sea Level Rise,SLR,% land inundated (1.6 ft sea level rise),Climate Risk,CLIMATE,NOAA,2019

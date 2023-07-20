@@ -14,6 +14,7 @@ Depends:
 LazyData: true
 Imports: 
     dplyr,
+    DT,
     glue,
     htmltools,
     leaflet,
@@ -26,4 +27,6 @@ Imports:
     shinycssloaders,
     shinyjs,
     shinyWidgets,
-    stringr
+    stringr,
+    tibble,
+    tidyr

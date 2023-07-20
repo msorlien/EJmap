@@ -53,7 +53,7 @@ weightCat_server <- function(id, selected_var) {
       select(CATEGORY) %>%
       rename(Category=CATEGORY) %>%
       distinct() %>%  # Drop duplicate rows
-      add_column('Weight'= 1, 'Minimum Score' = 0)
+      tibble::add_column('Weight'= 1, 'Minimum Score' = 0)
     
     # Reactable table ----
     # Code for reactable edits by DeepanshKhurana

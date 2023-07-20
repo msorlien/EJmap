@@ -10,7 +10,7 @@ list_col_codes <- function(input_shp){
   
   # List col names in input_shp, minus first two letters
   # (drops N_, P_)
-  input_col <- str_sub(colnames(input_shp), 3, -1)
+  input_col <- stringr::str_sub(colnames(input_shp), 3, -1)
   
   # Filter column table for col in input_shp
   df_columns <- column_table %>%

@@ -152,7 +152,7 @@ calculate_score <- function(
     select(-starts_with('temp_')) %>%
     select(-contains(drop_columns$METRIC_CODE)) %>%
     # Replace NA values with -999999
-    mutate(across(where(is.numeric), ~replace_na(.x, -999999)))
+    mutate(across(where(is.numeric), ~tidyr::replace_na(.x, -999999)))
 
   return(df_ej)
 }

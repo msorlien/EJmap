@@ -10,3 +10,4 @@ data-raw/*.sbx
 data-raw/*.shp
 data-raw/*.shp.xml
 data-raw/*.shx
+.RDataTmp

@@ -8,6 +8,7 @@
 ##############################################################################.
 
 library(dplyr)
+library(tibble)
 library(glue)
 
 # VARIABLES
@@ -35,8 +36,8 @@ add_metadata <- function(input_shp, df_metrics){
   
   output_shp <- input_shp %>%
     select(-c(DataSource, SourceYear)) %>%
-    add_column(DataSource = DATA_SOURCE) %>%
-    add_column(SourceYear = SOURCE_YEAR) %>%
+    tibble::add_column(DataSource = DATA_SOURCE) %>%
+    tibble::add_column(SourceYear = SOURCE_YEAR) %>%
     relocate(c(NBEPYear, Study_Area, geometry), .after = last_col())
   
   return(output_shp)

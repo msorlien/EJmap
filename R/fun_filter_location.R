@@ -23,8 +23,8 @@ filter_location <- function(input_shp, selected_towns, selected_watersheds) {
     # Filter for selected towns
     filter(Town_Code %in% selected_towns) %>%
     # Generate extra rows for multi-watershed entries
-    mutate(temp_watersheds = str_split(HUC10_Name, '; ')) %>%
-    unnest(temp_watersheds) %>%
+    mutate(temp_watersheds = stringr::str_split(HUC10_Name, '; ')) %>%
+    tidyr::unnest(temp_watersheds) %>%
     # Filter for selected watersheds
     filter(temp_watersheds %in% selected_watersheds) %>%
     # Drop temp column
