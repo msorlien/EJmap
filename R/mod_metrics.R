@@ -2,7 +2,7 @@
 #  TITLE: select_metrics.R
 #  DESCRIPTION: Module to select parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-13
+#  DATE LAST UPDATED: 2023-07-21
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -74,7 +74,8 @@ selectPar_server <- function(id, input_shp) {
     })
     
     # Add server for advanced options ----
-    adv_opt <- advancedSelect_server('advanced_options', df_metrics)
+    adv_opt <- advancedSelect_server(
+      'advanced_options', df_metrics, input$btn_advanced)
     
     # Button: View Advanced Options
     observeEvent(input$btn_advanced, {

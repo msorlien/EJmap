@@ -20,7 +20,7 @@ usethis::use_data(metric_table, overwrite=TRUE)
 cat_table <- metric_table %>%
   select(CATEGORY, CAT_CODE) %>%
   distinct() %>% # Drop duplicate rows
-  add_column(WEIGHT = 1, MIN_SCORE = NA)
+  add_column(WEIGHT = 1, MIN_SCORE = NA_integer_)
 
 usethis::use_data(cat_table, overwrite=TRUE)
 

@@ -72,8 +72,6 @@ EJmap <- function(...){
     fixed_metrics <- FALSE
     
     # Add module servers ----
-    # NBEP tab
-    nbep_tab_server('nbep', shp_nbep, shp_nbep_simple)
     # NBEP map
     nbep_score <- map_sidebar_server(
       'nbep_sidebar',

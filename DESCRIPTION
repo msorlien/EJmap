@@ -14,13 +14,13 @@ Depends:
 LazyData: true
 Imports: 
     dplyr,
-    DT,
     glue,
     htmltools,
     leaflet,
     leaflet.extras2,
     pkgload,
     reactable,
+    rhandsontable,
     sf,
     shiny,
     shinya11y,
