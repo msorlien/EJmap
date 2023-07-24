@@ -2,7 +2,7 @@
 #  TITLE: select_metrics.R
 #  DESCRIPTION: Module to select parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-21
+#  DATE LAST UPDATED: 2023-07-24
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -25,6 +25,7 @@ selectPar_ui <- function(id) {
       # Tab 1 ----
       bslib::nav_panel_hidden(
         'tab_metrics',
+        
         # * Select metrics ----
         selectParInput_ui(ns('socvul_metrics'), 'SOCVUL'),
         selectParInput_ui(ns('health_metrics'), 'HEALTH'),
@@ -62,20 +63,15 @@ selectPar_server <- function(id, input_shp) {
     envbur <- selectParInput_server('envbur_metrics')
     climate <- selectParInput_server('climate_metrics')
     
-    # Filter metric table for selected variables ----
-    df_metrics <- reactive({
-      
-      selected_metrics <- c(socvul(), health(), envbur(), climate())
-      
-      df_metrics <- metric_table %>%
-        filter(METRIC_CODE %in% selected_metrics)
-      
-      return(df_metrics)
-    })
+    # Compile list of selected metrics ----
+    metrics_list <- reactive({ c(socvul(), health(), envbur(), climate()) })
+    
+    # Pass btn_advanced as reactive value ----
+    btn_reset <- reactive({ input$btn_advanced })
     
     # Add server for advanced options ----
-    adv_opt <- advancedSelect_server(
-      'advanced_options', df_metrics, input$btn_advanced)
+    adv_opt <- advancedSelect_server('advanced_options', metrics_list, 
+                                     btn_reset)
     
     # Button: View Advanced Options
     observeEvent(input$btn_advanced, {
@@ -87,31 +83,33 @@ selectPar_server <- function(id, input_shp) {
       bslib::nav_select('tabset_metrics', 'tab_metrics')
     })
     
-    # Button: Calculate score ----
-    # * Toggle button on/off ----
+    # Toggle buttons on/off ----
     shinyjs::disable('btn_calculate')
+    shinyjs::disable('btn_advanced')
 
     observe({
-      if (nrow(df_metrics()) > 0) {
+      if (length(metrics_list()) > 0) {
         shinyjs::enable('btn_calculate')
+        shinyjs::enable('btn_advanced')
       } else {
         shinyjs::disable('btn_calculate')
+        shinyjs::disable('btn_advanced')
       }
     })
     
-    # * Calculate score ----
+    # Calculate score ----
     shp_output <- eventReactive(input$btn_calculate, {
       
       # Drop pre-existing score columns
       shp_output <- input_shp %>%
         select(-contains(c('_SOCVUL', '_HEALTH', '_ENVBUR', '_CLIMATE', 
-                           '_SCORE')))
+                           '_SCORE', '_ISEJ')))
       
       # Calculate score
       shp_output <- calculate_score(
         input_shp = shp_output, 
         percentile_min = adv_opt$percentile_min(), 
-        exceed_all_min_scores = adv_opt$exceed_all(), 
+        exceed_all_min_scores = 'AND', 
         df_metrics = adv_opt$df_metric(), 
         df_categories = adv_opt$df_cat()
         ) 

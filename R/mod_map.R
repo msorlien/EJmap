@@ -2,7 +2,7 @@
 #  TITLE: ej_map.R
 #  DESCRIPTION: Module to display EJ map
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-23
+#  DATE LAST UPDATED: 2023-07-24
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -45,7 +45,7 @@ map_ui <- function(id, input_shp, percentiles = c('N_', 'P_')) {
     ),
     # Map ----
     shinycssloaders::withSpinner(
-      leafletOutput(ns('map'), width='100%', height = '75vh'),
+      leafletOutput(ns('map'), width='100%', height = '70vh'),
       type = 5
     )
   )

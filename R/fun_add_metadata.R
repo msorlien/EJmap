@@ -1,11 +1,10 @@
-################################### HEADER ###################################
 #  TITLE: fun_add_metadata.R
 #  DESCRIPTION: Adds metadata to shapefile
 #  AUTHOR(S): Mariel Sorlien
 #  DATE LAST UPDATED: 2023-05-23
-#  GIT REPO:
+#  GIT REPO: nbep/ejmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
-##############################################################################.
+# -----------------------------------------------------------------------------.
 
 library(dplyr)
 library(tibble)

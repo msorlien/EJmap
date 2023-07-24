@@ -11,7 +11,8 @@ library(tidyverse)
 
 # Create metric table ---------------------------------------------------------
 
-metric_table <- read.csv('data-raw/metric_list.csv')
+metric_table <- read.csv('data-raw/metric_list.csv') %>%
+  add_column(WEIGHT = 1)
 
 usethis::use_data(metric_table, overwrite=TRUE)
 
@@ -20,7 +21,7 @@ usethis::use_data(metric_table, overwrite=TRUE)
 cat_table <- metric_table %>%
   select(CATEGORY, CAT_CODE) %>%
   distinct() %>% # Drop duplicate rows
-  add_column(WEIGHT = 1, MIN_SCORE = NA_integer_)
+  add_column(WEIGHT = 1, MIN_SCORE = 0)
 
 usethis::use_data(cat_table, overwrite=TRUE)
 

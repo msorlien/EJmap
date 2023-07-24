@@ -27,16 +27,19 @@ advancedSelect_ui <- function(id) {
     weightVar_ui(ns('cat_weight')),
     
     h4('Minimum Category Score'),
+    'Minimum scores of 0 are ignored.',
     weightVar_ui(ns('cat_min')),
-    h4('OLD STUFF'),
-    weightCat_ui(ns('cat')),
-    awesomeRadio(
-      inputId = ns('exceed_all'),
-      label = 'Must match all minimum scores?', 
-      choices = c('Yes'='AND', 'No'='OR'),
-      selected = 'AND',
-      inline = TRUE, 
-      checkbox = TRUE),
+    pickerInput(
+      ns('min_pass'),
+      label = 'EJ areas must meet or exceed...',
+      choices = c('All  minimum category scores' = 4, 
+                  'At least one minimum category score' = 1,
+                  'At least two minimum category scores' = 2,
+                  'At least three minimum category scores' = 3),
+      selected = '4',
+      options = list(
+        container = 'body')  # Allows dropdown overflow
+      ),
       
     h4('Minimum Percentile'),
     'Percentiles indicate what percent of block groups have a lower 
@@ -48,10 +51,10 @@ advancedSelect_ui <- function(id) {
       selected = 80),
     
     h4('Metrics'),
-    weightMetric_ui(ns('socvul'), 'Social Vulnerability'),
-    weightMetric_ui(ns('health'), 'Health'),
-    weightMetric_ui(ns('envbur'), 'Environmental Burden'),
-    weightMetric_ui(ns('climate'), 'Climate'),
+    weightVar_ui(ns('socvul'), 'Social Vulnerability'),
+    weightVar_ui(ns('health'), 'Health'),
+    weightVar_ui(ns('envbur'), 'Environmental Burden'),
+    weightVar_ui(ns('climate'), 'Climate'),
     
     # * Save Button ----
     actionButton(ns('btn_save'),
@@ -74,106 +77,100 @@ advancedSelect_server <- function(id, metric_list, btn_reset) {
     ns <- session$ns
     
     # List selected categories ----
-    cat_list <- reactive({ unique(metric_list()$CAT_CODE) })
+    cat_list <- reactive({ 
+      df_cat <- metric_table %>% 
+        dplyr::filter(METRIC_CODE %in% metric_list())
+      
+      cat_list <- unique(df_cat$CAT_CODE)
+      
+      return(cat_list)
+      })
     
-    # Add row names to default tables ----
+    # Add row names ----
     row.names(cat_table) = wrap_text(cat_table$CATEGORY, 15, '<br>')
     row.names(metric_table) = wrap_text(metric_table$METRIC, 15, '<br>')
     
     # Create reactiveValues object ----
     values <- reactiveValues(cats = cat_table, metrics = metric_table, 
-                             min_percentile = 80, min_pass = 0)
+                             min_percentile = 80, min_pass = 4)
     
-    # Table: category weight ----
-    # * Modify table ----
-    df_cat_weight <- reactive({
+    # Cat Tables ----
+    df_cat <- reactive({
       values$cats %>%
-        filter(CAT_CODE %in% cat_list()) %>%
+        filter(CAT_CODE %in% cat_list())
+    })
+    
+    # * Category weight ----
+    df_cat_weight <- reactive({
+      df_cat() %>%
         select(WEIGHT) %>%
         rename(Weight = WEIGHT)
     })
     
-    # * Add server ----
-    s_cat_weight <- weightVar_server('cat_weight', df_cat_weight, btn_reset)
-    
-    # # * Save data ----
-    # observeEvent(input$btn_save, {
-    #   base_table <- values$cats
-    # 
-    #   new_data <- s_cat_weight() %>%
-    #     rename(WEIGHT = Weight) %>%
-    #     tibble::rownames_to_column('CATEGORY') %>%
-    #     mutate(CATEGORY = gsub('<br>', ' ', CATEGORY))
-    # 
-    #   new_table <- left_join(base_table, new_data, by='CATEGORY') %>%
-    #     mutate(WEIGHT = ifelse(is.na(WEIGHT.y), WEIGHT.x, WEIGHT.y)) %>%
-    #     select(!c(WEIGHT.x, WEIGHT.y))
-    # 
-    #   values$cat <- new_table
-    # })
-    
-    # Table: min category score ----
+    # * Min category score ----
     df_cat_min <- reactive({
-      values$cats %>%
-        filter(CAT_CODE %in% cat_list()) %>%
-        select(MIN_SCORE) %>%
+      df_cat() %>%
+        select(MIN_SCORE) %>% 
+        mutate(MIN_SCORE = ifelse(MIN_SCORE == 0, NA_real_, MIN_SCORE)) %>%
         rename('Minimum<br>Score' = MIN_SCORE)
     })
     
-    weightVar_server('cat_min', df_cat_min, btn_reset)
+    # Metric tables ----
+    df_metric <- reactive({
+      values$metrics %>%
+        filter(METRIC_CODE %in% metric_list())
+    })
     
-    # Split metrics by category ----
-    socvul_metrics <- reactive({
-      metric_list() %>% filter(CAT_CODE == 'SOCVUL')
-    }) 
-    health_metrics <- reactive({
-      metric_list() %>% filter(CAT_CODE == 'HEALTH')
-    }) 
-    envbur_metrics <- reactive({
-      metric_list() %>% filter(CAT_CODE == 'ENVBUR')
-    }) 
-    climate_metrics <- reactive({
-      metric_list() %>% filter(CAT_CODE == 'CLIMATE')
-    }) 
+    # * Social vulnerability ----
+    df_socvul <- reactive({
+      df_metric() %>%
+        filter(CAT_CODE == 'SOCVUL') %>%
+        select(WEIGHT) %>%
+        rename(Weight = WEIGHT)
+    })
+    
+    # * Health ----
+    df_health <- reactive({
+      df_metric() %>%
+        filter(CAT_CODE == 'HEALTH') %>%
+        select(WEIGHT) %>%
+        rename(Weight = WEIGHT)
+    })
+    
+    # * Environmental Burden ----
+    df_envbur <- reactive({
+      df_metric() %>%
+        filter(CAT_CODE == 'ENVBUR') %>%
+        select(WEIGHT) %>%
+        rename(Weight = WEIGHT)
+    })
+    
+    # * Climate ----
+    df_climate <- reactive({
+      df_metric() %>%
+        filter(CAT_CODE == 'CLIMATE') %>%
+        select(WEIGHT) %>%
+        rename(Weight = WEIGHT)
+    })
     
     # Add module servers ----
-    cat <- weightCat_server('cat', metric_list)
-    socvul <- weightMetric_server('socvul', 'SOCVUL', socvul_metrics)
-    health <- weightMetric_server('health', 'HEALTH', health_metrics)
-    envbur <- weightMetric_server('envbur', 'ENVBUR', envbur_metrics)
-    climate <- weightMetric_server('climate', 'CLIMATE', climate_metrics)
+    cat_weight <- weightVar_server('cat_weight', df_cat_weight, btn_reset)
+    cat_min <- weightVar_server('cat_min', df_cat_min, btn_reset)
+    socvul <- weightVar_server('socvul', df_socvul, btn_reset)
+    health <- weightVar_server('health', df_health, btn_reset)
+    envbur <- weightVar_server('envbur', df_envbur, btn_reset)
+    climate <- weightVar_server('climate', df_climate, btn_reset)
     
-    # Category weight dataframe ----
-    
-    df_cat <- reactive({
-      
-      df_metric <- metric_list() %>%
-        select('CATEGORY', 'CAT_CODE') %>%
-        distinct()  # Drop duplicate rows
-      
-      df_weight <- cat() %>%
-        rename(CATEGORY=Category, WEIGHT=Weight, MIN_SCORE='Minimum Score')
-      
-      df_join <- merge(df_metric, df_weight, by='CATEGORY')
-      
-      return(df_join)
-      
+    # Save data ----
+    observeEvent(input$btn_save, {
+      # Update category data ----
+      df_cat_weight <- update_table_values(values$cats, cat_weight(), 
+                                           'WEIGHT', 'CATEGORY')
+      df_cat_min <- update_table_values(df_cat_weight, cat_min(), 'MIN_SCORE',
+                                        'CATEGORY')
+      values$cats <- df_cat_min
     })
-    
-    # Metric weight dataframe ----
-    df_metrics <- reactive({
-      
-      df_metric <- metric_list() 
-      
-      df_weight <- rbind(socvul(), health(), envbur(), climate()) %>%
-        rename(METRIC=Metric, WEIGHT=Weight)
-      
-      df_join <- merge(df_metric, df_weight, by='METRIC')
-      
-      return(df_join)
-    })
-    
-    
+
     # Output reactive values ----
     return(
       list(
@@ -182,9 +179,9 @@ advancedSelect_server <- function(id, metric_list, btn_reset) {
         btn_cancel = reactive({ input$btn_cancel }),
         
         percentile_min = reactive({ as.numeric(input$percentile_min) }),
-        exceed_all = reactive({ input$exceed_all }),
+        # exceed_all = reactive({ 'AND' }),
         df_cat = reactive({ df_cat() }),
-        df_metric = reactive({ df_metrics() })
+        df_metric = reactive({ df_metric() })
         
       )
     )
