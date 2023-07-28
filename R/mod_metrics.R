@@ -2,7 +2,7 @@
 #  TITLE: select_metrics.R
 #  DESCRIPTION: Module to select parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-24
+#  DATE LAST UPDATED: 2023-07-26
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -27,10 +27,21 @@ selectPar_ui <- function(id) {
         'tab_metrics',
         
         # * Select metrics ----
+        h3('Metrics'),
         selectParInput_ui(ns('socvul_metrics'), 'SOCVUL'),
         selectParInput_ui(ns('health_metrics'), 'HEALTH'),
         selectParInput_ui(ns('envbur_metrics'), 'ENVBUR'),
         selectParInput_ui(ns('climate_metrics'), 'CLIMATE'),
+        
+        # Minimum score ----
+        h3('Minimum Score'),
+        numericInput(
+          ns('min_ej'),
+          'Set minimum overall score for environmental justice areas.',
+          value = 0,
+          min = 0,
+          max = 100
+        ),
         
         # * Advanced Options Button ----
         actionButton(ns('btn_advanced'),
@@ -109,7 +120,8 @@ selectPar_server <- function(id, input_shp) {
       shp_output <- calculate_score(
         input_shp = shp_output, 
         percentile_min = adv_opt$percentile_min(), 
-        exceed_all_min_scores = 'AND', 
+        min_pass = adv_opt$min_pass(),
+        min_ej = as.numeric(input$min_ej),
         df_metrics = adv_opt$df_metric(), 
         df_categories = adv_opt$df_cat()
         ) 

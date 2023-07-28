@@ -1,7 +1,7 @@
 #  TITLE: fun_save_data.R
 #  DESCRIPTION: Update dataframe with new data
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-24
+#  DATE LAST UPDATED: 2023-07-25
 #  GIT REPO: nbep/ejmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
@@ -15,7 +15,7 @@ library(tibble)
 # col_name: name of column with new data ('WEIGHT', 'MIN_SCORE')
 # cat_or_metric: type of table being updated ('CATEGORY', 'METRIC')
 
-update_table_values <- function(df_old, df_new, col_name, cat_or_metric){
+update_table <- function(df_old, df_new, col_name, cat_or_metric){
   
   # Update df_new (rownames as a column, remove <br>)
  if (cat_or_metric == 'CATEGORY') {
@@ -30,7 +30,8 @@ update_table_values <- function(df_old, df_new, col_name, cat_or_metric){
   
   # Rename columns, reset NA values
   if (col_name == 'WEIGHT'){
-    df_new <- rename(df_new, WEIGHT = Weight)
+    df_new <- rename(df_new, WEIGHT = Weight) %>%
+      mutate(WEIGHT = ifelse(is.na(WEIGHT), 1, WEIGHT))
   } else if (col_name == 'MIN_SCORE'){
     df_new <- df_new %>% 
       rename(MIN_SCORE = 'Minimum<br>Score') %>%

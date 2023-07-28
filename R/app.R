@@ -1,20 +1,17 @@
-################################### HEADER ###################################
 #  TITLE: app.R
 #  DESCRIPTION: R shiny app for mapping EJ areas
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-18
-#  GIT REPO:
+#  DATE LAST UPDATED: 2023-07-26
+#  GIT REPO: nbep/ejmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
-##############################################################################.
+# -----------------------------------------------------------------------------.
 
 library(shiny)
 library(dplyr)
 
 EJmap <- function(...){
   
-  ########################################################################.
-  #                         User Interface                               #
-  ########################################################################.
+  # UI ------------------------------------------------------------------------
   
   ui <- bslib::page_navbar(
     shinya11y::use_tota11y(),
@@ -42,7 +39,8 @@ EJmap <- function(...){
         map_ui(
           'nbep_map',
           input_shp = shp_nbep_simple,
-          percentiles = 'N_')
+          percentiles = 'N_', 
+          default_layer = 'EJAREA')
       )
     ),
     
@@ -64,9 +62,8 @@ EJmap <- function(...){
   # Set language -----
   attr(ui, 'lang')='en'
   
-  ########################################################################.
-  #                         Server Function                              #
-  ########################################################################.
+  # Server --------------------------------------------------------------------
+  
   server <- function(input, output, session) {
     # Set variables
     fixed_metrics <- FALSE
@@ -79,7 +76,7 @@ EJmap <- function(...){
       input_shp_simple = shp_nbep_simple,
       select_metrics = FALSE
       )
-    map_server('nbep_map', nbep_score, 1)
+    map_server('nbep_map', nbep_score, default_layer = 'EJAREA')
     
     # Custom map
     custom_score <- map_sidebar_server(

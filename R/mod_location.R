@@ -34,8 +34,8 @@ select_location_ui <- function(id) {
     pickerInput(
       ns('select_town'),
       label = h3('Select Town'),
-      choices = NULL,
-      selected = NULL,
+      choices = town_list,
+      selected = town_list,
       options = list(
         `actions-box` = TRUE,
         `live-search` = TRUE,
@@ -72,11 +72,12 @@ select_location_server <- function(id, input_shp) {
       subset(town_list, sub('^.+,\\s+', '', town_list) %in% input$select_state)
     })
     
-    observeEvent(town_list_filtered(), {
+    observeEvent(input$select_state, {
       updatePickerInput(session = session,
                         inputId = 'select_town',
                         choices = town_list_filtered(),
-                        selected = town_list_filtered())
+                        selected = town_list_filtered()
+                        )
     })
     
     

@@ -52,9 +52,9 @@ type_order = c('CATEGORY', 'METRIC')
 column_table <- df_all %>%
   arrange(match(CAT_CODE, cat_order), 
           match(TYPE, type_order))%>%
-  select(COL_CODE, COL_NAME) %>%
-  add_row(COL_CODE = 'SCORE', COL_NAME = 'Overall Score') %>%
-  add_row(COL_CODE = 'EJAREA', COL_NAME = 'EJ Areas')
+  select(COL_CODE, COL_NAME, CAT_CODE) %>%
+  add_row(COL_CODE = 'SCORE', COL_NAME = 'Score', CAT_CODE = 'EJ') %>%
+  add_row(COL_CODE = 'EJAREA', COL_NAME = 'EJ Communities', CAT_CODE = 'EJ')
 
 # Drop row names
 rownames(column_table) <- NULL

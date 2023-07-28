@@ -1,39 +1,52 @@
-################################### HEADER ###################################
 #  TITLE: fun_calculate_score.R
 #  DESCRIPTION: Calculates scores
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-15
-#  GIT REPO:
+#  DATE LAST UPDATED: 2023-07-28
+#  GIT REPO: nbep/ejmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
-##############################################################################.
+# -----------------------------------------------------------------------------.
 
 library(dplyr)
+library(tidyr)
 library(glue)
 
 # VARIABLES
 # input_shp: input shapefile
 # percentile_min: minimum percentile
 # prefix_list: list of column prefixes (P_ -> state, N_ -> study area)
-# exceed_all_min_scores: TRUE, FALSE
-#  Determines whether final score needs to meet ALL category min scores,
-#  or only ONE OR MORE category min scores
+# min_pass: number of minimum category scores EJ areas must meet or exceed
+# min_ej: minimum overall score to be considered an EJ area (0-100)
 # df_metrics: dataframe of metric columns, names, and weights
 # df_categories: dataframe of category columns, names, weights, and min scores
 
 calculate_score <- function(
-    input_shp, percentile_min, prefix_list=c('P_', 'N_'),
-    exceed_all_min_scores=TRUE, df_metrics, df_categories){
+    input_shp, percentile_min = 80, prefix_list=c('P_', 'N_'), min_pass = 4, 
+    min_ej = 0, df_metrics, df_categories){
   
   # Define variables ----
   metric_list <- df_metrics$METRIC_CODE
   cat_list <- df_categories$CAT_CODE
   df_ej <- input_shp
   
+  cat_length <- df_categories %>%
+    filter(MIN_SCORE > 0)
+  
+  if (min_pass > nrow(cat_length)) {
+    min_pass <- nrow(cat_length)
+  }
+  
+  if (min_ej < 0) {
+    min_ej <- 0
+  } else if (min_ej > 100) {
+    min_ej <- 100
+  }
+  
   # Calculate scores for state, NBEP ----
   for (col_prefix in prefix_list){
     
     # Define variables ----
     final_score <- paste0(col_prefix, 'SCORE')
+    ejarea <- paste0(col_prefix, 'EJAREA')
     
     # Add columns for each category ----
     for (cat in cat_list) {
@@ -76,10 +89,10 @@ calculate_score <- function(
   
     # Add columns ----
     df_ej[[final_score]] <- 0
+    df_ej[[ejarea]] <- 'No Data'
     df_ej[['temp_score']] <- 0
     df_ej[['temp_score_max']] <- 0
-    df_ej[['temp_fail']] <- 0
-    df_ej[['temp_fail_max']] <- 0
+    df_ej[['temp_pass']] <- 0
     
     # Calculate final scores ----
     for (cat in cat_list) {
@@ -115,30 +128,27 @@ calculate_score <- function(
         )
 
       # * Check if above min cat score ----
-      df_ej[['temp_fail']] <- if_else(
+      df_ej[['temp_pass']] <- if_else(
         cat_min > 0 & 
-          df_ej[[cat_score]] < cat_min &
-          df_ej[[cat_score]] >= 0,  # Filter out NA values
-        df_ej[['temp_fail']] + 1,
-        df_ej[['temp_fail']]
+          df_ej[[cat_score]] >= cat_min,  # Filter out NA values
+        df_ej[['temp_pass']] + 1,
+        df_ej[['temp_pass']]
         )
-
-      # * Check max # of fail cat score ----
-      # Check for NA! 
-      df_ej[['temp_fail_max']] <- if_else(
-        cat_min > 0 & df_ej[[cat_score]] >= 0,
-        df_ej[['temp_fail_max']] + 1,
-        df_ej[['temp_fail_max']]
-      )
     }
 
     # * Calculate overall score ----
     df_ej[[final_score]] <- case_when(
-      df_ej[['temp_score_max']] == 0 ~ -999999,
-      exceed_all_min_scores == TRUE & df_ej[['temp_fail']] > 0 ~ 0,
-      df_ej[['temp_fail_max']] > 0 & 
-        df_ej[['temp_fail']] >= df_ej[['temp_fail_max']] ~ 0,
-      TRUE ~ df_ej[['temp_score']] / df_ej[['temp_score_max']]
+      df_ej[['temp_pass']] < min_pass ~ 0,
+      df_ej[['temp_score_max']] > 0 ~ 
+        df_ej[['temp_score']] / df_ej[['temp_score_max']],
+      TRUE ~ -999999
+    )
+    
+    # * Calculate if EJ area ----
+    df_ej[[ejarea]] <- case_when(
+      df_ej[[final_score]] < 0 ~ 'No Data',
+      df_ej[[final_score]] > 0 & df_ej[[final_score]] >= min_ej ~ 'Yes',
+      TRUE ~ 'No'
     )
   }
 

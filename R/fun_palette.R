@@ -1,15 +1,14 @@
 #  TITLE: fun_color_pal
 #  DESCRIPTION: Calculates scores
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-19
-#  GIT REPO:
+#  DATE LAST UPDATED: 2023-07-28
+#  GIT REPO: NBEP/EJmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------
 
 library(leaflet)
 
-
-pal_colors <- function(var_name, percentile_min, min_overall_score) {
+pal_colors <- function(var_name, percentile_min = 80) {
   
   # Define var
   pal_min <- c(0, 50, 60, 70, 80, 90, 95)
@@ -30,12 +29,10 @@ pal_colors <- function(var_name, percentile_min, min_overall_score) {
   )
 
   # Palette for cat score, final score columns
-  if (var_name == 'SCORE' & min_overall_score > 0) {
-    pal_score <- colorBin(
-      palette = c('#FFEDA0', '#F03B20'),
-      bins = c(0, min_overall_score, 100),
-      na.color = '#CCCCCC',
-      domain = c(0, 100)
+  if (var_name == 'EJAREA') {
+    pal_score <- colorFactor(
+      palette = c('#F03B20', '#FFEDA0', '#B1B1B1'),
+      levels = c('Yes', 'No', 'No Data')
     )
   } else if (var_name %in% c('SOCVUL', 'HEALTH', 'ENVBUR', 'CLIMATE', 
                              'SCORE')) {

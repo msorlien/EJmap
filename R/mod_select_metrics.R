@@ -32,7 +32,7 @@ selectParInput_ui <- function(id, cat_code) {
   tagList(
     pickerInput(
       ns('metricSelect'),
-      label = h3(cat_name),
+      label = h4(cat_name),
       choices = metric_choices,
       selected = df_metric$METRIC_CODE,
       options = list(

@@ -1,17 +1,14 @@
-################################### HEADER ###################################
 #  TITLE: mod_advanced_options.R
 #  DESCRIPTION: Module to select advanced options for selected metrics
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-21
+#  DATE LAST UPDATED: 2023-07-26
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
-##############################################################################.
+# -----------------------------------------------------------------------------.
 
 library(shinyWidgets)
 
-########################################################################.
-###                       User Interface                            ####
-########################################################################.
+# Module ui -------------------------------------------------------------------
 
 advancedSelect_ui <- function(id) {
   
@@ -23,52 +20,71 @@ advancedSelect_ui <- function(id) {
     h3('Advanced Options'),
         
     # Categories ----
+    
     h4('Category Weight'),
     weightVar_ui(ns('cat_weight')),
-    
+
     h4('Minimum Category Score'),
-    'Minimum scores of 0 are ignored.',
+    'Set minimum category scores for environmental justice areas. If you do not 
+    wish to set a minimum score, set to 0 or leave blank.',
     weightVar_ui(ns('cat_min')),
-    pickerInput(
-      ns('min_pass'),
-      label = 'EJ areas must meet or exceed...',
-      choices = c('All  minimum category scores' = 4, 
-                  'At least one minimum category score' = 1,
-                  'At least two minimum category scores' = 2,
-                  'At least three minimum category scores' = 3),
-      selected = '4',
-      options = list(
-        container = 'body')  # Allows dropdown overflow
-      ),
-      
+    # Min number of cat scores
+    conditionalPanel(
+      condition = paste0('output["', ns('cat_count'), '"] > 1'),
+      pickerInput(
+        ns('min_pass'),
+        label = 'EJ areas must meet or exceed...',
+        choices = c('All  minimum category scores' = 4, 
+                    'At least one minimum category score' = 1,
+                    'At least two minimum category scores' = 2,
+                    'At least three minimum category scores' = 3),
+        selected = '4',
+        options = list(
+          container = 'body')  # Allows dropdown overflow
+      )
+    ),
+    
+    # Percentiles -----
     h4('Minimum Percentile'),
-    'Percentiles indicate what percent of block groups have a lower 
-      score than the selected block group.',
+    'Percentiles are a way to rank and compare data. A block group that is 
+    listed as the 80th percentile for a metric has a higher value 
+    than 80% of the block groups.',
     pickerInput(
       ns('percentile_min'),
       label = 'Minimum Percentile',
       choices = c(50, 60, 70, 80, 90, 95),
       selected = 80),
     
-    h4('Metrics'),
-    weightVar_ui(ns('socvul'), 'Social Vulnerability'),
-    weightVar_ui(ns('health'), 'Health'),
-    weightVar_ui(ns('envbur'), 'Environmental Burden'),
-    weightVar_ui(ns('climate'), 'Climate'),
+    # Metrics ----
+    h4('Metric Weight'),
+    conditionalPanel(
+      condition = paste0('output["', ns('cat_names'), '"].includes("SOCVUL")'),
+      weightVar_ui(ns('socvul'), 'Social Vulnerability')
+      ),
+    conditionalPanel(
+      condition = paste0('output["', ns('cat_names'), '"].includes("HEALTH")'),
+      weightVar_ui(ns('health'), 'Health')
+      ),
+    conditionalPanel(
+      condition = paste0('output["', ns('cat_names'), '"].includes("ENVBUR")'),
+      weightVar_ui(ns('envbur'), 'Environmental Burden')
+      ),
+    conditionalPanel(
+      condition = paste0('output["', ns('cat_names'), '"].includes("CLIMATE")'),
+      weightVar_ui(ns('climate'), 'Climate')
+      ),
     
-    # * Save Button ----
+    # Save Button ----
     actionButton(ns('btn_save'),
                  label = 'Save'),
     
-    # * Cancel Button ----
+    # Cancel Button ----
     actionButton(ns('btn_cancel'),
                  label = 'Cancel')
   )
 }
 
-########################################################################.
-###                         MODULE SERVER                           ####
-########################################################################.
+# Module server ---------------------------------------------------------------
 
 advancedSelect_server <- function(id, metric_list, btn_reset) {
   moduleServer(id, function(input, output, session) {
@@ -86,7 +102,14 @@ advancedSelect_server <- function(id, metric_list, btn_reset) {
       return(cat_list)
       })
     
-    # Add row names ----
+    # Pass info to ui ----
+    output$cat_count <- renderText({ length(cat_list()) })
+    output$cat_names <- renderText({ cat_list() })
+    
+    outputOptions(output, 'cat_count', suspendWhenHidden = FALSE)
+    outputOptions(output, 'cat_names', suspendWhenHidden = FALSE)
+    
+    # Add row names to tables ----
     row.names(cat_table) = wrap_text(cat_table$CATEGORY, 15, '<br>')
     row.names(metric_table) = wrap_text(metric_table$METRIC, 15, '<br>')
     
@@ -161,14 +184,59 @@ advancedSelect_server <- function(id, metric_list, btn_reset) {
     envbur <- weightVar_server('envbur', df_envbur, btn_reset)
     climate <- weightVar_server('climate', df_climate, btn_reset)
     
+    # Update/reset pickerInput -----
+    observeEvent(btn_reset(), {
+      
+      # * Set variables ----
+      cat_length <- length(cat_list())
+      cat_choices <- c('All  minimum category scores' = 4, 
+                        'At least one minimum category score' = 1,
+                        'At least two minimum category scores' = 2,
+                        'At least three minimum category scores' = 3)
+      cat_selected <- values$min_pass
+      
+      if (cat_length <= 2) {
+        cat_choices <- c('All  minimum category scores' = 4, 
+                          'At least one minimum category score' = 1)
+      } else if (cat_length == 3) {
+        cat_choices <- c('All  minimum category scores' = 4, 
+                          'At least one minimum category score' = 1,
+                          'At least two minimum category scores' = 2)
+      }
+      if (cat_length - 1 < values$min_pass) {
+        cat_selected <- 4
+      }
+      
+      # * Update min percentile ----
+      updatePickerInput(session = session,
+                        inputId = 'percentile_min',
+                        selected = values$min_percentile)
+      
+      # * Update min categories ----
+      updatePickerInput(session = session,
+                        inputId = 'min_pass',
+                        choices = cat_choices,
+                        selected = cat_selected)
+    })
+    
     # Save data ----
     observeEvent(input$btn_save, {
-      # Update category data ----
-      df_cat_weight <- update_table_values(values$cats, cat_weight(), 
-                                           'WEIGHT', 'CATEGORY')
-      df_cat_min <- update_table_values(df_cat_weight, cat_min(), 'MIN_SCORE',
-                                        'CATEGORY')
+      # * Update category data ----
+      df_cat_weight <- update_table(values$cats, cat_weight(), 'WEIGHT', 
+                                    'CATEGORY')
+      df_cat_min <- update_table(df_cat_weight, cat_min(), 'MIN_SCORE', 
+                                 'CATEGORY')
       values$cats <- df_cat_min
+      
+      # * Update metric data ----
+      df_met_join <- rbind(socvul(), health(), envbur(), climate())
+      df_met_weight <- update_table(values$metrics, df_met_join, 'WEIGHT', 
+                                    'METRIC')
+      values$metrics <- df_met_weight
+      
+      # * Update dropdown values ----
+      values$min_percentile <- input$percentile_min
+      values$min_pass <- input$min_pass
     })
 
     # Output reactive values ----
@@ -178,8 +246,8 @@ advancedSelect_server <- function(id, metric_list, btn_reset) {
         btn_save = reactive({ input$btn_save }),
         btn_cancel = reactive({ input$btn_cancel }),
         
-        percentile_min = reactive({ as.numeric(input$percentile_min) }),
-        # exceed_all = reactive({ 'AND' }),
+        percentile_min = reactive({ as.numeric(values$min_percentile) }),
+        min_pass = reactive({ as.numeric(values$min_pass) }),
         df_cat = reactive({ df_cat() }),
         df_metric = reactive({ df_metric() })
         

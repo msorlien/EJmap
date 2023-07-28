@@ -1,4 +1,4 @@
-#  TITLE: fun_wrap.R
+#  TITLE: fun_wrap_text.R
 #  DESCRIPTION: Wrap text, add custom divisor
 #  AUTHOR(S): Mariel Sorlien
 #  DATE LAST UPDATED: 2023-07-21

@@ -95,7 +95,8 @@ shp_nbep <- calculate_score(
   input_shp = shp_raw,
   percentile_min = 80, 
   prefix_list = 'N_',
-  exceed_all_min_scores = FALSE,
+  min_pass = 1,
+  min_ej = 0,
   df_metrics = df_metrics_nbep, 
   df_categories = df_cats_nbep)
 
@@ -114,7 +115,8 @@ shp_nbep_simple <- calculate_score(
   input_shp = shp_raw_simple,
   percentile_min = 80, 
   prefix_list = 'N_',
-  exceed_all_min_scores = FALSE,
+  min_pass = 1,
+  min_ej = 0,
   df_metrics = df_metrics_nbep, 
   df_categories = df_cats_nbep)
 
