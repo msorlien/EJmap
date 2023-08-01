@@ -15,7 +15,7 @@ Mental Health,MHEALTH,Mental health,Health,HEALTH,CDC,2020
 Diesel Particulate Matter,DSLPM,Disel particulate matter,Environmental Burden,ENVBUR,EPA,2019
 Particulate Matter 2.5,PM25,Particulate matter 2.5,Environmental Burden,ENVBUR,EPA,2019
 Ozone,OZONE,Ozone,Environmental Burden,ENVBUR,EPA,2019
-Air Toxics Cancer Risk,CANCER,Air toxics respiratory hazard index,Environmental Burden,ENVBUR,EPA,2019
+Air Toxics Cancer Risk,CANCER,Air toxics cancer risk,Environmental Burden,ENVBUR,EPA,2019
 Respiratory Hazard Index,RESP,Air toxics respiratory hazard index,Environmental Burden,ENVBUR,EPA,2019
 Toxic Releases to Air,RSEIAIR,Toxic releases to air,Environmental Burden,ENVBUR,EPA,2021
 Lead Paint,LDPNT,Lead paint,Environmental Burden,ENVBUR,ACS,2017-2021
@@ -25,7 +25,7 @@ Hazardous Waste Proximity,PTSDF,Hazardous waste proximity,Environmental Burden,E
 Superfund Proximity,PNPL,Superfund proximity,Environmental Burden,ENVBUR,EPA,2022
 Wastewater Discharge,PWDIS,Wastewater discharge,Environmental Burden,ENVBUR,EPA,2020
 Underground Storage Tanks,UST,Underground storage tanks,Environmental Burden,ENVBUR,EPA,2022
-Impervious Surfaces,IMPER,% impervious surfaces,Environmental Burden,ENVBUR,NLCD,2019
+Impervious Surfaces,IMPER,% impervious surfaces,Environmental Burden,ENVBUR,NLCD,2021
 Lack of Trees,TREE,% tree cover,Environmental Burden,ENVBUR,"NLCD, USFS",2021
 Flood Risk,FLOOD,Flood risk,Climate Risk,CLIMATE,First Street,2022
 Heat Risk,HEAT,Heat risk,Climate Risk,CLIMATE,First Street,2022

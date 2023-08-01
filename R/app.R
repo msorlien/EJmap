@@ -1,7 +1,7 @@
 #  TITLE: app.R
 #  DESCRIPTION: R shiny app for mapping EJ areas
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-26
+#  DATE LAST UPDATED: 2023-08-01
 #  GIT REPO: nbep/ejmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
@@ -19,6 +19,7 @@ EJmap <- function(...){
     theme = bslib::bs_theme(version = 5),
     
     title = h1('NBEP EJmap'),
+    id = 'main_tabs',
     
     # Tab: About ----
     bslib::nav_panel(
@@ -30,6 +31,7 @@ EJmap <- function(...){
     # Tab: NBEP map ----
     bslib::nav_panel(
       'NBEP Map',
+      value = 'map_nbep',
       bslib::layout_sidebar(
         sidebar = bslib::sidebar(
           width = 300,
@@ -47,6 +49,7 @@ EJmap <- function(...){
     # Tab: Custom map ----
     bslib::nav_panel(
       'Custom Map',
+      value = 'map_custom',
       bslib::layout_sidebar(
         sidebar = bslib::sidebar(
           width = 300,
@@ -67,6 +70,7 @@ EJmap <- function(...){
   server <- function(input, output, session) {
     # Set variables
     fixed_metrics <- FALSE
+    selected_tab <- reactive({ input$main_tabs })
     
     # Add module servers ----
     # NBEP map
@@ -76,19 +80,18 @@ EJmap <- function(...){
       input_shp_simple = shp_nbep_simple,
       select_metrics = FALSE
       )
-    map_server('nbep_map', nbep_score, default_layer = 'EJAREA')
+    map_server('nbep_map', nbep_score, selected_tab, 'map_nbep',
+               default_layer = 'EJAREA')
     
     # Custom map
     custom_score <- map_sidebar_server(
       'custom_sidebar',
       input_shp = shp_raw, 
       input_shp_simple = shp_default_simple)
-    map_server('custom_map', custom_score)
+    map_server('custom_map', custom_score, selected_tab, 'map_custom')
+    
   }
   
-  ########################################################################.
-  #                             Run App                                  #
-  ########################################################################.
-  
+  # Run app -------------------------------------------------------------------.
   shinyApp(ui, server)
 }

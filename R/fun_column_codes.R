@@ -2,7 +2,7 @@
 #  DESCRIPTION: List metric & category column codes, assign names
 #  AUTHOR(S): Mariel Sorlien
 #  DATE LAST UPDATED: 2023-07-28
-#  GIT REPO: nbep/ejmap
+#  GIT REPO: NBEP/EJmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------
 

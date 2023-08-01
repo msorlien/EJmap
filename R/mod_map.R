@@ -41,7 +41,6 @@ map_ui <- function(id, input_shp, percentiles = c('N_', 'P_'),
       inline = TRUE, 
       checkbox = TRUE
     ),
-    textOutput(ns('test')),
     
     # Map ----
     shinycssloaders::withSpinner(
@@ -53,7 +52,8 @@ map_ui <- function(id, input_shp, percentiles = c('N_', 'P_'),
 
 # Server ----------------------------------------------------------------------.
 
-map_server <- function(id, ejvar, default_layer = 'SCORE') {
+map_server <- function(id, ejvar, selected_tab, this_tab, 
+                       default_layer = 'SCORE') {
   moduleServer(id, function(input, output, session) {
     
     ns <- NS(id)
@@ -106,35 +106,6 @@ map_server <- function(id, ejvar, default_layer = 'SCORE') {
         leaflet::addProviderTiles(
           leaflet::providers$CartoDB.Positron, 
           group = 'Light Map') %>%
-          leaflet::addProviderTiles(
-            leaflet::providers$CartoDB.DarkMatter, 
-            group = 'Dark Map') %>%
-          leaflet::addProviderTiles(
-            leaflet::providers$Esri.WorldImagery, 
-            group = 'Satellite') %>%
-        # Add legend? maybe???
-        { if (default_layer == 'EJAREA') 
-          addLegend(
-            map = .,
-            layerId = 'legend',
-            title = 'EJ Communities',
-            colors = c('#F03B20', '#FFEDA0', '#B1B1B1'),
-            labels = c('EJ Community', 'Not an EJ Communitiy', 'No Data'),
-            position = 'bottomright') 
-          else
-            addLegend(
-              map = .,
-              layerId = 'legend',
-              title = 'Score',
-              pal = pal_colors(default_layer),
-              values = c(0,100),
-              position = 'bottomright')
-          } %>% 
-        # * Add layer toggle ----
-        leaflet::addLayersControl(
-          baseGroups = c('Light Map', 'Dark Map', 'Satellite'),
-          position='topleft'
-        ) %>%
         # * Add spinner ----
         leaflet.extras2::addSpinner() %>%
         # * Add scale bar ----
@@ -157,7 +128,8 @@ map_server <- function(id, ejvar, default_layer = 'SCORE') {
     })
     
     # * Remove/add legend ----
-    observeEvent( c(legend_type(), ejvar$btn_metrics()), {
+    observe({
+      req(selected_tab() == this_tab)
 
       leafletProxy('map') %>%
         removeControl('legend')
@@ -183,49 +155,49 @@ map_server <- function(id, ejvar, default_layer = 'SCORE') {
 
     # Update polygons ----
     observe({
+      req(input_shp())
+      req(selected_tab() == this_tab)
+      
       # * Clear polygons ----
       leafletProxy('map') %>%
         clearShapes()
-      
+
       # * Add EJ map ----
-      if (nrow(input_shp()) > 0) {
-        leafletProxy('map') %>%
-          # Add spinner
-          leaflet.extras2::startSpinner(
-            list('length' = 0, 'lines' = 8, 'width' = 20, 'radius' = 40,
-                 'color' = '#0275D8')
-          ) %>%
-          # Add polygons
-          addPolygons(
-            data = input_shp(),
-            layerId = input_shp(),
-            # Label
-            label = ~paste(Town, State,
-                           display_layer()),
-            labelOptions = labelOptions(textsize = '15px'),
-            # Popup
-            popup = ~paste0('<b>Block Group: </b>', BlockGroup,
-                            '<br/><b>Town: </b>', Town, ', ', State,
-                            '<br/><b>Watersheds: </b>', HUC10_Name,
-                            '<br/><br/><b>', input$select_layer, ': </b>',
-                            display_layer()),
-            # Stroke
-            color = '#000000',
-            weight = 0.5,
-            smoothFactor = 0.5,
-            opacity = 0.2,
-            # Fill
-            fillOpacity = 0.8,
-            fillColor = ~pal()(display_layer()),
-            # Highlight
-            highlightOptions = highlightOptions(fillColor = '#ffffff',
-                                                weight = 2,
-                                                bringToFront = TRUE)
-          ) %>%
-          # Stop spinner
-          leaflet.extras2::stopSpinner()
-      }
-        
+      leafletProxy('map') %>%
+        # Add spinner
+        leaflet.extras2::startSpinner(
+          list('length' = 0, 'lines' = 8, 'width' = 20, 'radius' = 40,
+               'color' = '#0275D8')
+        ) %>%
+        # Add polygons
+        addPolygons(
+          data = input_shp(),
+          layerId = input_shp(),
+          # Label
+          label = ~paste(Town, State,
+                         display_layer()),
+          labelOptions = labelOptions(textsize = '15px'),
+          # Popup
+          popup = ~paste0('<b>Block Group: </b>', BlockGroup,
+                          '<br/><b>Town: </b>', Town, ', ', State,
+                          '<br/><b>Watersheds: </b>', HUC10_Name,
+                          '<br/><br/><b>', input$select_layer, ': </b>',
+                          display_layer()),
+          # Stroke
+          color = '#000000',
+          weight = 0.5,
+          smoothFactor = 0.5,
+          opacity = 0.2,
+          # Fill
+          fillOpacity = 0.8,
+          fillColor = ~pal()(display_layer()),
+          # Highlight
+          highlightOptions = highlightOptions(fillColor = '#ffffff',
+                                              weight = 2,
+                                              bringToFront = TRUE)
+        ) %>%
+        # Stop spinner
+        leaflet.extras2::stopSpinner()
     })
     
   })
