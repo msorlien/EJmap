@@ -6,12 +6,6 @@
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
 
-library(shinyjs)
-library(sf)
-library(leaflet)
-library(leaflet.extras2)
-library(shinycssloaders)
-
 # UI --------------------------------------------------------------------------
 
 map_ui <- function(id, input_shp, percentiles = c('N_', 'P_'), 
@@ -44,7 +38,7 @@ map_ui <- function(id, input_shp, percentiles = c('N_', 'P_'),
     
     # Map ----
     shinycssloaders::withSpinner(
-      leafletOutput(ns('map'), width='100%', height = '70vh'),
+      leaflet::leafletOutput(ns('map'), width='100%', height = '600px'),
       type = 5
     )
   )
@@ -68,7 +62,7 @@ map_server <- function(id, ejvar, selected_tab, this_tab,
       col_codes <- list_column_codes(input_shp())
 
       # Update layer list
-      updatePickerInput(session = session,
+      shinyWidgets::updatePickerInput(session = session,
                         inputId = 'select_layer',
                         choices = col_codes,
                         selected = default_layer)
@@ -95,24 +89,23 @@ map_server <- function(id, ejvar, selected_tab, this_tab,
 
     # Leaflet basemap ----
     output$map <- renderLeaflet({
-      leaflet() %>%
+      leaflet::leaflet() %>%
         # * Set map dimensions ----
-        fitBounds(-71.9937973, # Lon min
+      leaflet::fitBounds(-71.9937973, # Lon min
                   41.29999924, # Lat min
                   -70.5164032, # Lon max
                   42.43180084 # Lat max
                   ) %>%
-        # * Add basemap tiles ----
-        leaflet::addProviderTiles(
-          leaflet::providers$CartoDB.Positron, 
-          group = 'Light Map') %>%
-        # * Add spinner ----
-        leaflet.extras2::addSpinner() %>%
-        # * Add scale bar ----
-        addScaleBar(position='bottomleft')
+      # * Add basemap tiles ----
+      leaflet::addProviderTiles(
+        leaflet::providers$Esri.WorldTopoMap) %>%
+      # * Add spinner ----
+      leaflet.extras2::addSpinner() %>%
+      # * Add scale bar ----
+      leaflet::addScaleBar(position='bottomleft')
     })
 
-    # Update legends ----
+    # Update legend ----
     # * Legend type ----
     legend_type <- reactive({
       if (input$select_layer == 'EJAREA') {
@@ -131,20 +124,20 @@ map_server <- function(id, ejvar, selected_tab, this_tab,
     observe({
       req(selected_tab() == this_tab)
 
-      leafletProxy('map') %>%
-        removeControl('legend')
+      leaflet::leafletProxy('map') %>%
+        leaflet::removeControl('legend')
 
       if (legend_type() == 'EJ') {
-        leafletProxy('map') %>%
-          addLegend(
+        leaflet::leafletProxy('map') %>%
+          leaflet::addLegend(
             layerId = 'legend',
             title = 'EJ Communities',
             colors = c('#F03B20', '#FFEDA0', '#B1B1B1'),
-            labels = c('EJ Community', 'Not an EJ Communitiy', 'No Data'),
+            labels = c('EJ Area', 'Not an EJ Area', 'No Data'),
             position = 'bottomright')
       } else {
-        leafletProxy('map') %>%
-          addLegend(
+        leaflet::leafletProxy('map') %>%
+          leaflet::addLegend(
             layerId = 'legend',
             title = stringr::str_to_title(legend_type()),
             pal = pal(),
@@ -159,18 +152,18 @@ map_server <- function(id, ejvar, selected_tab, this_tab,
       req(selected_tab() == this_tab)
       
       # * Clear polygons ----
-      leafletProxy('map') %>%
-        clearShapes()
+      leaflet::leafletProxy('map') %>%
+        leaflet::clearShapes()
 
       # * Add EJ map ----
       leafletProxy('map') %>%
-        # Add spinner
+        # Start spinner
         leaflet.extras2::startSpinner(
           list('length' = 0, 'lines' = 8, 'width' = 20, 'radius' = 40,
                'color' = '#0275D8')
         ) %>%
         # Add polygons
-        addPolygons(
+        leaflet::addPolygons(
           data = input_shp(),
           layerId = input_shp(),
           # Label

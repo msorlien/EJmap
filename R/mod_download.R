@@ -16,7 +16,7 @@ download_ui <- function(id) {
   ns <- NS(id)
   
   tagList(
-    pickerInput(
+    shinyWidgets::pickerInput(
       ns('downloadSelect'),
       label = h3('Select Format'),
       choices = c('Excel', 'CSV', 'TSV', 'KML', 'Shapefile', 'GeoJSON'),

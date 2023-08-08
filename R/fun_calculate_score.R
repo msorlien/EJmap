@@ -1,7 +1,7 @@
 #  TITLE: fun_calculate_score.R
 #  DESCRIPTION: Calculates scores
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-28
+#  DATE LAST UPDATED: 2023-08-02
 #  GIT REPO: nbep/ejmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
@@ -138,10 +138,9 @@ calculate_score <- function(
 
     # * Calculate overall score ----
     df_ej[[final_score]] <- case_when(
+      df_ej[['temp_score_max']] == 0 ~ -999999,
       df_ej[['temp_pass']] < min_pass ~ 0,
-      df_ej[['temp_score_max']] > 0 ~ 
-        df_ej[['temp_score']] / df_ej[['temp_score_max']],
-      TRUE ~ -999999
+      TRUE ~ df_ej[['temp_score']] / df_ej[['temp_score_max']]
     )
     
     # * Calculate if EJ area ----

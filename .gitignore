@@ -11,3 +11,8 @@ data-raw/*.shp
 data-raw/*.shp.xml
 data-raw/*.shx
 .RDataTmp
+*.dbf
+*.prj
+*.shp
+*.shx
+*.lock

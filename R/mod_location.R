@@ -15,7 +15,7 @@ select_location_ui <- function(id) {
   
   tagList(
     # Select State ----
-    pickerInput(
+    shinyWidgets::pickerInput(
       ns('select_state'),
       label = h3('Select State'),
       choices = c('Connecticut' = 'CT', 
@@ -31,7 +31,7 @@ select_location_ui <- function(id) {
       ),
     
     # Select towns ----
-    pickerInput(
+    shinyWidgets::pickerInput(
       ns('select_town'),
       label = h3('Select Town'),
       choices = town_list,
@@ -45,7 +45,7 @@ select_location_ui <- function(id) {
       ),
 
     # Select watersheds ----
-    pickerInput(
+    shinyWidgets::pickerInput(
       ns('select_watershed'),
       label = h3('Select Watershed'),
       choices = watershed_list,
@@ -73,7 +73,7 @@ select_location_server <- function(id, input_shp) {
     })
     
     observeEvent(input$select_state, {
-      updatePickerInput(session = session,
+      shinyWidgets::updatePickerInput(session = session,
                         inputId = 'select_town',
                         choices = town_list_filtered(),
                         selected = town_list_filtered()

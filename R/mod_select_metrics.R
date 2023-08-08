@@ -30,7 +30,7 @@ selectParInput_ui <- function(id, cat_code) {
   
   # Select metrics
   tagList(
-    pickerInput(
+    shinyWidgets::pickerInput(
       ns('metricSelect'),
       label = h4(cat_name),
       choices = metric_choices,

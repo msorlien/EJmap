@@ -31,7 +31,7 @@ advancedSelect_ui <- function(id) {
     # Min number of cat scores
     conditionalPanel(
       condition = paste0('output["', ns('cat_count'), '"] > 1'),
-      pickerInput(
+      shinyWidgets::pickerInput(
         ns('min_pass'),
         label = 'EJ areas must meet or exceed...',
         choices = c('All  minimum category scores' = 4, 
@@ -49,7 +49,7 @@ advancedSelect_ui <- function(id) {
     'Percentiles are a way to rank and compare data. A block group that is 
     listed as the 80th percentile for a metric has a higher value 
     than 80% of the block groups.',
-    pickerInput(
+    shinyWidgets::pickerInput(
       ns('percentile_min'),
       label = 'Minimum Percentile',
       choices = c(50, 60, 70, 80, 90, 95),
@@ -208,12 +208,12 @@ advancedSelect_server <- function(id, metric_list, btn_reset) {
       }
       
       # * Update min percentile ----
-      updatePickerInput(session = session,
+      shinyWidgets::updatePickerInput(session = session,
                         inputId = 'percentile_min',
                         selected = values$min_percentile)
       
       # * Update min categories ----
-      updatePickerInput(session = session,
+      shinyWidgets::updatePickerInput(session = session,
                         inputId = 'min_pass',
                         choices = cat_choices,
                         selected = cat_selected)
