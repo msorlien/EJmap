@@ -2,7 +2,7 @@
 #  TITLE: mod_sidebar.R
 #  DESCRIPTION: Module to select location & parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-13
+#  DATE LAST UPDATED: 2023-08-21
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -33,7 +33,7 @@ map_sidebar_ui <- function(id) {
       conditionalPanel(
         condition = paste0('output["', ns('show_metrics'), '"] == "TRUE"'),
         bslib::accordion_panel(
-          title = h2('Select Metrics'),
+          title = h2('Select Indicators'),
           value = 'metrics',
           selectPar_ui(ns('metrics'))
           )
@@ -42,7 +42,7 @@ map_sidebar_ui <- function(id) {
       bslib::accordion_panel(
         title = h2('Download Data'),
         value = 'download',
-        'placeholder text'
+        download_ui(ns('download'))
       )
     )
   )
@@ -51,15 +51,16 @@ map_sidebar_ui <- function(id) {
 
 # Server ----------------------------------------------------------------------
 
-map_sidebar_server <- function(id, input_shp, input_shp_simple, 
-                               select_metrics = TRUE) {
+map_sidebar_server <- function(
+    id, input_shp, input_shp_simple, select_metrics = TRUE, 
+    percentile_type = c('N_', 'P_')
+    ) {
   moduleServer(id, function(input, output, session) { 
     
     # Pass info to ui ----
     output$show_metrics <- renderText({ paste0(select_metrics) })
     
     outputOptions(output, 'show_metrics', suspendWhenHidden = FALSE)
-    
     
     # Default shp ----
     shp_reactive <- reactiveValues(shp = input_shp_simple)
@@ -74,8 +75,12 @@ map_sidebar_server <- function(id, input_shp, input_shp_simple,
     })
     
     # Filter location ----
-    # * Add module
+    # * Add module ----
     df_loc <- select_location_server('location', shp_reactive)
+    
+    # Download ----
+    # * Add module ----
+    download_server('download', input_shp)
 
     # Output reactive values ----
     return(

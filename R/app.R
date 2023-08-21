@@ -1,8 +1,8 @@
 #  TITLE: app.R
 #  DESCRIPTION: R shiny app for mapping EJ areas
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-08-01
-#  GIT REPO: nbep/ejmap
+#  DATE LAST UPDATED: 2023-08-21
+#  GIT REPO: NBEP/EJmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
 
@@ -25,7 +25,42 @@ EJmap <- function(...){
     bslib::nav_panel(
       'About',
       value='about',
-      'This app is under development and subject to frequent changes.'
+      h2('About EJMap'),
+      HTML("Environmental justice is the just and equitable distribution of 
+           environmental benefits and burdens for all communities, regardless of 
+           race, culture, ethnicity, or income. <p>Mapping tools such as EPA’s 
+           <a href='https://www.epa.gov/ejscreen'>EJScreen</a> 
+           serve to identify communities that face disproportionate negative 
+           environmental impacts, or are particularly vulnerable to those 
+           impacts. <i>EJMap</i> is designed to supplement EJScreen with data 
+           from additional sources and to allow local communities to build and 
+           design custom maps that meet their needs and concerns.</p>"),
+      h2('About NBEP'),
+      HTML("<p>Founded in 1985, the <a href='https://www.nbep.org/'>Narragansett 
+           Bay Estuary Program</a> (NBEP) is a stakeholder-led organization 
+           pursuing place-based conservation across the Narragansett Bay 
+           region.</p> <p>NBEP is part of the <a href='https://www.epa.gov/nep'>
+           National Estuary Program</a>, a network of 28 \"estuaries of national 
+           significance\" across the United States. NBEP is hosted by <a 
+           href='https://www.rwu.edu/'>Roger Williams University</a>.</p>"),
+      h2('Links and Technical Documentation'),
+      tags$a(
+        href='https://narragansett-bay-estuary-program-nbep.hub.arcgis.com/documents/396d763941a34e57a2e6eebf05f82b8b/explore',
+        'Technical Documentation'),
+      tags$a(
+        href='https://narragansett-bay-estuary-program-nbep.hub.arcgis.com/search?q=ejmap',
+        'Archived Data'),
+      tags$a(
+        href='https://github.com/NBEP/EJmap',
+        'EJMap Code'),
+      h2('FAQ'),
+      'Coming soon',
+      h2('Upcoming Features'),
+      HTML('This is the beta version of EJMap. Planned updates include:
+           <ul><li>Improved accessibility</li>
+           <li>Viewing data as a table</li>
+           <li>Better symbology for null data</li>
+           <li>More detailed pop-up text</li></ul>')
     ),
     
     # Tab: NBEP map ----
@@ -78,7 +113,8 @@ EJmap <- function(...){
       'nbep_sidebar',
       input_shp = shp_nbep, 
       input_shp_simple = shp_nbep_simple,
-      select_metrics = FALSE
+      select_metrics = FALSE,
+      percentile_type = 'N_'
       )
     map_server('nbep_map', nbep_score, selected_tab, 'map_nbep',
                default_layer = 'EJAREA')

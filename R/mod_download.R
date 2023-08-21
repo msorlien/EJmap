@@ -19,7 +19,7 @@ download_ui <- function(id) {
     shinyWidgets::pickerInput(
       ns('downloadSelect'),
       label = h3('Select Format'),
-      choices = c('Excel', 'CSV', 'TSV', 'KML', 'Shapefile', 'GeoJSON'),
+      choices = c('Shapefile', 'GeoJSON', 'Excel', 'CSV', 'TSV'),
       selected = 'Shapefile'
     ),
     'download button'
@@ -29,10 +29,12 @@ download_ui <- function(id) {
 
 # Server -----------------------------------------------------------------------
 
-download_server <- function(id) {
+download_server <- function(id, input_shp) {
   moduleServer(id, function(input, output, session) {
     
-    
+    # Adjust shapefile ----
+    df_shp <- input_shp %>%
+      select(-Town_Code)
     
   })
 }

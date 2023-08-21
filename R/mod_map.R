@@ -131,7 +131,7 @@ map_server <- function(id, ejvar, selected_tab, this_tab,
         leaflet::leafletProxy('map') %>%
           leaflet::addLegend(
             layerId = 'legend',
-            title = 'EJ Communities',
+            title = 'EJ Areas',
             colors = c('#F03B20', '#FFEDA0', '#B1B1B1'),
             labels = c('EJ Area', 'Not an EJ Area', 'No Data'),
             position = 'bottomright')

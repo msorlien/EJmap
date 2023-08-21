@@ -16,3 +16,4 @@ data-raw/*.shx
 *.shp
 *.shx
 *.lock
+inst/rmd/metadata.pdf

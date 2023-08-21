@@ -1,0 +1,188 @@
+---
+title: NBEP_EJMAP_`r format(Sys.Date(), '%Y')` Metadata
+output: pdf_document
+urlcolor: blue
+params:
+  df_metrics: NULL
+  df_cats: NULL
+  min_percentile: 80
+  min_score: 0
+  min_pass: 4
+  always_allow_html: true
+header-includes:
+- \usepackage{booktabs}
+- \usepackage{longtable}
+- \usepackage{array}
+- \usepackage{multirow}
+- \usepackage{wrapfig}
+- \usepackage{float}
+- \usepackage{colortbl}
+- \usepackage{pdflscape}
+- \usepackage{tabu}
+- \usepackage{threeparttable}
+- \usepackage{threeparttablex}
+- \usepackage[normalem]{ulem}
+- \usepackage{makecell}
+- \usepackage{xcolor}
+---
+
+```{r setup, echo = FALSE, message = FALSE}
+# Import packages
+library(kableExtra)
+library(dplyr)
+
+# Define variables
+EPA_funding <- 'CE00A00967'
+```
+
+# Metadata
+
+## Title
+NBEP_EJMAP_`r format(Sys.Date(), '%Y')`
+
+## Description
+Environmental justice metrics in the Narragansett Bay estuary region as 
+calculated by the Narragansett Bay Estuary Program (NBEP) 
+[**EJMAP**](https://nbep.shinyapps.io/ejmap/) tool. EJMAP provides
+population demographics and other information at the U.S. Census block group 
+scale. Please review the **technical documentation** for additional information. 
+
+## Data Source
+```{r text_dataSource, echo = FALSE, results = 'asis'}
+test <- 'this is test'
+
+cat(test)
+
+```
+
+## Data Year
+```{r text_dataYear, echo = FALSE, results = 'asis'}
+cat(test)
+
+```
+
+## Date Published
+`r Sys.Date()`
+
+## Use Limitations
+```{r text_limitations, echo = FALSE, results = 'asis'}
+lim_string <- 'This dataset is provided "as is". The producer(s) of this 
+  dataset, contributors to this dataset, and the Narragansett Bay Estuary 
+  Program (NBEP) do not make any warranties of any kind for this dataset, and 
+  are not liable for any loss or damage however and whenever caused by any use 
+  of this dataset.'
+
+# Check if First Street in list
+if (grepl('First Street', test, fixed=TRUE)){
+  lim_string <- paste(lim_string, 'This data is provided under the 
+    [**Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) 
+    license**](https://creativecommons.org/licenses/by-nc-sa/4.0/).')
+  
+} else {
+  lim_string <- paste(lim_string, 'There are no restrictions or legal 
+  prerequisites for using the data.')
+}
+
+lim_string <- paste(
+  lim_string, 'Once acquired, any modification made to the data must be noted 
+  in the metadata. Please acknowledge both NBEP and the primary producer(s) of 
+  this dataset or any derived products. These data are intended for use as a 
+  tool for reference, display, and general GIS analysis purposes only. It is the 
+  responsibility of the data user to use the data appropriately and consistent 
+  with the limitations of geospatial data in general and these data in 
+  particular. The information contained in these data may be dynamic and could 
+  change over time. The data accuracy is checked against best available sources 
+  which may be dated. The data are not better than the original sources from 
+  which they are derived. These data are not designed for use as a primary 
+  regulatory tool in permitting or siting decisions and are not a legally 
+  authoritative source for the location of natural or manmade features. The 
+  depicted boundaries, interpretations, and analysis derived from them have not 
+  been verified at the site level and do not eliminate the need for onsite 
+  sampling, testing, and detailed study of specific sites. This project was 
+  funded by agreements by the Environmental Protection Agency (EPA) to Roger 
+  Williams University (RWU) in partnership with the Narragansett Bay Estuary 
+  Program. Although the information in this document has been funded wholly or 
+  in part by EPA under the agreements', EPA_funding, 'to RWU, it has not 
+  undergone the Agency’s publications review process and therefore, may not 
+  necessarily reflect the views of the Agency and no official endorsement 
+  should be inferred. The viewpoints expressed here do not necessarily represent 
+  those of the Narragansett Bay Estuary Program, RWU, or EPA nor does mention of 
+  trade names, commercial products, or causes constitute endorsement or 
+  recommendation for use.'
+  )
+
+cat(lim_string)
+```
+
+## Point of Contact
+Mariel Sorlien
+
+Narragansett Bay Estuary Program
+
+235 Promenade Ave, Suite 393
+
+Providence, RI 02908
+
+Telephone: 401-633-0550
+
+Email: msorlien@nbep.org 
+
+\newpage
+# Variables
+
+## Percentiles
+The minimum percentile is `r params$min_percentile`.
+
+## Indicators
+
+```{r table_met, echo = FALSE, warnings = FALSE}
+
+
+```
+
+## Categories
+
+table
+
+## EJ Areas
+```{r text_ejarea, echo = FALSE, results = 'asis'}
+# df_cat_score <- params$df_cats %>%
+#   filter(MIN_SCORE > 0)
+# 
+# if(nrow(df_cat_score) < params$min_pass){
+#   min_pass <- nrow(df_cat_score)
+# }
+# 
+# 
+# ej_string <- 'All block groups with an EJ score above 0 are EJ areas'
+# 
+# if(nrow(df_cat_score) > 0 | params$min_score > 0) {
+#   ej_string <- 'To qualify as an EJ area, block groups must'
+# }
+# 
+# if(nrow(df_cat_score) > 0) {
+#   ej_string <- paste(ej_string, 'pass at least', min_pass, 
+#                      'minimum category score')
+#   if(min_pass > 1){
+#     ej_string <- paste0(ej_string, 's')
+#   }
+# }
+# 
+# if (nrow(df_cat_score) > 0 & params$min_score > 0) {
+#   ej_string <- paste(ej_string, 'and')
+# }
+# 
+# if(params$min_score > 0) {
+#   ej_string <- paste(ej_string, 'have a minimum overall score of', 
+#                      params$min_score)
+# }
+# 
+# ej_string <- paste0(ej_string, '.')
+# 
+# cat(ej_string)
+```
+
+\newpage
+# Column Headings
+
+table

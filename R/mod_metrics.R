@@ -37,7 +37,7 @@ selectPar_ui <- function(id) {
         h3('Minimum Score'),
         numericInput(
           ns('min_ej'),
-          'Set minimum overall score for environmental justice areas.',
+          'Set minimum EJ score for environmental justice areas.',
           value = 0,
           min = 0,
           max = 100

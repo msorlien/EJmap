@@ -6,7 +6,7 @@ Limited English Speaking,LNGISPCT,% limited english speaking households,Social V
 Under Age 5,UNDR5PCT,% under age 5,Social Vulnerability,SOCVUL,ACS,2017-2021
 Over Age 64,OVR64PCT,% over age 64,Social Vulnerability,SOCVUL,ACS,2017-2021
 Unemployment Rate,UNEMPPCT,% unemployed,Social Vulnerability,SOCVUL,ACS,2017-2021
-Life Expectancy,LIFEEXPT,% low life expectancy,Health,HEALTH,ACS,2017-2021
+Life Expectancy,LIFEEXPT,Low life expectancy,Health,HEALTH,ACS,2017-2021
 Cancer,CANCER_2,Cancer,Health,HEALTH,CDC,2020
 Asthma,ASTHMA,Asthma,Health,HEALTH,CDC,2020
 Diabetes,DIABE,Diabetes,Health,HEALTH,CDC,2020
@@ -26,7 +26,7 @@ Superfund Proximity,PNPL,Superfund proximity,Environmental Burden,ENVBUR,EPA,202
 Wastewater Discharge,PWDIS,Wastewater discharge,Environmental Burden,ENVBUR,EPA,2020
 Underground Storage Tanks,UST,Underground storage tanks,Environmental Burden,ENVBUR,EPA,2022
 Impervious Surfaces,IMPER,% impervious surfaces,Environmental Burden,ENVBUR,NLCD,2021
-Lack of Trees,TREE,% tree cover,Environmental Burden,ENVBUR,"NLCD, USFS",2021
+Lack of Trees,TREE,% no tree cover,Environmental Burden,ENVBUR,"NLCD, USFS",2021
 Flood Risk,FLOOD,Flood risk,Climate Risk,CLIMATE,First Street,2022
 Heat Risk,HEAT,Heat risk,Climate Risk,CLIMATE,First Street,2022
-Sea Level Rise,SLR,% land inundated (1.6 ft sea level rise),Climate Risk,CLIMATE,NOAA,2019
+Sea Level Rise,SLR,% land inundated (0.85 ft sea level rise),Climate Risk,CLIMATE,NOAA,2016-2017

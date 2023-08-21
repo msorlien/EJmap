@@ -53,8 +53,8 @@ column_table <- df_all %>%
   arrange(match(CAT_CODE, cat_order), 
           match(TYPE, type_order))%>%
   select(COL_CODE, COL_NAME, CAT_CODE) %>%
-  add_row(COL_CODE = 'SCORE', COL_NAME = 'Score', CAT_CODE = 'EJ') %>%
-  add_row(COL_CODE = 'EJAREA', COL_NAME = 'EJ Communities', CAT_CODE = 'EJ')
+  add_row(COL_CODE = 'SCORE', COL_NAME = 'EJ Score', CAT_CODE = 'EJ') %>%
+  add_row(COL_CODE = 'EJAREA', COL_NAME = 'EJ Areas', CAT_CODE = 'EJ')
 
 # Drop row names
 rownames(column_table) <- NULL
