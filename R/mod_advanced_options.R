@@ -1,7 +1,7 @@
 #  TITLE: mod_advanced_options.R
 #  DESCRIPTION: Module to select advanced options for selected metrics
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-26
+#  DATE LAST UPDATED: 2023-08-22
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
@@ -58,19 +58,19 @@ advancedSelect_ui <- function(id) {
     # Metrics ----
     h4('Metric Weight'),
     conditionalPanel(
-      condition = paste0('output["', ns('cat_names'), '"].includes("SOCVUL")'),
+      condition = paste0('output["', ns('cat_socvul'), '"] == 1'),
       weightVar_ui(ns('socvul'), 'Social Vulnerability')
       ),
     conditionalPanel(
-      condition = paste0('output["', ns('cat_names'), '"].includes("HEALTH")'),
+      condition = paste0('output["', ns('cat_health'), '"] == 1'),
       weightVar_ui(ns('health'), 'Health')
       ),
     conditionalPanel(
-      condition = paste0('output["', ns('cat_names'), '"].includes("ENVBUR")'),
+      condition = paste0('output["', ns('cat_envbur'), '"] == 1'),
       weightVar_ui(ns('envbur'), 'Environmental Burden')
-      ),
+    ),
     conditionalPanel(
-      condition = paste0('output["', ns('cat_names'), '"].includes("CLIMATE")'),
+      condition = paste0('output["', ns('cat_climate'), '"] == 1'),
       weightVar_ui(ns('climate'), 'Climate')
       ),
     
@@ -104,10 +104,16 @@ advancedSelect_server <- function(id, metric_list, btn_reset) {
     
     # Pass info to ui ----
     output$cat_count <- renderText({ length(cat_list()) })
-    output$cat_names <- renderText({ cat_list() })
+    output$cat_socvul <- renderText({ if('SOCVUL' %in% cat_list()) 1 else 0 })
+    output$cat_health <- renderText({ if('HEALTH' %in% cat_list()) 1 else 0 })
+    output$cat_envbur <- renderText({ if('ENVBUR' %in% cat_list()) 1 else 0 })
+    output$cat_climate <- renderText({ if('CLIMATE' %in% cat_list()) 1 else 0 })
     
     outputOptions(output, 'cat_count', suspendWhenHidden = FALSE)
-    outputOptions(output, 'cat_names', suspendWhenHidden = FALSE)
+    outputOptions(output, 'cat_socvul', suspendWhenHidden = FALSE)
+    outputOptions(output, 'cat_health', suspendWhenHidden = FALSE)
+    outputOptions(output, 'cat_envbur', suspendWhenHidden = FALSE)
+    outputOptions(output, 'cat_climate', suspendWhenHidden = FALSE)
     
     # Add row names to tables ----
     row.names(cat_table) = wrap_text(cat_table$CATEGORY, 15, '<br>')
