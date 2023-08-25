@@ -1,63 +1,72 @@
 ---
-title: NBEP_EJMAP_`r format(Sys.Date(), '%Y')` Metadata
-output: pdf_document
+title: EJMap Metadata, Selected Variables, and Column Names
+output: 
+  html_document:
+    toc: true
+    toc_float: 
+      collapsed: false
 urlcolor: blue
 params:
+  title: NULL
+  epa_funding: NULL
   df_metrics: NULL
   df_cats: NULL
+  percentile_type: NULL
   min_percentile: 80
   min_score: 0
   min_pass: 4
   always_allow_html: true
-header-includes:
-- \usepackage{booktabs}
-- \usepackage{longtable}
-- \usepackage{array}
-- \usepackage{multirow}
-- \usepackage{wrapfig}
-- \usepackage{float}
-- \usepackage{colortbl}
-- \usepackage{pdflscape}
-- \usepackage{tabu}
-- \usepackage{threeparttable}
-- \usepackage{threeparttablex}
-- \usepackage[normalem]{ulem}
-- \usepackage{makecell}
-- \usepackage{xcolor}
 ---
 
 ```{r setup, echo = FALSE, message = FALSE}
 # Import packages
 library(kableExtra)
 library(dplyr)
-
-# Define variables
-EPA_funding <- 'CE00A00967'
 ```
 
-# Metadata
+# File Metadata
 
 ## Title
-NBEP_EJMAP_`r format(Sys.Date(), '%Y')`
+`r params$title`
 
 ## Description
 Environmental justice metrics in the Narragansett Bay estuary region as 
 calculated by the Narragansett Bay Estuary Program (NBEP) 
 [**EJMAP**](https://nbep.shinyapps.io/ejmap/) tool. EJMAP provides
 population demographics and other information at the U.S. Census block group 
-scale. Please review the **technical documentation** for additional information. 
+scale. Please review the [**technical documentation**](https://narragansett-bay-estuary-program-nbep.hub.arcgis.com/documents/396d763941a34e57a2e6eebf05f82b8b/explore)
+for additional information. 
 
 ## Data Source
 ```{r text_dataSource, echo = FALSE, results = 'asis'}
-test <- 'this is test'
 
-cat(test)
+# Summarize data source, source year for selected indicators
+df_dataSource <- params$df_metrics %>%
+  # Select data source, source year columns; sort by year
+  select(DATA_SOURCE, SOURCE_YEAR) %>%
+  arrange(SOURCE_YEAR) %>%
+  # Drop duplicate rows
+  unique() %>%
+  # Group data by data source, concatenate source year
+  group_by(DATA_SOURCE) %>%
+  summarize(SOURCE_YEAR = toString(SOURCE_YEAR)) %>%
+  # Change abbreviations to full names
+  mutate(DATA_SOURCE = case_when(
+    DATA_SOURCE == 'ACS' ~ 'American Community Survey',
+    DATA_SOURCE == 'CDC' ~ 'Centers for Disease Control',
+    DATA_SOURCE == 'DOT' ~ 'Department of Transportation',
+    DATA_SOURCE == 'EPA' ~ 'Environmental Protection Agency',
+    DATA_SOURCE == 'NLCD' ~ 'National Landcover Database',
+    DATA_SOURCE == 'NOAA' ~ 'National Oceanic and Atmospheric Administration',
+    DATA_SOURCE == 'NLCD, USFS' ~ 
+      'National Landcover Database, US Forestry Service',
+    TRUE ~ DATA_SOURCE)) %>%
+  # Add new column that concatenates data source, source year
+  mutate(DATA_SUMMARY = paste0(DATA_SOURCE, ' (', SOURCE_YEAR, ')'))
 
-```
+list_dataSource <- paste(df_dataSource$DATA_SUMMARY, collapse = '; ')
 
-## Data Year
-```{r text_dataYear, echo = FALSE, results = 'asis'}
-cat(test)
+cat(list_dataSource)
 
 ```
 
@@ -73,7 +82,7 @@ lim_string <- 'This dataset is provided "as is". The producer(s) of this
   of this dataset.'
 
 # Check if First Street in list
-if (grepl('First Street', test, fixed=TRUE)){
+if (grepl('First Street', list_dataSource, fixed=TRUE)){
   lim_string <- paste(lim_string, 'This data is provided under the 
     [**Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) 
     license**](https://creativecommons.org/licenses/by-nc-sa/4.0/).')
@@ -102,7 +111,7 @@ lim_string <- paste(
   funded by agreements by the Environmental Protection Agency (EPA) to Roger 
   Williams University (RWU) in partnership with the Narragansett Bay Estuary 
   Program. Although the information in this document has been funded wholly or 
-  in part by EPA under the agreements', EPA_funding, 'to RWU, it has not 
+  in part by EPA under the agreements', params$epa_funding, 'to RWU, it has not 
   undergone the Agency’s publications review process and therefore, may not 
   necessarily reflect the views of the Agency and no official endorsement 
   should be inferred. The viewpoints expressed here do not necessarily represent 
@@ -127,62 +136,250 @@ Telephone: 401-633-0550
 
 Email: msorlien@nbep.org 
 
-\newpage
-# Variables
+# Selected Variables
 
 ## Percentiles
 The minimum percentile is `r params$min_percentile`.
 
-## Indicators
+## Indicator Weight
+```{r format_metrics, echo = FALSE}
 
-```{r table_met, echo = FALSE, warnings = FALSE}
+# Format dataframe
+df_metric_table <- params$df_metrics %>%
+  # Select columns
+  select(METRIC, WEIGHT, CAT_CODE) %>%
+  # Rename columns
+  rename(Indicator = METRIC, Weight = WEIGHT)
 
+# Subset dataframe for each category
+df_socvul <- df_metric_table %>%
+  filter(CAT_CODE == 'SOCVUL') %>%
+  select(!CAT_CODE)
 
+df_health <- df_metric_table %>%
+  filter(CAT_CODE == 'HEALTH') %>%
+  select(!CAT_CODE)
+
+df_envbur <- df_metric_table %>%
+  filter(CAT_CODE == 'ENVBUR') %>%
+  select(!CAT_CODE)
+
+df_climate <- df_metric_table %>%
+  filter(CAT_CODE == 'CLIMATE') %>%
+  select(!CAT_CODE)
+
+# Determine whether to print tables
+run_socvul <- nrow(df_socvul) > 0
+run_health <- nrow(df_health) > 0
+run_envbur <- nrow(df_envbur) > 0
+run_climate <- nrow(df_climate) > 0
+
+# Number tables
+table_number <- 0
 ```
 
-## Categories
+```{r table_socvul, echo = FALSE, eval = run_socvul}
+table_number <- table_number + 1
+table_caption <- paste0('Table ', table_number, 
+                        ': Social Vulnerability Indicators')
 
-table
-
-## EJ Areas
-```{r text_ejarea, echo = FALSE, results = 'asis'}
-# df_cat_score <- params$df_cats %>%
-#   filter(MIN_SCORE > 0)
-# 
-# if(nrow(df_cat_score) < params$min_pass){
-#   min_pass <- nrow(df_cat_score)
-# }
-# 
-# 
-# ej_string <- 'All block groups with an EJ score above 0 are EJ areas'
-# 
-# if(nrow(df_cat_score) > 0 | params$min_score > 0) {
-#   ej_string <- 'To qualify as an EJ area, block groups must'
-# }
-# 
-# if(nrow(df_cat_score) > 0) {
-#   ej_string <- paste(ej_string, 'pass at least', min_pass, 
-#                      'minimum category score')
-#   if(min_pass > 1){
-#     ej_string <- paste0(ej_string, 's')
-#   }
-# }
-# 
-# if (nrow(df_cat_score) > 0 & params$min_score > 0) {
-#   ej_string <- paste(ej_string, 'and')
-# }
-# 
-# if(params$min_score > 0) {
-#   ej_string <- paste(ej_string, 'have a minimum overall score of', 
-#                      params$min_score)
-# }
-# 
-# ej_string <- paste0(ej_string, '.')
-# 
-# cat(ej_string)
+kable(df_socvul, caption = table_caption) %>%
+    kable_styling(latex_options = c('striped'))
 ```
 
-\newpage
-# Column Headings
+```{r table_health, echo = FALSE, eval = run_health}
+table_number <- table_number + 1
+table_caption <- paste0('Table ', table_number, ': Health Indicators')
 
-table
+kable(df_health, caption = table_caption) %>%
+    kable_styling(latex_options = c('striped'))
+```
+
+```{r table_envbur, echo = FALSE, eval = run_envbur}
+table_number <- table_number + 1
+table_caption <- paste0('Table ', table_number, 
+                        ': Environmental Burden Indicators')
+
+kable(df_envbur, caption = table_caption) %>%
+    kable_styling(latex_options = c('striped'))
+```
+
+```{r table_climate, echo = FALSE, eval = run_climate}
+table_number <- table_number + 1
+table_caption <- paste0('Table ', table_number, ': Climate Risk Indicators')
+
+kable(df_climate, caption = table_caption) %>%
+    kable_styling(latex_options = c('striped'))
+```
+
+## Category Weight
+```{r table_catWeight, echo = FALSE, results = 'asis'}
+# Category Weight
+df_catWeight <- params$df_cats %>%
+  # Select columns
+  select(CATEGORY, WEIGHT) %>%
+  # Rename columns
+  rename(Category = CATEGORY, Weight = WEIGHT)
+
+# Format kable
+table_number <- table_number + 1
+table_caption <- paste0('Table ', table_number, ': Category Weight')
+
+kable(df_catWeight, caption = table_caption) %>%
+    kable_styling(latex_options = c('striped'))
+```
+
+## Minimum Category Score
+```{r format_catMinScore, echo = FALSE}
+# Minimum Category Score
+
+# Create dataframe
+df_catMinScore <- params$df_cats %>%
+  # Select columns
+  select(CATEGORY, MIN_SCORE) %>%
+  # Drop rows where MIN_SCORE == 0
+  filter(MIN_SCORE > 0) %>%
+  # Rename columns
+  rename(Category = CATEGORY, 'Minimum Score' = MIN_SCORE)
+
+# Calc min pass
+if(nrow(df_catMinScore) < params$min_pass){
+  min_pass <- nrow(df_catMinScore)
+} else {
+  min_pass <- params$min_pass
+}
+
+# Determine if print table
+run_catMinScore <- nrow(df_catMinScore) > 0
+```
+
+```{r table_catMinScore, echo = FALSE, eval = run_catMinScore}
+table_number <- table_number + 1
+table_caption <- paste0('Table ', table_number, ': Minimum Category Scores')
+
+kable(df_catMinScore, caption = table_caption) %>%
+    kable_styling(latex_options = c('striped'))
+```
+
+```{r text_catMinScore, echo = FALSE, results = 'asis'}
+# Describe criteria
+if(nrow(df_catMinScore) > 0){
+  catMinScore_string <- paste('Block groups must pass at least', min_pass,
+                     'minimum category score')
+  if(min_pass > 1){
+    catMinScore_string <- paste0(catMinScore_string, 's')
+  }
+  catMinScore_string <- paste0(catMinScore_string, '.')
+} else {
+  catMinScore_string <- 'No minimum category scores were set.'
+}
+
+cat(catMinScore_string)
+```
+
+## EJ Score
+```{r text_minEJ, echo = FALSE, results = 'asis'}
+
+minEJ_string <- 'No minimum EJ score was set.'
+
+if(params$min_score > 0) {
+  minEJ_string <- paste0('The minimum EJ score is ', params$min_score, '.')
+}
+
+cat(minEJ_string)
+```
+
+# Column Names
+
+```{r table_colNames, echo = FALSE}
+
+# Create dataframe - columns at beginning of shapefile
+df_cols_start <- data.frame(
+  Column = c(
+    'BlockGroup', 'Town', 'State', 'HUC10', 'HUC10_Name', 'ALAND', 'AWATER', 
+    'ACSTOTPOP'
+    ),
+  Description = c(
+    'Census FIPS code for block group', 'Town', 'State', 'Watershed ID', 
+    'Watershed name', 'Square meters of land', 'Square meters of water', 
+    'Total population'
+    )
+)
+
+# Create dataframe - indicator columns
+# Metrics
+df_cols_metrics <- params$df_metrics %>%
+  select(METRIC_CODE, DESCRIPTION) %>%
+  rename(Column = METRIC_CODE, Description = DESCRIPTION)
+
+# Categories
+df_cols_cats <- data.frame(
+  Column = c('SOCVUL', 'HEALTH', 'ENVBUR', 'CLIMATE'),
+  Description = c(
+    'Social vulnerability score', 'Health score', 'Environmental burden score',
+    'Climate score'
+  )
+)
+
+df_cols_cats <- df_cols_cats %>%
+  filter(Column %in% params$df_cats$CAT_CODE)
+
+# EJ columns
+df_cols_ej <- data.frame(
+  Column = c('SCORE', 'EJAREA'),
+  Description = c('Environmental justice score', 'Environmental justice area')
+)
+
+# Join datasets - metrics, categories, ej
+df_cols_var <- df_cols_metrics
+
+# Create col lists for N_, P_
+if('N_' %in% params$percentile_type){
+  df_cols_metrics_n <- df_cols_metrics %>%
+    mutate(Column = paste0('N_', Column)) %>%
+    mutate(Description = paste('Regional percentile for', 
+                               tolower(Description)))
+  
+  df_cols_n <- rbind(df_cols_cats, df_cols_ej) %>%
+    mutate(Column = paste0('N_', Column)) %>%
+    mutate(Description = paste('Regional', tolower(Description)))
+  
+  df_cols_var <- rbind(df_cols_var, df_cols_metrics_n, df_cols_n)
+}
+
+if('P_' %in% params$percentile_type){
+  df_cols_metrics_p <- df_cols_metrics %>%
+    mutate(Column = paste0('P_', Column)) %>%
+    mutate(Description = paste('State percentile for', tolower(Description)))
+  
+  df_cols_p <- rbind(df_cols_cats, df_cols_ej) %>%
+    mutate(Column = paste0('P_', Column)) %>%
+    mutate(Description = paste('State', tolower(Description)))
+  
+  df_cols_var <- rbind(df_cols_var, df_cols_metrics_p, df_cols_p)
+}
+
+# create dataframe - 
+df_cols_end <- data.frame(
+  Column = c(
+    'DataSource', 'SourceYear', 'NBEPYear', 'Study_Area'
+    ),
+  Description = c(
+    'Source of the primary data used to produce dataset', 
+    'Publication year of the primary data used to produce this dataset', 
+    'Publication year of this dataset', 'NBEP study area'
+    )
+)
+
+# Join datasets - start, mid, end
+df_cols <- rbind(df_cols_start, df_cols_var, df_cols_end)
+
+
+# Create kable
+table_number <- table_number + 1
+table_caption <- paste0('Table ', table_number, ': Column Names')
+
+kable(df_cols, caption = table_caption) %>%
+    kable_styling(latex_options = c('striped'))
+
+```

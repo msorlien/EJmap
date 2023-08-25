@@ -2,7 +2,7 @@
 #  TITLE: select_metrics.R
 #  DESCRIPTION: Module to select parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-26
+#  DATE LAST UPDATED: 2023-08-25
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -139,7 +139,11 @@ selectPar_server <- function(id, input_shp) {
       list(
         
         output_shp = reactive({ shp_output() }),
+        df_metric = reactive({ adv_opt$df_metric() }),
+        df_cat = reactive({ adv_opt$df_cat() }),
         percentile_min = reactive({ adv_opt$percentile_min() }),
+        min_pass = reactive({ adv_opt$min_pass() }),
+        min_ej = reactive({ as.numeric(input$min_ej) }),
         button = reactive({ input$btn_calculate })
         
       )

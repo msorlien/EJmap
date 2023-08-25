@@ -2,7 +2,7 @@
 #  TITLE: mod_sidebar.R
 #  DESCRIPTION: Module to select location & parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-08-21
+#  DATE LAST UPDATED: 2023-08-25
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -80,7 +80,12 @@ map_sidebar_server <- function(
     
     # Download ----
     # * Add module ----
-    download_server('download', input_shp)
+    download_server('download', 
+                    input_shp = input_shp, 
+                    select_metrics = select_metrics, 
+                    percentile_type = percentile_type,
+                    metrics = df_par, 
+                    location = df_loc)
 
     # Output reactive values ----
     return(

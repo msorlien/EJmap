@@ -21,6 +21,7 @@ Imports:
     pkgload,
     purrr,
     reactable,
+    rgdal,
     rhandsontable,
     sf,
     shiny,
@@ -30,4 +31,6 @@ Imports:
     shinyWidgets,
     stringr,
     tibble,
-    tidyr
+    tidyr,
+    writexl,
+    zip

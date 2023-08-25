@@ -2,7 +2,7 @@
 #  TITLE: fun_update_shapefiles.R
 #  DESCRIPTION: Adds EJ metric shapefiles
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-18
+#  DATE LAST UPDATED: 2023-08-25
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt) x86_64
 ##############################################################################.
@@ -12,6 +12,13 @@ library(tidyverse)
 
 source('R/fun_calculate_score.R')
 source('R/fun_add_metadata.R')
+
+# Set variables ---------------------------------------------------------------
+epagrants <- 'CE00A00967'
+usethis::use_data(epagrants, overwrite=TRUE)
+
+ejmap_year = format(Sys.Date(), '%Y')
+usethis::use_data(ejmap_year, overwrite = TRUE)
 
 # Read in csv data ------------------------------------------------------------
 df_metrics <- read.csv('data-raw/metric_list.csv')
@@ -90,13 +97,19 @@ usethis::use_data(shp_default_simple, overwrite=TRUE)
 df_metrics_nbep <- merge(df_metrics, df_nbep_metrics, by='METRIC_CODE')
 df_cats_nbep <- merge(df_cats, df_nbep_cats, by='CAT_CODE')
 
+# Define variables
+nbep_percentile_min = 80
+nbep_percentile_type = c('N_')
+nbep_min_pass = 1
+nbep_min_ej = 0
+
 # Calculate score
 shp_nbep <- calculate_score(
   input_shp = shp_raw,
-  percentile_min = 80, 
-  prefix_list = 'N_',
-  min_pass = 1,
-  min_ej = 0,
+  percentile_min = nbep_percentile_min, 
+  prefix_list = nbep_percentile_type,
+  min_pass = nbep_min_pass,
+  min_ej = nbep_min_ej,
   df_metrics = df_metrics_nbep, 
   df_categories = df_cats_nbep)
 
@@ -108,6 +121,21 @@ shp_nbep <- shp_nbep %>%
   filter(Study_Area != 'Outside Study Area')
 
 usethis::use_data(shp_nbep, overwrite=TRUE)
+
+# Generate HTML, XML metadata
+add_metadata_files( 
+    input_rmd = normalizePath(paste0(getwd(), '/inst/rmd/metadata.Rmd')), 
+    input_xml = NULL, 
+    output_path = paste0(getwd(), '/www'), 
+    title = paste0('EJAREAS_', ejmap_year, '_NBEP', ejmap_year),
+    epa_funding = epagrants, 
+    df_metrics = df_metrics_nbep,
+    df_cats = df_cats_nbep,
+    min_percentile = nbep_percentile_min,
+    percentile_type = nbep_percentile_type,
+    min_score = nbep_min_ej,
+    min_pass = nbep_min_pass
+)
 
 # Shp NBEP (simple) -----------------------------------------------------------
 # Calculate score

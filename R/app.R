@@ -70,7 +70,6 @@ EJmap <- function(...){
       bslib::layout_sidebar(
         sidebar = bslib::sidebar(
           width = 300,
-          # style = css(overflow = "visible"),
           map_sidebar_ui('nbep_sidebar')
           ),
         map_ui(

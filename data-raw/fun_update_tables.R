@@ -2,7 +2,7 @@
 #  TITLE: metric_table.R
 #  DESCRIPTION: Imports table of metric column names and metadata
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-17
+#  DATE LAST UPDATED: 2023-08-25
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt) x86_64
 ##############################################################################.
@@ -60,7 +60,3 @@ column_table <- df_all %>%
 rownames(column_table) <- NULL
   
 usethis::use_data(column_table, overwrite=TRUE)
-
-# Create metadata table --------------------------------------------------------
-
-# TO DO
