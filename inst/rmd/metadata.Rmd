@@ -11,6 +11,7 @@ params:
   epa_funding: NULL
   df_metrics: NULL
   df_cats: NULL
+  df_sources: NULL
   percentile_type: NULL
   min_percentile: 80
   min_score: 0
@@ -30,12 +31,11 @@ library(dplyr)
 `r params$title`
 
 ## Description
-Environmental justice metrics in the Narragansett Bay estuary region as 
-calculated by the Narragansett Bay Estuary Program (NBEP) 
-[**EJMAP**](https://nbep.shinyapps.io/ejmap/) tool. EJMAP provides
-population demographics and other information at the U.S. Census block group 
-scale. Please review the [**technical documentation**](https://narragansett-bay-estuary-program-nbep.hub.arcgis.com/documents/396d763941a34e57a2e6eebf05f82b8b/explore)
-for additional information. 
+Environmental justice indicators and priority areas in the Narragansett Bay 
+region at the U.S. Census "block group" scale. Scores were calculated using 
+the Narragansett Bay Estuary Program (NBEP) 
+[**EJMAP**](https://nbep.shinyapps.io/ejmap/) tool. This dataset is intended 
+for general planning, graphic display, and GIS analysis.
 
 ## Data Source
 ```{r text_dataSource, echo = FALSE, results = 'asis'}
@@ -49,22 +49,30 @@ df_dataSource <- params$df_metrics %>%
   unique() %>%
   # Group data by data source, concatenate source year
   group_by(DATA_SOURCE) %>%
-  summarize(SOURCE_YEAR = toString(SOURCE_YEAR)) %>%
-  # Change abbreviations to full names
-  mutate(DATA_SOURCE = case_when(
-    DATA_SOURCE == 'ACS' ~ 'American Community Survey',
-    DATA_SOURCE == 'CDC' ~ 'Centers for Disease Control',
-    DATA_SOURCE == 'DOT' ~ 'Department of Transportation',
-    DATA_SOURCE == 'EPA' ~ 'Environmental Protection Agency',
-    DATA_SOURCE == 'NLCD' ~ 'National Landcover Database',
-    DATA_SOURCE == 'NOAA' ~ 'National Oceanic and Atmospheric Administration',
-    DATA_SOURCE == 'NLCD, USFS' ~ 
-      'National Landcover Database, US Forestry Service',
-    TRUE ~ DATA_SOURCE)) %>%
-  # Add new column that concatenates data source, source year
-  mutate(DATA_SUMMARY = paste0(DATA_SOURCE, ' (', SOURCE_YEAR, ')'))
+  summarize(SOURCE_YEAR = toString(SOURCE_YEAR))
 
-list_dataSource <- paste(df_dataSource$DATA_SUMMARY, collapse = '; ')
+# Summarize data source, source year for block groups
+df_nbep <- params$df_sources %>%
+  filter(DATA_SOURCE == 'NBEP')
+
+# Combine datasets
+df_dataSource <- df_dataSource %>%
+    add_row(DATA_SOURCE = 'NBEP', 
+            SOURCE_YEAR = toString(df_nbep$SOURCE_YEAR))
+
+# Import list of name substitutions 
+df_sources <- params$df_sources %>%
+  select(DATA_SOURCE, DATA_SOURCE_LONG)
+
+# Join datasets, add column with concatenated data source, source year
+df_source <- left_join(x=df_dataSource, y=df_sources, by='DATA_SOURCE') %>%
+  mutate(DATA_SOURCE_LONG = ifelse(is.na(DATA_SOURCE_LONG), 
+                                   DATA_SOURCE, 
+                                   DATA_SOURCE_LONG)) %>%
+  # Add new column that concatenates data source, source year
+  mutate(DATA_SUMMARY = paste0(DATA_SOURCE_LONG, ' (', SOURCE_YEAR, ')'))
+
+list_dataSource <- paste(df_source$DATA_SUMMARY, collapse = '; ')
 
 cat(list_dataSource)
 
@@ -75,7 +83,7 @@ cat(list_dataSource)
 
 ## Use Limitations
 ```{r text_limitations, echo = FALSE, results = 'asis'}
-lim_string <- 'This dataset is provided "as is". The producer(s) of this 
+lim_string <- '<p>This dataset is provided "as is". The producer(s) of this 
   dataset, contributors to this dataset, and the Narragansett Bay Estuary 
   Program (NBEP) do not make any warranties of any kind for this dataset, and 
   are not liable for any loss or damage however and whenever caused by any use 
@@ -95,7 +103,7 @@ if (grepl('First Street', list_dataSource, fixed=TRUE)){
 lim_string <- paste(
   lim_string, 'Once acquired, any modification made to the data must be noted 
   in the metadata. Please acknowledge both NBEP and the primary producer(s) of 
-  this dataset or any derived products. These data are intended for use as a 
+  this dataset or any derived products.</p><p>These data are intended for use as a 
   tool for reference, display, and general GIS analysis purposes only. It is the 
   responsibility of the data user to use the data appropriately and consistent 
   with the limitations of geospatial data in general and these data in 
@@ -107,7 +115,7 @@ lim_string <- paste(
   authoritative source for the location of natural or manmade features. The 
   depicted boundaries, interpretations, and analysis derived from them have not 
   been verified at the site level and do not eliminate the need for onsite 
-  sampling, testing, and detailed study of specific sites. This project was 
+  sampling, testing, and detailed study of specific sites.</p><p>This project was 
   funded by agreements by the Environmental Protection Agency (EPA) to Roger 
   Williams University (RWU) in partnership with the Narragansett Bay Estuary 
   Program. Although the information in this document has been funded wholly or 
@@ -117,15 +125,13 @@ lim_string <- paste(
   should be inferred. The viewpoints expressed here do not necessarily represent 
   those of the Narragansett Bay Estuary Program, RWU, or EPA nor does mention of 
   trade names, commercial products, or causes constitute endorsement or 
-  recommendation for use.'
+  recommendation for use.</p>'
   )
 
 cat(lim_string)
 ```
 
 ## Point of Contact
-Mariel Sorlien
-
 Narragansett Bay Estuary Program
 
 235 Promenade Ave, Suite 393
@@ -134,7 +140,7 @@ Providence, RI 02908
 
 Telephone: 401-633-0550
 
-Email: msorlien@nbep.org 
+Email: info@nbep.org 
 
 # Selected Variables
 

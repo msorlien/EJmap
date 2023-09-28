@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Mariel", "Sorlien", , "msorlien@nbep.org", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: Creates custom environmental justice maps for the Narragansett Bay region. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -15,13 +15,13 @@ LazyData: true
 Imports: 
     dplyr,
     glue,
+    here,
     htmltools,
     leaflet,
     leaflet.extras2,
     pkgload,
     purrr,
     reactable,
-    rgdal,
     rhandsontable,
     sf,
     shiny,
@@ -33,4 +33,5 @@ Imports:
     tibble,
     tidyr,
     writexl,
+    xml2,
     zip

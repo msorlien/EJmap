@@ -1,7 +1,7 @@
 #  TITLE: mod_download.R
 #  DESCRIPTION: Module to download data
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-08-25
+#  DATE LAST UPDATED: 2023-09-27
 #  GIT REPO: NBEP/EJmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
@@ -74,7 +74,8 @@ download_server <- function(id, input_shp, select_metrics, percentile_type,
           add_metadata_files(
             input_rmd = normalizePath(system.file('rmd', 'metadata.Rmd', 
                                                   package = 'EJmap')), 
-            input_xml = NULL, 
+            input_xml = normalizePath(system.file('extdata', 'metadata.xml', 
+                                                  package = 'EJmap')), 
             output_path = temp_directory, 
             title = title, 
             epa_funding = epagrants, 
@@ -93,10 +94,10 @@ download_server <- function(id, input_shp, select_metrics, percentile_type,
           html_temp = paste0(temp_directory, '/METADATA_', title, '.html')
           file.copy(html_src, html_temp, overwrite = TRUE)
           
-          # xml_src = system.file('www', paste0(title, '.xml'),
-          #                        package = 'EJmap')
-          # xml_temp = paste0(temp_directory, '/', title, '.xml')
-          # file.copy(xml_src, xml_temp, overwrite = TRUE)
+          xml_src = system.file('www', paste0(title, '.xml'),
+                                 package = 'EJmap')
+          xml_temp = paste0(temp_directory, '/', title, '.xml')
+          file.copy(xml_src, xml_temp, overwrite = TRUE)
         }
         
         # Format data for download ----
@@ -106,6 +107,9 @@ download_server <- function(id, input_shp, select_metrics, percentile_type,
         if (input$downloadSelect == 'Shapefile'){
           shp_temp <- paste0(temp_directory, '/', title, '.shp')
           sf::st_write(df_shp, shp_temp, append=FALSE)
+          # change XML metadata extension
+          file.rename(paste0(temp_directory, '/', title, '.xml' ),
+                      paste0(temp_directory, '/', title, '.shp.xml' ))
         } else if (input$downloadSelect == 'GeoJSON'){
           geojson_temp <- paste0(temp_directory, '/', title, '.geojson')
           sf::st_write(df_shp, geojson_temp, append=FALSE)

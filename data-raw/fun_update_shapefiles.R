@@ -1,11 +1,10 @@
-################################### HEADER ###################################
 #  TITLE: fun_update_shapefiles.R
 #  DESCRIPTION: Adds EJ metric shapefiles
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-08-25
+#  DATE LAST UPDATED: 2023-09-28
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt) x86_64
-##############################################################################.
+# -----------------------------------------------------------------------------
 
 library(sf)
 library(tidyverse)
@@ -15,10 +14,7 @@ source('R/fun_add_metadata.R')
 
 # Set variables ---------------------------------------------------------------
 epagrants <- 'CE00A00967'
-usethis::use_data(epagrants, overwrite=TRUE)
-
 ejmap_year = format(Sys.Date(), '%Y')
-usethis::use_data(ejmap_year, overwrite = TRUE)
 
 # Read in csv data ------------------------------------------------------------
 df_metrics <- read.csv('data-raw/metric_list.csv')
@@ -118,14 +114,15 @@ shp_nbep <- add_metadata(shp_nbep, df_metrics_nbep)
 
 # Tidy data
 shp_nbep <- shp_nbep %>%
-  filter(Study_Area != 'Outside Study Area')
+  filter(Study_Area != 'Outside Study Area') %>%
+  select(-starts_with('P_'))
 
 usethis::use_data(shp_nbep, overwrite=TRUE)
 
 # Generate HTML, XML metadata
 add_metadata_files( 
     input_rmd = normalizePath(paste0(getwd(), '/inst/rmd/metadata.Rmd')), 
-    input_xml = NULL, 
+    input_xml = normalizePath(paste0(getwd(), '/inst/extdata/metadata.xml')), 
     output_path = paste0(getwd(), '/www'), 
     title = paste0('EJAREAS_', ejmap_year, '_NBEP', ejmap_year),
     epa_funding = epagrants, 

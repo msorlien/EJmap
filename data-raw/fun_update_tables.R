@@ -60,3 +60,9 @@ column_table <- df_all %>%
 rownames(column_table) <- NULL
   
 usethis::use_data(column_table, overwrite=TRUE)
+
+# Create table of source name substitutions -----------------------------------
+
+source_table <- read.csv('data-raw/data_sources.csv')
+
+usethis::use_data(source_table, overwrite=TRUE)
