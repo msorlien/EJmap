@@ -1,7 +1,7 @@
 #  TITLE: fun_add_metadata.R
 #  DESCRIPTION: Generates metadata for shapefile
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-09-28
+#  DATE LAST UPDATED: 2023-12-12
 #  GIT REPO: nbep/ejmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
@@ -9,6 +9,7 @@
 library(dplyr)
 library(tibble)
 library(glue)
+library(xml2)
 
 # function: add_metadata ------------------------------------------------------
 # Adds DATA_SOURCE, SOURCE_YEAR columns to shapefile
@@ -188,8 +189,8 @@ add_metadata_files <- function(
   
   # * Data Source ----
   # List extra sources
-  list_source_nodes <- xml_text(
-    xml_find_all(
+  list_source_nodes <- xml2::xml_text(
+    xml2::xml_find_all(
       input_xml, '//dataSource/srcCitatn/citRespParty/rpOrgName'
       )
     )
@@ -220,7 +221,11 @@ add_metadata_files <- function(
   
   # * Fields ----
   # List extra fields
-  list_field_nodes <- xml_text(xml_find_all(input_xml, '//attr/attrlabl'))
+  list_field_nodes <- xml2::xml_text(
+    xml2::xml_find_all(
+      input_xml, '//attr/attrlabl'
+      )
+    )
   extra_field_nodes <- list_field_nodes[which(
     !list_field_nodes %in% list_fields)]
   

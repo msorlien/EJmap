@@ -21,9 +21,9 @@ Toxic Releases to Air,RSEIAIR,Toxic releases to air,Environmental Burden,ENVBUR,
 Lead Paint,LDPNT,Lead paint,Environmental Burden,ENVBUR,EPA EJScreen,2023
 Traffic Proximity,PTRAF,Traffic proximity,Environmental Burden,ENVBUR,EPA EJScreen,2023
 RMP Facility Proximity,PRMP,RMP facility proximity,Environmental Burden,ENVBUR,EPA EJScreen,2023
-Hazardous Waste Proximity,PTSDF,Hazardous waste proximity,Environmental Burden,ENVBUR,EPA EJScreen,2023
+Hazardous Waste Facilities,PTSDF,Hazardous waste facilities,Environmental Burden,ENVBUR,EPA EJScreen,2023
 Superfund Proximity,PNPL,Superfund proximity,Environmental Burden,ENVBUR,EPA EJScreen,2023
-Wastewater Discharge,PWDIS,Wastewater discharge,Environmental Burden,ENVBUR,EPA EJScreen,2023
+Water Pollution,PWDIS,Water pollution,Environmental Burden,ENVBUR,EPA EJScreen,2023
 Underground Storage Tanks,UST,Underground storage tanks,Environmental Burden,ENVBUR,EPA EJScreen,2023
 Impervious Surfaces,IMPER,% impervious surfaces,Environmental Burden,ENVBUR,NLCD,2021
 Lack of Trees,TREE,% no tree cover,Environmental Burden,ENVBUR,NLCD,2021

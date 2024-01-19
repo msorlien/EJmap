@@ -51,10 +51,10 @@
       </presForm>
       <resAltTitle>Environmental Justice Priority Areas, 2023, NBEP 2023</resAltTitle>
       <date>
-        <pubDate>2023-09-28T16:54:24</pubDate>
+        <pubDate>2023-12-12T12:40:22</pubDate>
       </date>
       <resEd>NBEP 2023</resEd>
-      <otherCitDet>Suggested bibliographic reference: NBEP, 2023. Environmental Justice Priority Areas, 2023, NBEP 2023; EJAREAS_2023_NBEP2023. Narragansett Bay Estuary Program (NBEP), URL: http://www.nbep.org, Providence, Rhode Island (publication date: 2023-09-28)</otherCitDet>
+      <otherCitDet>Suggested bibliographic reference: NBEP, 2023. Environmental Justice Priority Areas, 2023, NBEP 2023; EJAREAS_2023_NBEP2023. Narragansett Bay Estuary Program (NBEP), URL: http://www.nbep.org, Providence, Rhode Island (publication date: 2023-12-12)</otherCitDet>
       <citRespParty>
         <rpOrgName>Narragansett Bay Estuary Program</rpOrgName>
         <role>
@@ -392,7 +392,7 @@ Indicators that meet or exceed the 80th percentile are assigned a hidden score o
 
 Climate Risk = [1(Flood Risk) + 1(Heat Risk)]/2
 
-Environmental Burden = [0.5(Impervious Surfaces) + 0.5(Ozone) + 0.5(Particulate Matter 2.5) + 1(Traffic Proximity) + 1(Hazardous Waste Proximity) + 1(Wastewater Discharge) + 0.5(Lack of Trees)]/5
+Environmental Burden = [0.5(Impervious Surfaces) + 0.5(Ozone) + 0.5(Particulate Matter 2.5) + 1(Traffic Proximity) + 1(Hazardous Waste Facilities) + 1(Water Pollution) + 0.5(Lack of Trees)]/5
 
 Social Vulnerability = [1(Less Than High School Education) + 1(Limited English Speaking) + 1(Low Income) + 1(People of Color)]/4
 
@@ -401,7 +401,7 @@ The following minimum category scores were applied: 80 for environmental burden,
 EJ Score = [1(Climate Risk) + 1(Environmental Burden) + 1(Social Vulnerability)] / 3
 
 Block groups with an environmental justice score above 0 are considered to be environmental justice areas and have EJAREA marked "Yes".</stepDesc>
-        <stepDateTm>2023-09-28T16:54:24</stepDateTm>
+        <stepDateTm>2023-12-12T12:40:23</stepDateTm>
         <stepProc>
           <rpOrgName>Narragansett Bay Estuary Program</rpOrgName>
           <rpCntInfo>
