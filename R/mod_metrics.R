@@ -119,7 +119,8 @@ selectPar_server <- function(id, input_shp) {
       # Calculate score
       shp_output <- calculate_score(
         input_shp = shp_output, 
-        percentile_min = adv_opt$percentile_min(), 
+        percentile_min = adv_opt$percentile_min(),
+        prefix_list = adv_opt$percentile_type(),
         min_pass = adv_opt$min_pass(),
         min_ej = as.numeric(input$min_ej),
         df_metrics = adv_opt$df_metric(), 
@@ -142,6 +143,7 @@ selectPar_server <- function(id, input_shp) {
         df_metric = reactive({ adv_opt$df_metric() }),
         df_cat = reactive({ adv_opt$df_cat() }),
         percentile_min = reactive({ adv_opt$percentile_min() }),
+        percentile_type = reactive({ adv_opt$percentile_type() }),
         min_pass = reactive({ adv_opt$min_pass() }),
         min_ej = reactive({ as.numeric(input$min_ej) }),
         button = reactive({ input$btn_calculate })

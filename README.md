@@ -16,16 +16,13 @@ View [technical documentation](https://narragansett-bay-estuary-program-nbep.hub
 - Map
   - Not keyboard navigable
   - No alt text
-  - NA polygons low contrast, not color-blind safe
 - Advanced options
   - Tables not keyboard navigable
-- No dark mode
 
 ## Planned Updates
-- View data as table
+- Dark mode
 - Misc updates to improve map accessibility
   - Give NA polygons striped symbology
-  - Learn javascript, add alt text + make polygons keyboard navigable
 
 # Acknowledgements
 This project was funded by agreements by the Environmental Protection Agency 

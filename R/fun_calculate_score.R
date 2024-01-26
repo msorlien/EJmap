@@ -1,7 +1,7 @@
 #  TITLE: fun_calculate_score.R
 #  DESCRIPTION: Calculates scores
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-08-02
+#  DATE LAST UPDATED: 2024-01-25
 #  GIT REPO: nbep/ejmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
@@ -30,6 +30,11 @@ calculate_score <- function(
   
   cat_length <- df_categories %>%
     filter(MIN_SCORE > 0)
+  
+  if(prefix_list == "N_") {
+    df_ej <- input_shp %>%
+      filter(!Study_Area == "Outside Study Area")
+  }
   
   if (min_pass > nrow(cat_length)) {
     min_pass <- nrow(cat_length)
@@ -156,12 +161,21 @@ calculate_score <- function(
     filter(!METRIC_CODE %in% metric_list)
   
   # Tidy data ----
+  extra_col <- c("temp_", "N_", "P_")
+  extra_col <- extra_col[!extra_col %in% prefix_list]
+  
   df_ej <- df_ej %>%
     # Drop temp columns, skipped metrics
-    select(-starts_with('temp_')) %>%
+    select(-starts_with(extra_col)) %>%
     select(-contains(drop_columns$METRIC_CODE)) %>%
     # Replace NA values with -999999
-    mutate(across(where(is.numeric), ~tidyr::replace_na(.x, -999999)))
+    mutate(across(where(is.numeric), ~tidyr::replace_na(.x, -999999))) %>%
+    # Round category scores to 2 decimals
+    mutate(across(
+      expand.grid(prefix_list, c(cat_list, "SCORE")) %>%
+        purrr::pmap_chr(paste0),
+      ~round(.x, 2)
+      ))
 
   return(df_ej)
 }

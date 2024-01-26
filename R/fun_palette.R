@@ -24,7 +24,7 @@ pal_colors <- function(var_name, percentile_min = 80) {
   pal_score <- colorBin(
     palette = df_pal$pal_roy,
     bins = c(0, 50, 60, 70, 80, 90, 95, 100),
-    na.color = '#FFFFFF',
+    na.color = rgb(0,0,0,0),
     domain = c(0,100)
   )
 
@@ -40,7 +40,7 @@ pal_colors <- function(var_name, percentile_min = 80) {
       palette = c('#FFFFCC', '#FFEDA0', '#FED976', '#FEB24C', '#FD8D3C', 
                   '#FC4E2A', '#E31A1C', '#BD0026', '#800026', '#400015'),
       bins = c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100),
-      na.color = '#CCCCCC',
+      na.color = rgb(0,0,0,0),
       domain = c(0, 100)
     )
   }

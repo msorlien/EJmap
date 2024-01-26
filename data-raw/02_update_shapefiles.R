@@ -79,6 +79,7 @@ df_cats_default <- df_cats %>%
 shp_default_simple <- calculate_score(
   input_shp = shp_raw_simple, 
   percentile_min = 80, 
+  prefix_list = "N_",
   df_metrics = df_metrics_default, 
   df_categories = df_cats_default)
 

@@ -1,7 +1,7 @@
 #  TITLE: mod_advanced_options.R
 #  DESCRIPTION: Module to select advanced options for selected metrics
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-08-22
+#  DATE LAST UPDATED: 2024-01-25
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
@@ -10,7 +10,7 @@ library(shinyWidgets)
 
 # Module ui -------------------------------------------------------------------
 
-advancedSelect_ui <- function(id) {
+advancedSelect_ui <- function(id, percentiles = c("N_", "P_")) {
   
   ns <- NS(id)
   
@@ -54,6 +54,19 @@ advancedSelect_ui <- function(id) {
       label = 'Minimum Percentile',
       choices = c(50, 60, 70, 80, 90, 95),
       selected = 80),
+    
+    conditionalPanel(
+      condition = paste0(length(percentiles), " > 1"),
+      h4("Percentile Type"),
+      "Regional percentiles rank block groups across the entire region. State 
+      percentiles rank block groups within a state.",
+      shinyWidgets::pickerInput(
+        ns("percentile_type"),
+        label = "Percentile Type", 
+        choices = list_percentile_codes(percentiles),
+        selected = list_percentile_codes(percentiles)[1]
+      )
+    ),
     
     # Metrics ----
     h4('Metric Weight'),
@@ -120,8 +133,12 @@ advancedSelect_server <- function(id, metric_list, btn_reset) {
     row.names(metric_table) = wrap_text(metric_table$METRIC, 15, '<br>')
     
     # Create reactiveValues object ----
-    values <- reactiveValues(cats = cat_table, metrics = metric_table, 
-                             min_percentile = 80, min_pass = 4)
+    values <- reactiveValues(
+      cats = cat_table, 
+      metrics = metric_table, 
+      min_percentile = 80, 
+      percentile_type = "N_",
+      min_pass = 4)
     
     # Cat Tables ----
     df_cat <- reactive({
@@ -218,6 +235,11 @@ advancedSelect_server <- function(id, metric_list, btn_reset) {
                         inputId = 'percentile_min',
                         selected = values$min_percentile)
       
+      # * Update percentile type ----
+      shinyWidgets::updatePickerInput(session = session,
+                                      inputId = "percentile_type",
+                                      selected = values$percentile_type)
+      
       # * Update min categories ----
       shinyWidgets::updatePickerInput(session = session,
                         inputId = 'min_pass',
@@ -242,6 +264,7 @@ advancedSelect_server <- function(id, metric_list, btn_reset) {
       
       # * Update dropdown values ----
       values$min_percentile <- input$percentile_min
+      values$percentile_type <- input$percentile_type
       values$min_pass <- input$min_pass
     })
 
@@ -253,6 +276,7 @@ advancedSelect_server <- function(id, metric_list, btn_reset) {
         btn_cancel = reactive({ input$btn_cancel }),
         
         percentile_min = reactive({ as.numeric(values$min_percentile) }),
+        percentile_type = reactive ({ values$percentile_type }),
         min_pass = reactive({ as.numeric(values$min_pass) }),
         df_cat = reactive({ df_cat() }),
         df_metric = reactive({ df_metric() })

@@ -94,7 +94,8 @@ map_sidebar_server <- function(
         output_shp = reactive({ df_loc$output_shp() }),
         btn_metrics = reactive({ df_par$button() }),
         location_type = reactive({ df_loc$location_type() }),
-        percentile_min = reactive({ df_par$percentile_min() })
+        percentile_min = reactive({ df_par$percentile_min() }),
+        percentile_type = reactive({ df_par$percentile_type() })
 
       )
     )

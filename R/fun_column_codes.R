@@ -1,7 +1,7 @@
 #  TITLE: fun_col_codes.R
 #  DESCRIPTION: List metric & category column codes, assign names
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-28
+#  DATE LAST UPDATED: 2024-01-26
 #  GIT REPO: NBEP/EJmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------
@@ -11,9 +11,13 @@
 
 list_column_codes <- function(input_shp){
   
-  # List col names in input_shp, minus first two letters
-  # (drops N_, P_)
-  input_col <- stringr::str_sub(colnames(input_shp), 3, -1)
+  # List col names in input_shp, minus "N_", "P_", or "_"
+  input_col <- input_shp %>%
+    sf::st_drop_geometry() %>%
+    select(starts_with(c("N_", "P_", "_")))
+  colnames(input_col) <- gsub("N_", "_", colnames(input_col))
+  colnames(input_col) <- gsub("P_", "_", colnames(input_col))
+  input_col <- stringr::str_sub(colnames(input_col), 2, -1)
   
   # Filter column table for col in input_shp
   df_columns <- column_table %>%

@@ -1,0 +1,899 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xml:lang="en">
+  <Esri>
+    <CreaDate>20230925</CreaDate>
+    <CreaTime>12312600</CreaTime>
+    <ArcGISFormat>1.0</ArcGISFormat>
+    <SyncOnce>TRUE</SyncOnce>
+    <scaleRange>
+      <minScale>150000000</minScale>
+      <maxScale>5000</maxScale>
+    </scaleRange>
+    <ArcGISProfile>FGDC</ArcGISProfile>
+    <DataProperties>
+      <lineage>
+        <Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\Project" Date="20230925" Time="123126" Name="" export="">Project "C:\Users\msorlien\OneDrive - NBEP - RWU\Documents\GIS_PROJECTS\INTERNAL_PROJECTS\EJ_map_v2\EJmap_prep\gis_data\int_gisdata\ejmap_intdata.gdb\EJMETRICS_2023_NBEP2023" "C:\Users\msorlien\OneDrive - NBEP - RWU\Documents\GIS_PROJECTS\INTERNAL_PROJECTS\EJ_map_v2\EJmap\data-raw\EJMETRICS_2023_NBEP2023.shp" GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]] WGS_1984_(ITRF00)_To_NAD_1983 PROJCS["NAD_1983_UTM_Zone_19N",GEOGCS["GCS_North_American_1983",DATUM["D_North_American_1983",SPHEROID["GRS_1980",6378137.0,298.257222101]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",-69.0],PARAMETER["Scale_Factor",0.9996],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0]] NO_PRESERVE_SHAPE # NO_VERTICAL</Process>
+        <Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20230928" Time="165107">DeleteField EJMETRICS_2023_NBEP2023.shp Shape_Leng "Delete Fields"</Process>
+        <Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20230928" Time="165124">DeleteField EJMETRICS_2023_NBEP2023.shp Shape_Le_1 "Delete Fields"</Process>
+        <Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20230928" Time="165130">DeleteField EJMETRICS_2023_NBEP2023.shp Shape_Area "Delete Fields"</Process>
+      </lineage>
+      <itemProps>
+        <imsContentType export="False"/>
+      </itemProps>
+    </DataProperties>
+  </Esri>
+  <mdChar>
+    <CharSetCd value="004"/>
+  </mdChar>
+  <mdHrLv>
+    <ScopeCd value="005"/>
+  </mdHrLv>
+  <mdContact>
+    <rpOrgName>Narragansett Bay Estuary Program</rpOrgName>
+    <role>
+      <RoleCd value="006"/>
+    </role>
+    <rpCntInfo>
+      <cntAddress addressType="both">
+        <delPoint>235 Promenade Street, Suite 393</delPoint>
+        <city>Providence</city>
+        <adminArea>Rhode Island</adminArea>
+        <postCode>02908</postCode>
+        <eMailAdd>info@nbep.org</eMailAdd>
+        <country>US</country>
+      </cntAddress>
+      <cntPhone>
+        <voiceNum>401-633-0550 </voiceNum>
+      </cntPhone>
+    </rpCntInfo>
+  </mdContact>
+  <dataIdInfo>
+    <idCitation>
+      <presForm>
+        <fgdcGeoform>vector digital data</fgdcGeoform>
+      </presForm>
+      <resAltTitle>Environmental Justice Priority Areas, 2024, NBEP 2024</resAltTitle>
+      <date>
+        <pubDate>2024-01-25T17:40:33</pubDate>
+      </date>
+      <resEd>NBEP 2023</resEd>
+      <otherCitDet>Suggested bibliographic reference: NBEP, 2024. Environmental Justice Priority Areas, 2024, NBEP 2024; EJAREAS_2024_NBEP2024. Narragansett Bay Estuary Program (NBEP), URL: http://www.nbep.org, Providence, Rhode Island (publication date: 2024-01-25)</otherCitDet>
+      <citRespParty>
+        <rpOrgName>Narragansett Bay Estuary Program</rpOrgName>
+        <role>
+          <RoleCd value="006"/>
+        </role>
+        <rpCntInfo>
+          <cntAddress addressType="both">
+            <delPoint>235 Promenade Street, Suite 393</delPoint>
+            <city>Providence</city>
+            <adminArea>Rhode Island</adminArea>
+            <postCode>02908</postCode>
+            <eMailAdd>info@nbep.org</eMailAdd>
+            <country>US</country>
+          </cntAddress>
+          <cntPhone>
+            <voiceNum>401-633-0550 </voiceNum>
+          </cntPhone>
+        </rpCntInfo>
+      </citRespParty>
+      <resTitle>EJAREAS_2024_NBEP2024</resTitle>
+    </idCitation>
+    <idPurp>Environmental justice indicators and priority areas in the Narragansett Bay region at the U.S. Census block group scale. Scores were calculated using the Narragansett Bay Estuary Program EJMAP tool (NBEP 2024). This dataset is intended for general planning, graphic display, and GIS analysis.</idPurp>
+    <idAbs>Environmental justice indicators and priority areas in the Narragansett Bay region at the U.S. Census block group scale. Scores were calculated using the Narragansett Bay Estuary Program EJMAP tool (NBEP 2024). This dataset is intended for general planning, graphic display, and GIS analysis.</idAbs>
+    <idCredit>First Street; National Landcover Database; U.S. Environmental Protection Agency EJSCREEN; Narragansett Bay Estuary Program</idCredit>
+    <searchKeys>
+      <keyword>environmental justice</keyword>
+      <keyword>underserved areas</keyword>
+      <keyword>population vulnerability</keyword>
+      <keyword>social vulnerability</keyword>
+      <keyword>environmental risk susceptibility</keyword>
+      <keyword>ejmap</keyword>
+      <keyword>population demographics</keyword>
+      <keyword>people</keyword>
+    </searchKeys>
+    <resConst>
+      <Consts>
+        <useLimit>This dataset is provided "as is". The producer(s) of this dataset, contributors to this dataset, and the Narragansett Bay Estuary Program (NBEP) do not make any warranties of any kind for this dataset, and are not liable for any loss or damage however and whenever caused by any use of this dataset. This data is provided under the Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) license. Once acquired, any modification made to the data must be noted in the metadata. Please acknowledge both NBEP and the primary producer(s) of this dataset or any derived products. These data are intended for use as a tool for reference, display, and general GIS analysis purposes only. It is the responsibility of the data user to use the data appropriately and consistent with the limitations of geospatial data in general and these data in particular. The information contained in these data may be dynamic and could change over time. The data accuracy is checked against best available sources which may be dated. The data are not better than the original sources from which they are derived. These data are not designed for use as a primary regulatory tool in permitting or siting decisions and are not a legally authoritative source for the location of natural or manmade features. The depicted boundaries, interpretations, and analysis derived from have not been verified at the site level them and do not eliminate the need for onsite sampling, testing, and detailed study of specific sites. This project was funded by agreements by the Environmental Protection Agency (EPA) to Roger Williams University (RWU) in partnership with the Narragansett Bay Estuary Program. Although the information in this document has been funded wholly or in part by EPA under the agreements CE00A00967 to RWU, it has not undergone the Agency’s publications review process and therefore, may not necessarily reflect the views of the Agency and no official endorsement should be inferred. The viewpoints expressed here do not necessarily represent those of the Narragansett Bay Estuary Program, RWU, or EPA nor does mention of trade names, commercial products, or causes constitute endorsement or recommendation for use.</useLimit>
+      </Consts>
+    </resConst>
+    <themeKeys>
+      <thesaName>
+        <resTitle>ISO 19115 Topic Category</resTitle>
+      </thesaName>
+      <keyword>Environment, Health, Society</keyword>
+    </themeKeys>
+    <placeKeys>
+      <keyword>Rhode Island, Massachusetts, Connecticut, RI, MA, CT, Narragansett Bay Watershed, Little Narragansett Bay Watershed, Southwest Coastal Ponds Watershed, New England</keyword>
+    </placeKeys>
+    <themeKeys>
+      <keyword>environmental justice, underserved areas, population vulnerability, social vulnerability, environmental risk susceptibility, ejmap, population demographics, people</keyword>
+    </themeKeys>
+    <dataChar>
+      <CharSetCd value="004"/>
+    </dataChar>
+    <idStatus>
+      <ProgCd value="001"/>
+    </idStatus>
+    <dataExt>
+      <exDesc>Publication Date</exDesc>
+      <tempEle>
+        <TempExtent>
+          <exTemp>
+            <TM_Period>
+              <tmBegin>2016-01-01T00:00:00</tmBegin>
+              <tmEnd>2023-01-01T00:00:00</tmEnd>
+            </TM_Period>
+          </exTemp>
+        </TempExtent>
+      </tempEle>
+    </dataExt>
+    <idPoC>
+      <rpOrgName>Narragansett Bay Estuary Program</rpOrgName>
+      <role>
+        <RoleCd value="006"/>
+      </role>
+      <rpCntInfo>
+        <cntAddress addressType="both">
+          <delPoint>235 Promenade Street, Suite 393</delPoint>
+          <city>Providence</city>
+          <adminArea>Rhode Island</adminArea>
+          <postCode>02908</postCode>
+          <eMailAdd>info@nbep.org</eMailAdd>
+          <country>US</country>
+        </cntAddress>
+        <cntPhone>
+          <voiceNum>401-633-0550 </voiceNum>
+        </cntPhone>
+      </rpCntInfo>
+    </idPoC>
+    <resMaint>
+      <maintFreq>
+        <MaintFreqCd value="011"/>
+      </maintFreq>
+    </resMaint>
+    <tpCat>
+      <TopicCatCd value="007"/>
+    </tpCat>
+    <tpCat>
+      <TopicCatCd value="009"/>
+    </tpCat>
+    <tpCat>
+      <TopicCatCd value="016"/>
+    </tpCat>
+  </dataIdInfo>
+  <mdMaint>
+    <maintFreq>
+      <MaintFreqCd value="011"/>
+    </maintFreq>
+  </mdMaint>
+  <mdConst>
+    <Consts>
+      <useLimit>This dataset is provided "as is". The producer(s) of this dataset, contributors to this dataset, and the Narragansett Bay Estuary Program (NBEP) do not make any warranties of any kind for this dataset, and are not liable for any loss or damage however and whenever caused by any use of this dataset. This data is provided under the Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) license. Once acquired, any modification made to the data must be noted in the metadata. Please acknowledge both NBEP and the primary producer(s) of this dataset or any derived products. These data are intended for use as a tool for reference, display, and general GIS analysis purposes only. It is the responsibility of the data user to use the data appropriately and consistent with the limitations of geospatial data in general and these data in particular. The information contained in these data may be dynamic and could change over time. The data accuracy is checked against best available sources which may be dated. The data are not better than the original sources from which they are derived. These data are not designed for use as a primary regulatory tool in permitting or siting decisions and are not a legally authoritative source for the location of natural or manmade features. The depicted boundaries, interpretations, and analysis derived from have not been verified at the site level them and do not eliminate the need for onsite sampling, testing, and detailed study of specific sites. This project was funded by agreements by the Environmental Protection Agency (EPA) to Roger Williams University (RWU) in partnership with the Narragansett Bay Estuary Program. Although the information in this document has been funded wholly or in part by EPA under the agreements CE00A00967 to RWU, it has not undergone the Agency’s publications review process and therefore, may not necessarily reflect the views of the Agency and no official endorsement should be inferred. The viewpoints expressed here do not necessarily represent those of the Narragansett Bay Estuary Program, RWU, or EPA nor does mention of trade names, commercial products, or causes constitute endorsement or recommendation for use.</useLimit>
+    </Consts>
+  </mdConst>
+  <dqInfo>
+    <report type="DQQuanAttAcc">
+      <measDesc>Attribute accuracy is derived from the source datasets. Due to uncertainty in demographic data at the block group level, EJSCREEN advises against use of estimates for a single block group, and recommends summarizing trends across larger areas of several block groups. </measDesc>
+    </report>
+    <report type="DQConcConsis">
+      <measDesc>Tests for logical consistency were run using ArcGIS Pro 2.9.3 software. Dataset contains discrete, non-overlapping polygons for each area. </measDesc>
+    </report>
+    <report type="DQCompOm">
+      <measDesc>All block group polygons that intersected with NBEP study areas and contained land were retained. </measDesc>
+    </report>
+    <report type="DQAbsExtPosAcc">
+      <measDesc>Not tested. Polygons were derived as is from source dataset, U.S. Census TIGERS.</measDesc>
+    </report>
+    <dataLineage>
+      <dataSource>
+        <srcDesc>Census block groups for Rhode Island, Massachusetts, and Connecticut as defined by the 2020 U.S. Census. Census data has been supplemented with town names (RIGIS 2001; MassGIS 2021; CTDEEP 2005), watersheds (USGS WBD 2023), and NBEP study areas (NBEP 2017). This dataset is intended for general planning, graphic display, and GIS analysis. </srcDesc>
+        <srcCitatn>
+          <resTitle>RICTMA_BlockGroups_2020_NBEP2023 </resTitle>
+          <date>
+            <pubDate>2023-09-18T00:00:00</pubDate>
+          </date>
+          <citRespParty>
+            <rpOrgName>Narragansett Bay Estuary Program</rpOrgName>
+            <role>
+              <RoleCd value="006"/>
+            </role>
+            <rpCntInfo>
+              <cntAddress addressType="both">
+                <delPoint>235 Promenade Street, Suite 393</delPoint>
+                <city>Providence</city>
+                <adminArea>Rhode Island</adminArea>
+                <postCode>02908</postCode>
+                <eMailAdd>info@nbep.org</eMailAdd>
+                <country>US</country>
+              </cntAddress>
+              <cntPhone>
+                <voiceNum>401-633-0550 </voiceNum>
+              </cntPhone>
+            </rpCntInfo>
+          </citRespParty>
+        </srcCitatn>
+      </dataSource>
+      <dataSource>
+        <srcDesc>EJSCREEN is an environmental justice mapping and screening tool that provides EPA with a nationally consistent dataset and approach for combining environmental and demographic indicators. EJSCREEN was developed in order to better meet the Agency’s responsibilities related to the protection of public health and the environment.</srcDesc>
+        <srcCitatn>
+          <resTitle>US EPA Environmental Justice Screening and Mapping Tool</resTitle>
+          <resAltTitle>EJSCREEN</resAltTitle>
+          <date>
+            <pubDate>2023-01-01T00:00:00</pubDate>
+          </date>
+          <citRespParty>
+            <rpOrgName>U.S. Environmental Protection Agency</rpOrgName>
+            <rpCntInfo>
+              <cntAddress addressType="postal">
+                <delPoint>1200 Pennsylvania Ave, N.W., Mailcode 2201A</delPoint>
+                <city>Washington, DC</city>
+                <postCode>20460</postCode>
+                <eMailAdd>https://www.epa.gov/ejscreen/forms/contact-us-about-ejscreen</eMailAdd>
+                <country>US</country>
+              </cntAddress>
+            </rpCntInfo>
+          </citRespParty>
+        </srcCitatn>
+      </dataSource>
+      <dataSource>
+        <srcDesc>The National Land Cover Database (NLCD) provides nationwide data on land cover and land cover change at a 30m resolution with a 16-class legend based on a modified Anderson Level II classification system.</srcDesc>
+        <srcCitatn>
+          <resTitle>National Land Cover Database (NLCD) 2021 Impervious Surface Conterminous United States</resTitle>
+          <date>
+            <pubDate>2023-06-30T00:00:00</pubDate>
+          </date>
+          <citRespParty>
+            <rpOrgName>U.S. Geological Survey</rpOrgName>
+            <rpCntInfo>
+              <cntAddress addressType="both">
+                <delPoint>47914 252nd Street</delPoint>
+                <city>Sioux Falls</city>
+                <adminArea>South Dakota</adminArea>
+                <postCode>57198-0001</postCode>
+                <eMailAdd>custserv@usgs.gov</eMailAdd>
+                <country>US</country>
+              </cntAddress>
+              <cntPhone>
+                <voiceNum>605/594-6151</voiceNum>
+                <faxNum>605/594-6589</faxNum>
+              </cntPhone>
+            </rpCntInfo>
+          </citRespParty>
+        </srcCitatn>
+        <srcCitatn>
+          <resTitle>NLCD CONUS 2021 Tree Canopy Cover</resTitle>
+          <date>
+            <pubDate>2023-04-01T00:00:00</pubDate>
+          </date>
+          <citRespParty>
+            <rpOrgName>U.S. Geological Survey</rpOrgName>
+            <rpCntInfo>
+              <cntAddress addressType="both">
+                <delPoint>47914 252nd Street</delPoint>
+                <city>Sioux Falls</city>
+                <adminArea>South Dakota</adminArea>
+                <postCode>57198-0001</postCode>
+                <eMailAdd>custserv@usgs.gov</eMailAdd>
+                <country>US</country>
+              </cntAddress>
+              <cntPhone>
+                <voiceNum>605/594-6151</voiceNum>
+                <faxNum>605/594-6589</faxNum>
+              </cntPhone>
+            </rpCntInfo>
+          </citRespParty>
+        </srcCitatn>
+      </dataSource>
+      <dataSource>
+        <srcDesc>First Street models and quantifies physical climate risk in the United States.</srcDesc>
+        <srcCitatn>
+          <resTitle>Flood v2.1 Summary Flood Tract Summary</resTitle>
+          <date>
+            <pubDate>2022-01-01T00:00:00</pubDate>
+          </date>
+          <citRespParty>
+            <rpOrgName>First Street</rpOrgName>
+            <rpCntInfo>
+              <cntAddress addressType="both">
+                <delPoint>215 Plymouth Street, Floor 3</delPoint>
+                <city>Brooklyn</city>
+                <adminArea>New York</adminArea>
+                <postCode>11201</postCode>
+                <eMailAdd>support@firststreet.org</eMailAdd>
+                <country>US</country>
+              </cntAddress>
+            </rpCntInfo>
+          </citRespParty>
+        </srcCitatn>
+        <srcCitatn>
+          <resTitle>Heat v1.1 Summary Heat Tract Summary</resTitle>
+          <date>
+            <pubDate>2022-01-01T00:00:00</pubDate>
+          </date>
+          <citRespParty>
+            <rpOrgName>First Street</rpOrgName>
+            <rpCntInfo>
+              <cntAddress addressType="both">
+                <delPoint>215 Plymouth Street, Floor 3</delPoint>
+                <city>Brooklyn</city>
+                <adminArea>New York</adminArea>
+                <postCode>11201</postCode>
+                <eMailAdd>support@firststreet.org</eMailAdd>
+                <country>US</country>
+              </cntAddress>
+            </rpCntInfo>
+          </citRespParty>
+        </srcCitatn>
+      </dataSource>
+      <prcStep>
+        <stepDesc>Data was processed using ejmap_step2.py from the NBEP/EJmap_prep repository (https://github.com/NBEP/EJmap_prep/)
+
+Polygons are from RICTMA_blockgroups_2020_NBEP2023. Polygons that did not contain any land (ALAND = 0) were dropped.
+
+Columns from EPA EJSCREEN and CDC PLACES were copied without modification. 
+
+For NLCD raster data, invalid values (VALUE greater than 100) were dropped. An average raster value was calculated for each block group; this value was divided by 100 in order to normalize the data on a 0-1 scale. To account for large water bodies, the data was multiplied by the percent area land per block group (ALAND/(ALAND+AWATER)). In order to calculate lack of trees (TREES), the average value for tree cover was inverted (1 - VALUE/100).
+
+For First Street data, property risk was averaged at the census tract level. Block groups were assigned the risk level of their accompanying census tract.
+
+Under an intermediate climate change scenario and relative to a 2000 baseline, sea level rise in Rhode Island is estimated to rise 0.39-0.43 feet by 2020 and 1.25-1.28 feet by 2050 (NOAA Sea Level Rise Viewer), marking a difference of 0.82-0.89 ft between 2020 and 2050. To approximate the amount of land covered under an additional 0.85 feet of sea level rise, the area inundated by 1 ft sea level rise and 0 ft sea level rise was calculated for each block group. The area for 1 ft sea level rise was multiplied by 0.85, then the area for 0 ft sea level rise was subtracted from this value. Finally, the area of inundated land was divided by total land area, which provided the percent land inundated per block group. 
+
+State and regional percentiles were calculated using rank(pct=True). State percentiles were defined by the boundaries of each state. Regional percentiles were defined as all block groups that intersect the Narragansett Bay Estuary Program.</stepDesc>
+        <stepDateTm>2023-09-18T00:00:00</stepDateTm>
+        <stepProc>
+          <rpOrgName>Narragansett Bay Estuary Program</rpOrgName>
+          <role>
+            <RoleCd value="006"/>
+          </role>
+          <rpCntInfo>
+            <cntAddress addressType="both">
+              <delPoint>235 Promenade Street, Suite 393</delPoint>
+              <city>Providence</city>
+              <adminArea>Rhode Island</adminArea>
+              <postCode>02908</postCode>
+              <eMailAdd>info@nbep.org</eMailAdd>
+              <country>US</country>
+            </cntAddress>
+            <cntPhone>
+              <voiceNum>401-633-0550 </voiceNum>
+            </cntPhone>
+          </rpCntInfo>
+        </stepProc>
+      </prcStep>
+      <prcStep>
+        <stepDesc>Data was processed using ejmap_step2b_NBEP.py from the NBEP/EJmap_prep repository (https://github.com/NBEP/EJmap_prep/)
+
+A list of towns that intersect the Narragansett Bay Study Area was generated. Polygons for all other towns were dropped.
+
+Metadata was added from a template and modified as needed.</stepDesc>
+        <stepDateTm>2023-09-22T00:00:00</stepDateTm>
+        <stepProc>
+          <rpOrgName>Narragansett Bay Estuary Program</rpOrgName>
+          <role>
+            <RoleCd value="006"/>
+          </role>
+          <rpCntInfo>
+            <cntAddress addressType="both">
+              <delPoint>235 Promenade Street, Suite 393</delPoint>
+              <city>Providence</city>
+              <adminArea>Rhode Island</adminArea>
+              <postCode>02908</postCode>
+              <eMailAdd>info@nbep.org</eMailAdd>
+              <country>US</country>
+            </cntAddress>
+            <cntPhone>
+              <voiceNum>401-633-0550 </voiceNum>
+            </cntPhone>
+          </rpCntInfo>
+        </stepProc>
+      </prcStep>
+      <prcStep>
+        <stepDesc>EJmap (https://github.com/nbep/ejmap) was used to produce an environmental justice map. Extraneous data was dropped and the following calculations were run: 
+    
+Indicators that meet or exceed the 80th percentile are assigned a hidden score of 100; those that fail to do so are assigned a hidden score of 0. These hidden scores are used to calculate category scores as follows:
+
+Climate Risk = [1(Flood Risk) + 1(Heat Risk)]/2
+
+Environmental Burden = [0.5(Impervious Surfaces) + 0.5(Ozone) + 0.5(Particulate Matter 2.5) + 1(Traffic Proximity) + 1(Hazardous Waste Facilities) + 1(Water Pollution) + 0.5(Lack of Trees)]/5
+
+Social Vulnerability = [1(Less Than High School Education) + 1(Limited English Speaking) + 1(Low Income) + 1(People of Color)]/4
+
+The following minimum category scores were applied: 80 for environmental burden, 1 for social vulnerability. Block groups that failed to pass at least 1 minimum category score were assigned an environmental justice score of 0. For all other block groups, the environmental justice score was calculated as:
+
+EJ Score = [1(Climate Risk) + 1(Environmental Burden) + 1(Social Vulnerability)] / 3
+
+Block groups with an environmental justice score above 0 are considered to be environmental justice areas and have EJAREA marked "Yes".</stepDesc>
+        <stepDateTm>2024-01-25T17:40:33</stepDateTm>
+        <stepProc>
+          <rpOrgName>Narragansett Bay Estuary Program</rpOrgName>
+          <rpCntInfo>
+            <cntAddress addressType="both">
+              <delPoint>235 Promenade Street, Suite 393</delPoint>
+              <city>Providence</city>
+              <adminArea>Rhode Island</adminArea>
+              <postCode>02908</postCode>
+              <eMailAdd>info@nbep.org</eMailAdd>
+              <country>US</country>
+            </cntAddress>
+            <cntPhone>
+              <voiceNum tddtty="">(401) 633-0550</voiceNum>
+            </cntPhone>
+          </rpCntInfo>
+        </stepProc>
+      </prcStep>
+    </dataLineage>
+  </dqInfo>
+  <eainfo>
+    <detailed Name="EJAREAS_2024_NBEP2024">
+      <enttyp>
+        <enttypt>Feature Class</enttypt>
+        <enttypd>Environmental justice areas in the Narragansett Bay region.</enttypd>
+        <enttypds>Narragansett Bay Estuary Program</enttypds>
+        <enttypl>EJAREAS_2024_NBEP2024</enttypl>
+      </enttyp>
+      <attr>
+        <attrlabl>OBJECTID</attrlabl>
+        <attrdef>Internal feature number.</attrdef>
+        <attrdefs>ESRI</attrdefs>
+        <attrdomv>
+          <udom>Sequential unique whole numbers that are automatically generated.</udom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>BlockGroup</attrlabl>
+        <attrdef>FIPS code for Census block group</attrdef>
+        <attrdefs>U.S. Census</attrdefs>
+        <attrdomv>
+          <udom>FIPS code for Census block group</udom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>ALAND</attrlabl>
+        <attrdef>Square meters of land</attrdef>
+        <attrdefs>U.S. Census</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>AWATER</attrlabl>
+        <attrdef>Square meters of water</attrdef>
+        <attrdefs>U.S. Census</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>Town</attrlabl>
+        <attrdef>Town name</attrdef>
+        <attrdefs>MassGIS, RIGIS, CTDEEP</attrdefs>
+        <attrdomv>
+          <udom>Town name</udom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>State</attrlabl>
+        <attrdef>State name</attrdef>
+        <attrdefs>MassGIS, RIGIS, CTDEEP</attrdefs>
+        <attrdomv>
+          <edom>
+            <edomv>Connecticut</edomv>
+            <edomvd>Connecticut</edomvd>
+            <edomvds>CTDEEP</edomvds>
+          </edom>
+          <edom>
+            <edomv>Massachusetts</edomv>
+            <edomvd>Massachusetts</edomvd>
+            <edomvds>MassGIS</edomvds>
+          </edom>
+          <edom>
+            <edomv>Rhode Island</edomv>
+            <edomvd>Rhode Island</edomvd>
+            <edomvds>RIGIS</edomvds>
+          </edom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>HUC10</attrlabl>
+        <attrdef>The U.S. Geological Survey (USGS) Watershed Boundary Dataset 10-digit hydrologic unit code of the HUC10 drainage area (unique identifier).</attrdef>
+        <attrdefs>U.S. Geological Survey (USGS) Watershed Boundary Dataset </attrdefs>
+        <attrdomv>
+          <udom>The U.S. Geological Survey (USGS) Watershed Boundary Dataset 10-digit hydrologic unit code of the HUC10 drainage area (unique identifier).</udom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>HUC10_Name</attrlabl>
+        <attrdef>The USGS name of the HUC10 drainage area. </attrdef>
+        <attrdefs>U.S. Geological Survey (USGS) Watershed Boundary Dataset</attrdefs>
+        <attrdomv>
+          <udom>The USGS name of the HUC10 drainage area. </udom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>Study_Area</attrlabl>
+        <attrdef>The NBEP study area polygon(s) that the polygon occurs in. </attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <edom>
+            <edomv>Narragansett Bay Watershed</edomv>
+            <edomvd>The watershed of Narragansett Bay. Study areas are defined in the 2017 State of Narragansett Bay &amp; Its Watershed Technical Report (nbep.org) and STUDYAREAS_NBEP2017(GIS layer).</edomvd>
+            <edomvds>Narragansett Bay Estuary Program</edomvds>
+          </edom>
+          <edom>
+            <edomv>Little Narragansett Bay</edomv>
+            <edomvd>The watershed of Little Narragansett Bay. Study areas are defined in the 2017 State of Narragansett Bay &amp; Its Watershed Technical Report (nbep.org) and STUDYAREAS_NBEP2017(GIS layer).</edomvd>
+            <edomvds>Narragansett Bay Estuary Program</edomvds>
+          </edom>
+          <edom>
+            <edomv>Southwest Coastal Ponds</edomv>
+            <edomvd>The watershed of Southwest Coastal Ponds. Study areas are defined in the 2017 State of Narragansett Bay &amp; Its Watershed Technical Report (nbep.org) and STUDYAREAS_NBEP2017(GIS layer).</edomvd>
+            <edomvds>Narragansett Bay Estuary Program</edomvds>
+          </edom>
+          <edom>
+            <edomv>Outside Study Area</edomv>
+            <edomvd>Block group does not intersect any NBEP study areas. Study areas are defined in the 2017 State of Narragansett Bay &amp; Its Watershed Technical Report (nbep.org) and STUDYAREAS_NBEP2017(GIS layer).</edomvd>
+            <edomvds>Narragansett Bay Estuary Program</edomvds>
+          </edom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>DataSource</attrlabl>
+        <attrdef>The source(s) of the primary data used to produce this dataset. </attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <udom>For more information about primary sources, please refer to the Source Data section of the metadata for this layer. </udom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>SourceYear</attrlabl>
+        <attrdef>The publication year(s) of the primary data used to produce this dataset. </attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <begdatea>20010101</begdatea>
+        <enddatea>20210101</enddatea>
+      </attr>
+      <attr>
+        <attrlabl>NBEPYear</attrlabl>
+        <attrdef>The publication year of the dataset.</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <enddatea>20230912</enddatea>
+      </attr>
+      <attr>
+        <attrlabl>Shape_Length</attrlabl>
+        <attrdef>Length of feature in internal units.</attrdef>
+        <attrdefs>ESRI</attrdefs>
+        <attrdomv>
+          <udom>Positive real numbers that are automatically generated.</udom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>Shape_Area</attrlabl>
+        <attrdef>Area of feature in internal units squared.</attrdef>
+        <attrdefs>ESRI</attrdefs>
+        <attrdomv>
+          <udom>Positive real numbers that are automatically generated.</udom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>POCPCT</attrlabl>
+        <attrdef>Percent people of color. The percent of individuals in a block group who list their racial status as a race other than white alone and/or list their ethnicity as Hispanic or Latino. That is, all people other than non-Hispanic white-alone individuals. The word "alone" in this case indicates that the person is of a single race, not multiracial.</attrdef>
+        <attrdefs>U.S. Environmental Protection Agency EJSCREEN</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>1</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>LWINCPCT</attrlabl>
+        <attrdef>Percent low income. The percent of a block group's population in households where the household income is less than or equal to twice the federal "poverty level.</attrdef>
+        <attrdefs>U.S. Environmental Protection Agency EJSCREEN</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>1</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>LESHSPCT</attrlabl>
+        <attrdef>Percent less than high school education. Percent of people age 25 or older in a block group whose education is short of a high school diploma.</attrdef>
+        <attrdefs>U.S. Environmental Protection Agency EJSCREEN</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>1</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>LNGISPCT</attrlabl>
+        <attrdef>Percent limited English speaking households. A "limited English speaking household" is one in which no member 14 years old and over (1) speaks only English or (2) speaks a non-English language and speaks English "very well." In other words, all members 14 years old and over have at least some difficulty with English.</attrdef>
+        <attrdefs>U.S. Environmental Protection Agency EJSCREEN</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>1</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>PM25</attrlabl>
+        <attrdef>PM 2.5 levels in air measured using an annual average</attrdef>
+        <attrdefs>U.S. Environmental Protection Agency EJSCREEN</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>OZONE</attrlabl>
+        <attrdef>Ozone annual mean top 10 of daily maximum 8-hour concentration in air</attrdef>
+        <attrdefs>U.S. Environmental Protection Agency EJSCREEN</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>PTRAF</attrlabl>
+        <attrdef>Traffic proximity and volume. Count of vehicles (annual average daily traffic [AADT]) at major roads within 500 meters,
+divided by distance in meters (not kilometers [km]).</attrdef>
+        <attrdefs>U.S. Environmental Protection Agency EJSCREEN</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>PTSDF</attrlabl>
+        <attrdef>Hazardous waste proximity. Count of hazardous waste management facilities (TSDFs and LQGs) within 5 km (or
+nearest one beyond 5 km), each divided by distance in km.</attrdef>
+        <attrdefs>U.S. Environmental Protection Agency EJSCREEN</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>PWDIS</attrlabl>
+        <attrdef>Wastewater discharge. RSEI modeled Toxic Concentrations at stream segments within 500 meters, divided by
+distance in km.</attrdef>
+        <attrdefs>U.S. Environmental Protection Agency EJSCREEN</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>IMPER</attrlabl>
+        <attrdef>Percent land area covered in impervious surfaces.</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>1</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>TREE</attrlabl>
+        <attrdef>Percent land with no tree cover</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>1</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>FLOOD</attrlabl>
+        <attrdef>Average flood risk</attrdef>
+        <attrdefs>First Street</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>1</rdommin>
+            <rdommax>10</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>HEAT</attrlabl>
+        <attrdef>Average heat risk</attrdef>
+        <attrdefs>First Street</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>1</rdommin>
+            <rdommax>10</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_POCPCT</attrlabl>
+        <attrdef>Regional percentile for percent people of color (POCPCT)</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_LWINCPCT</attrlabl>
+        <attrdef>Regional percentile for percent low income (LWINCPCT)</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_LESHSPCT</attrlabl>
+        <attrdef>Regional percentile for percent less than high school education (LESHSPCT)</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_LNGISPCT</attrlabl>
+        <attrdef>Regional percentile for percent limited English speaking households (LNGISPCT)</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_PM25</attrlabl>
+        <attrdef>Regional percentile for particulate matter 2.5 (PM25)</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_OZONE</attrlabl>
+        <attrdef>Regional percentile for ozone (OZONE)</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_PTRAF</attrlabl>
+        <attrdef>Regional percentile for traffic proximity (PTRAF)</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_PTSDF</attrlabl>
+        <attrdef>Regional percentile for hazardous waste proximity (PTSDF)</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_PWDIS</attrlabl>
+        <attrdef>Regional percentile for wastewater discharge (PWDIS)</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_IMPER</attrlabl>
+        <attrdef>Regional percentiles for percent impervious surfaces (IMPER)</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_TREE</attrlabl>
+        <attrdef>Regional percentile for percent no tree cover (TREE)</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_FLOOD</attrlabl>
+        <attrdef>Regional percentile for flood risk (FLOOD)</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_HEAT</attrlabl>
+        <attrdef>Regional percentile for heat risk (HEAT)</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_SOCVUL</attrlabl>
+        <attrdef>Regional social vulnerability score</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_ENVBUR</attrlabl>
+        <attrdef>Regional environmental burden score</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_CLIMATE</attrlabl>
+        <attrdef>Regional climate score</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_SCORE</attrlabl>
+        <attrdef>Regional environmental justice score</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <rdom>
+            <rdommin>0</rdommin>
+            <rdommax>100</rdommax>
+          </rdom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>N_EJAREA</attrlabl>
+        <attrdef>Regional environmental justice area</attrdef>
+        <attrdefs>Narragansett Bay Estuary Program</attrdefs>
+        <attrdomv>
+          <edom>
+            <edomv>Yes</edomv>
+            <edomvd>Block group is an environmental justice area</edomvd>
+            <edomvds>Narragansett Bay Estuary Program</edomvds>
+          </edom>
+          <edom>
+            <edomv>No</edomv>
+            <edomvd>Block group is not an environmental justice area</edomvd>
+            <edomvds>Narragansett Bay Estuary Program</edomvds>
+          </edom>
+          <edom>
+            <edomv>No Data</edomv>
+            <edomvd>Insufficient data to determine if block group is an environmental justice area</edomvd>
+            <edomvds>Narragansett Bay Estuary Program</edomvds>
+          </edom>
+        </attrdomv>
+      </attr>
+    </detailed>
+  </eainfo>
+  <mdDateSt Sync="TRUE">20230925</mdDateSt>
+</metadata>

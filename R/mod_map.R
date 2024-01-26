@@ -1,7 +1,7 @@
-#  TITLE: ej_map.R
+#  TITLE: mod_map.R
 #  DESCRIPTION: Module to display EJ map
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-26
+#  DATE LAST UPDATED: 2024-01-26
 #  GIT REPO: NBEP/EJmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
@@ -26,19 +26,10 @@ map_ui <- function(id, input_shp, percentiles = c('N_', 'P_'),
         container = 'body'),  # Allows dropdown overflow
       multiple = FALSE
     ),
-    # Percentile type ----
-    awesomeRadio(
-      inputId = ns('percentile_type'),
-      label = NULL, 
-      choices = list_percentile_codes(percentiles),
-      selected = list_percentile_codes(percentiles)[1],
-      inline = TRUE, 
-      checkbox = TRUE
-    ),
     
     # Map ----
     shinycssloaders::withSpinner(
-      leaflet::leafletOutput(ns('map'), width='100%', height = '600px'),
+      leaflet::leafletOutput(ns('map')),
       type = 5
     )
   )
@@ -53,7 +44,13 @@ map_server <- function(id, ejvar, selected_tab, this_tab,
     ns <- NS(id)
     
     # Define variables ----
-    input_shp <- reactive({ ejvar$output_shp() })
+    input_shp <- reactive({ 
+      input_shp <- ejvar$output_shp()
+      colnames(input_shp) <- gsub("N_", "_", colnames(input_shp))
+      colnames(input_shp) <- gsub("P_", "_", colnames(input_shp))
+      
+      return(input_shp)
+    })
     
     # Update list of parameters ----
     observeEvent(ejvar$btn_metrics(), {
@@ -71,9 +68,8 @@ map_server <- function(id, ejvar, selected_tab, this_tab,
     # Selected layer ----
     display_layer <- reactive({
       req(input$select_layer)
-      req(input$percentile_type)
 
-      layer_name <- paste0(input$percentile_type, input$select_layer)
+      layer_name <- paste0("_", input$select_layer)
 
       display_layer <- input_shp()[[layer_name]]
 
@@ -91,10 +87,11 @@ map_server <- function(id, ejvar, selected_tab, this_tab,
     output$map <- renderLeaflet({
       leaflet::leaflet() %>%
         # * Set map dimensions ----
-      leaflet::fitBounds(-71.9937973, # Lon min
-                  41.29999924, # Lat min
-                  -70.5164032, # Lon max
-                  42.43180084 # Lat max
+      leaflet::fitBounds(
+        -71.9937973, # Lon min
+        41.29999924, # Lat min
+        -70.5164032, # Lon max
+        42.43180084 # Lat max
                   ) %>%
       # * Add basemap tiles ----
       leaflet::addProviderTiles(
