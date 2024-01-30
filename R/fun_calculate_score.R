@@ -1,7 +1,7 @@
 #  TITLE: fun_calculate_score.R
 #  DESCRIPTION: Calculates scores
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2024-01-25
+#  DATE LAST UPDATED: 2024-01-30
 #  GIT REPO: nbep/ejmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
@@ -26,12 +26,12 @@ calculate_score <- function(
   # Define variables ----
   metric_list <- df_metrics$METRIC_CODE
   cat_list <- df_categories$CAT_CODE
-  df_ej <- input_shp
-  
   cat_length <- df_categories %>%
     filter(MIN_SCORE > 0)
   
-  if(prefix_list == "N_") {
+  if("P_" %in% prefix_list) {
+    df_ej <- input_shp 
+  } else {
     df_ej <- input_shp %>%
       filter(!Study_Area == "Outside Study Area")
   }

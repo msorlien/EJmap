@@ -1,15 +1,14 @@
 #  TITLE: mod_map.R
 #  DESCRIPTION: Module to display EJ map
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2024-01-26
+#  DATE LAST UPDATED: 2024-01-30
 #  GIT REPO: NBEP/EJmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
 
 # UI --------------------------------------------------------------------------
 
-map_ui <- function(id, input_shp, percentiles = c('N_', 'P_'), 
-                   default_layer = 'SCORE') {
+map_ui <- function(id, input_shp, default_layer = 'SCORE') {
   
   ns <- NS(id)
 
@@ -19,7 +18,7 @@ map_ui <- function(id, input_shp, percentiles = c('N_', 'P_'),
     shinyWidgets::pickerInput(
       inputId = ns('select_layer'),
       label = 'Select Layer',
-      choices = list_column_codes(input_shp),
+      choices = list_indicators_grouped(input_shp),
       selected = default_layer,
       options = list(
         `live-search` = TRUE,
@@ -37,7 +36,7 @@ map_ui <- function(id, input_shp, percentiles = c('N_', 'P_'),
 
 # Server ----------------------------------------------------------------------.
 
-map_server <- function(id, ejvar, selected_tab, this_tab, 
+map_server <- function(id, ejvar, active_tab, map_tab, 
                        default_layer = 'SCORE') {
   moduleServer(id, function(input, output, session) {
     
@@ -56,7 +55,7 @@ map_server <- function(id, ejvar, selected_tab, this_tab,
     observeEvent(ejvar$btn_metrics(), {
 
       # Define variables
-      col_codes <- list_column_codes(input_shp())
+      col_codes <- list_indicators_grouped(input_shp())
 
       # Update layer list
       shinyWidgets::updatePickerInput(session = session,
@@ -92,7 +91,7 @@ map_server <- function(id, ejvar, selected_tab, this_tab,
         41.29999924, # Lat min
         -70.5164032, # Lon max
         42.43180084 # Lat max
-                  ) %>%
+        ) %>%
       # * Add basemap tiles ----
       leaflet::addProviderTiles(
         leaflet::providers$Esri.WorldTopoMap) %>%
@@ -119,7 +118,7 @@ map_server <- function(id, ejvar, selected_tab, this_tab,
     
     # * Remove/add legend ----
     observe({
-      req(selected_tab() == this_tab)
+      req(active_tab() == map_tab)
 
       leaflet::leafletProxy('map') %>%
         leaflet::removeControl('legend')
@@ -146,7 +145,7 @@ map_server <- function(id, ejvar, selected_tab, this_tab,
     # Update polygons ----
     observe({
       req(input_shp())
-      req(selected_tab() == this_tab)
+      req(active_tab() == map_tab)
       
       # * Clear polygons ----
       leaflet::leafletProxy('map') %>%

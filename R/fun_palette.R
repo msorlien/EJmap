@@ -1,7 +1,7 @@
 #  TITLE: fun_color_pal
 #  DESCRIPTION: Calculates scores
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-28
+#  DATE LAST UPDATED: 2024-01-26
 #  GIT REPO: NBEP/EJmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------
@@ -14,8 +14,8 @@ pal_colors <- function(var_name, percentile_min = 80) {
   pal_min <- c(0, 50, 60, 70, 80, 90, 95)
   pal_roy <- c('#FED976', '#FEB24C', '#FD8D3C', '#FC4E2A', '#E31A1C', 
                '#BD0026', '#6C0000') 
-  pal_grey <- c('#F0F0F0', '#D7D7D7', '#B7B7B7', '#999999', '#7C7C7C', 
-                '#626262', '#404040')
+  pal_grey <- c('#f2f2f2', '#d9d9d9', '#c2c2c2', '#ababab', '#949494', 
+                '#7a7a7a', '#636363')
   
   df_pal <- data.frame(pal_min, pal_roy, pal_grey) %>%
     mutate(pal_roy = if_else(pal_min >= percentile_min, pal_roy, pal_grey))

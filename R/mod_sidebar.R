@@ -2,7 +2,7 @@
 #  TITLE: mod_sidebar.R
 #  DESCRIPTION: Module to select location & parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-08-25
+#  DATE LAST UPDATED: 2024-01-30
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -63,7 +63,12 @@ map_sidebar_server <- function(
     outputOptions(output, 'show_metrics', suspendWhenHidden = FALSE)
     
     # Default shp ----
-    shp_reactive <- reactiveValues(shp = input_shp_simple)
+    # Drop extra cols/rows (default is regional percentiles)
+    default_shp <- input_shp_simple %>% 
+      select(-starts_with("P_")) %>%
+      filter(!Study_Area == "Outside Study Area")
+ 
+    shp_reactive <- reactiveValues(shp = default_shp)
     
     # Select parameters ----
     # * Add module ----
@@ -83,7 +88,6 @@ map_sidebar_server <- function(
     download_server('download', 
                     input_shp = input_shp, 
                     select_metrics = select_metrics, 
-                    percentile_type = percentile_type,
                     metrics = df_par, 
                     location = df_loc)
 
@@ -93,9 +97,7 @@ map_sidebar_server <- function(
 
         output_shp = reactive({ df_loc$output_shp() }),
         btn_metrics = reactive({ df_par$button() }),
-        location_type = reactive({ df_loc$location_type() }),
-        percentile_min = reactive({ df_par$percentile_min() }),
-        percentile_type = reactive({ df_par$percentile_type() })
+        percentile_min = reactive({ df_par$percentile_min() })
 
       )
     )

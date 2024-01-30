@@ -26,8 +26,7 @@ download_ui <- function(id) {
 
 # Server -----------------------------------------------------------------------
 
-download_server <- function(id, input_shp, select_metrics, percentile_type,
-                            metrics, location) {
+download_server <- function(id, input_shp, select_metrics, metrics, location) {
   moduleServer(id, function(input, output, session) {
     
     # Set variables ----
@@ -59,7 +58,7 @@ download_server <- function(id, input_shp, select_metrics, percentile_type,
           df_shp <- calculate_score(
             input_shp = df_shp, 
             percentile_min = metrics$percentile_min(), 
-            prefix_list = percentile_type, 
+            prefix_list = metrics$percentile_type(), 
             min_pass = metrics$min_pass(), 
             min_ej = metrics$min_ej(), 
             df_metrics = metrics$df_metric(), 
@@ -82,7 +81,7 @@ download_server <- function(id, input_shp, select_metrics, percentile_type,
             df_metrics = metrics$df_metric(), 
             df_cats = metrics$df_cat(), 
             min_percentile = metrics$percentile_min(), 
-            percentile_type = percentile_type, 
+            percentile_type = metrics$percentile_type(), 
             min_score = metrics$min_ej(), 
             min_pass = metrics$min_pass()
           )

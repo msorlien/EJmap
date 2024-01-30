@@ -2,7 +2,7 @@
 #  TITLE: select_metrics.R
 #  DESCRIPTION: Module to select parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-08-25
+#  DATE LAST UPDATED: 2024-01-30
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -74,27 +74,24 @@ selectPar_server <- function(id, input_shp) {
     envbur <- selectParInput_server('envbur_metrics')
     climate <- selectParInput_server('climate_metrics')
     
-    # Compile list of selected metrics ----
+    # Advanced Options ----
+    # * Prep data for module ----
     metrics_list <- reactive({ c(socvul(), health(), envbur(), climate()) })
-    
-    # Pass btn_advanced as reactive value ----
     btn_reset <- reactive({ input$btn_advanced })
     
-    # Add server for advanced options ----
+    # * Add module ----
     adv_opt <- advancedSelect_server('advanced_options', metrics_list, 
                                      btn_reset)
-    
-    # Button: View Advanced Options
+
+    # * Show/hide button ----
     observeEvent(input$btn_advanced, {
       bslib::nav_select('tabset_metrics', 'tab_advanced')
     })
-    
-    # Button: Hide advanced options
     observeEvent(c(adv_opt$btn_save(), adv_opt$btn_cancel()), {
       bslib::nav_select('tabset_metrics', 'tab_metrics')
     })
     
-    # Toggle buttons on/off ----
+    # Disable buttons if no metrics selected ----
     shinyjs::disable('btn_calculate')
     shinyjs::disable('btn_advanced')
 
@@ -134,20 +131,35 @@ selectPar_server <- function(id, input_shp) {
       return(shp_output)
     })
     
+    # Update output values ----
+    values <- reactiveValues(
+      df_metric = metric_table, 
+      df_cat = cat_table,
+      min_percentile = 80,
+      percentile_type = "N_",
+      min_pass = 4,
+      min_ej = 0)
+    observe({ 
+      values$df_metric <- adv_opt$df_metric()
+      values$df_cat <- adv_opt$df_cat()
+      values$min_percentile <- adv_opt$percentile_min()
+      values$percentile_type <- adv_opt$percentile_type()
+      values$min_pass <- adv_opt$min_pass()
+      values$min_ej <- as.numeric(input$min_ej)
+    }) %>%
+      bindEvent(input$btn_calculate)
     
     # Output reactive values ----
     return(
       list(
-        
         output_shp = reactive({ shp_output() }),
-        df_metric = reactive({ adv_opt$df_metric() }),
-        df_cat = reactive({ adv_opt$df_cat() }),
-        percentile_min = reactive({ adv_opt$percentile_min() }),
-        percentile_type = reactive({ adv_opt$percentile_type() }),
-        min_pass = reactive({ adv_opt$min_pass() }),
-        min_ej = reactive({ as.numeric(input$min_ej) }),
+        df_metric = reactive({ values$df_metric }),
+        df_cat = reactive({ values$df_cat }),
+        percentile_min = reactive({ values$min_percentile }),
+        percentile_type = reactive({ values$percentile_type }),
+        min_pass = reactive({ values$min_pass }),
+        min_ej = reactive({ values$min_ej }),
         button = reactive({ input$btn_calculate })
-        
       )
     )
     
