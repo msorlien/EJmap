@@ -6,8 +6,8 @@
 #'
 #' @param input_shp A shapefile.
 #' @returns A list.
-#' @seealso [list_category_codes()], [list_indicators_grouped()], 
-#'   [list_indicators_ungrouped()]
+#' @seealso [list_category_codes()], [list_percentile_codes()], 
+#'   [list_indicators_grouped()], [list_indicators_ungrouped()]
 list_indicator_codes <- function(input_shp) {
   col_list <- input_shp %>%
     sf::st_drop_geometry() %>%
@@ -27,8 +27,8 @@ list_indicator_codes <- function(input_shp) {
 #'
 #' @param input_shp A shapefile.
 #' @returns A list.
-#' @seealso [list_indicator_codes()], [list_indicators_grouped()], 
-#'   [list_indicators_ungrouped()]
+#' @seealso [list_indicator_codes()], [list_percentile_codes()], 
+#'   [list_indicators_grouped()], [list_indicators_ungrouped()]
 list_category_codes <- function(input_shp) {
   metric_list <- list_indicator_codes(input_shp)
   
@@ -41,6 +41,29 @@ list_category_codes <- function(input_shp) {
   return(col_list)
 }
 
+#' List percentile codes
+#' 
+#' `list_percentile_codes()` creates filtered list of percentile codes.
+#'
+#' @param input_percentiles A list. Acceptable values are "N_", "P_".
+#' @returns A named list.
+#' @seealso [list_indicator_codes()], [list_category_codes()], 
+#'   [list_indicators_grouped()], [list_indicators_ungrouped()]
+list_percentile_codes <- function(input_percentiles){
+  
+  percentile_codes <- c("N_", "P_")
+  percentile_names <- c("Compare to Region",
+                        "Compare to State")
+  
+  df_percentiles <- data.frame(percentile_codes, percentile_names) %>%
+    filter(percentile_codes %in% input_percentiles)
+
+  percentile_list <- df_percentiles$percentile_codes
+  names(percentile_list) <- df_percentiles$percentile_names
+  
+  return(percentile_list)
+}
+
 #' Group indicator list by category
 #' 
 #' `list_indicators_map()` creates list of indicator codes and names, 
@@ -50,7 +73,7 @@ list_category_codes <- function(input_shp) {
 #' @param input_shp A shapefile.
 #' @returns A grouped list with named elements.
 #' @seealso [list_category_codes()], [list_indicator_codes()], 
-#' [list_indicators_ungrouped()]
+#'   [list_percentile_codes()], [list_indicators_ungrouped()]
 list_indicators_grouped <- function(input_shp){
   
   # Filter column_table for selected indicators
@@ -105,7 +128,7 @@ list_indicators_grouped <- function(input_shp){
 #'   "ENVBUR", "CLIMATE", and "EJ".
 #' @returns A list with named elements.
 #' @seealso [list_category_codes()], [list_indicator_codes()], 
-#' [list_indicators_grouped()]
+#'   [list_percentile_codes()], [list_indicators_grouped()]
 list_indicators_ungrouped <- function(input_shp, category){
   
   # Filter column table for col in input_shp

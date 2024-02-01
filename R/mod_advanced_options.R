@@ -1,16 +1,14 @@
 #  TITLE: mod_advanced_options.R
 #  DESCRIPTION: Module to select advanced options for selected metrics
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2024-01-25
+#  DATE LAST UPDATED: 2024-02-01
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
 
-library(shinyWidgets)
-
 # Module ui -------------------------------------------------------------------
 
-advancedSelect_ui <- function(id, percentiles = c("N_", "P_")) {
+advancedSelect_ui <- function(id) {
   
   ns <- NS(id)
   
@@ -45,28 +43,17 @@ advancedSelect_ui <- function(id, percentiles = c("N_", "P_")) {
     ),
     
     # Percentiles -----
-    h4('Minimum Percentile'),
-    'Percentiles are a way to rank and compare data. A block group that is 
-    listed as the 80th percentile for a metric has a higher value 
-    than 80% of the block groups.',
+    h4("Percentiles"),
+    "Percentiles are a way to rank and compare data. A block group that 
+      is listed as the 80th percentile for a metric has a higher value than 
+      80% of the block groups. Block groups can either be compared to 
+      the region or to the state.",
     shinyWidgets::pickerInput(
-      ns('percentile_min'),
-      label = 'Minimum Percentile',
+      ns("percentile_min"),
+      label = h5("Minimum Percentile"),
       choices = c(50, 60, 70, 80, 90, 95),
       selected = 80),
-    
-    conditionalPanel(
-      condition = paste0(length(percentiles), " > 1"),
-      h4("Percentile Type"),
-      "Regional percentiles rank block groups across the entire region. State 
-      percentiles rank block groups within a state.",
-      shinyWidgets::pickerInput(
-        ns("percentile_type"),
-        label = "Percentile Type", 
-        choices = list_percentile_codes(percentiles),
-        selected = list_percentile_codes(percentiles)[1]
-      )
-    ),
+    uiOutput(ns("ptype_ui")),
     
     # Metrics ----
     h4('Metric Weight'),
@@ -99,7 +86,7 @@ advancedSelect_ui <- function(id, percentiles = c("N_", "P_")) {
 
 # Module server ---------------------------------------------------------------
 
-advancedSelect_server <- function(id, metric_list, btn_reset) {
+advancedSelect_server <- function(id, metric_list, percentile_type, btn_reset) {
   moduleServer(id, function(input, output, session) {
     
     # Set namespace ----
@@ -137,7 +124,7 @@ advancedSelect_server <- function(id, metric_list, btn_reset) {
       cats = cat_table, 
       metrics = metric_table, 
       min_percentile = 80, 
-      percentile_type = "N_",
+      percentile_type = percentile_type[1],
       min_pass = 4)
     
     # Cat Tables ----
@@ -197,6 +184,14 @@ advancedSelect_server <- function(id, metric_list, btn_reset) {
         filter(CAT_CODE == 'CLIMATE') %>%
         select(WEIGHT) %>%
         rename(Weight = WEIGHT)
+    })
+    
+    # Percentile type -----
+    output$ptype_ui <- renderUI({
+      shinyWidgets::pickerInput(
+        ns("percentile_type"),
+        label = h5("Percentile Type"), 
+        choices = list_percentile_codes(percentile_type))
     })
     
     # Add module servers ----
@@ -276,7 +271,7 @@ advancedSelect_server <- function(id, metric_list, btn_reset) {
         btn_cancel = reactive({ input$btn_cancel }),
         
         percentile_min = reactive({ as.numeric(values$min_percentile) }),
-        percentile_type = reactive ({ values$percentile_type }),
+        percentile_type = reactive({ values$percentile_type }),
         min_pass = reactive({ as.numeric(values$min_pass) }),
         df_cat = reactive({ df_cat() }),
         df_metric = reactive({ df_metric() })

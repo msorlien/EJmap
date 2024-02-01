@@ -2,7 +2,7 @@
 #  TITLE: mod_sidebar.R
 #  DESCRIPTION: Module to select location & parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2024-01-30
+#  DATE LAST UPDATED: 2024-02-01
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -53,26 +53,33 @@ map_sidebar_ui <- function(id) {
 
 map_sidebar_server <- function(
     id, input_shp, input_shp_simple, select_metrics = TRUE, 
-    percentile_type = c('N_', 'P_')
-    ) {
+    percentile_type = c("N_", "P_")) {
   moduleServer(id, function(input, output, session) { 
     
     # Pass info to ui ----
     output$show_metrics <- renderText({ paste0(select_metrics) })
-    
     outputOptions(output, 'show_metrics', suspendWhenHidden = FALSE)
     
     # Default shp ----
-    # Drop extra cols/rows (default is regional percentiles)
+    # Drop columns for "wrong" percentile type
+    drop_list <- c("N_", "P_")
+    drop_list <- drop_list[drop_list != percentile_type[1]]
+    
     default_shp <- input_shp_simple %>% 
-      select(-starts_with("P_")) %>%
-      filter(!Study_Area == "Outside Study Area")
+      select(-starts_with(drop_list)) 
+    
+    # If using regional percentiles, drop extra rows
+    if(percentile_type[1] == "N_") {
+      default_shp <- filter(default_shp, !Study_Area == "Outside Study Area")
+    }
  
     shp_reactive <- reactiveValues(shp = default_shp)
     
     # Select parameters ----
     # * Add module ----
-    df_par <- selectPar_server('metrics', input_shp_simple)
+    df_par <- selectPar_server('metrics', 
+      input_shp = input_shp_simple, 
+      percentile_type = percentile_type)
     
     # * Update shp ----
     observeEvent(df_par$button(), {

@@ -2,7 +2,7 @@
 #  TITLE: select_metrics.R
 #  DESCRIPTION: Module to select parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2024-01-30
+#  DATE LAST UPDATED: 2024-02-01
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
@@ -35,13 +35,11 @@ selectPar_ui <- function(id) {
         
         # Minimum score ----
         h3('Minimum Score'),
-        numericInput(
-          ns('min_ej'),
+        numericInput(ns('min_ej'),
           'Set minimum EJ score for environmental justice areas.',
           value = 0,
           min = 0,
-          max = 100
-        ),
+          max = 100),
         
         # * Advanced Options Button ----
         actionButton(ns('btn_advanced'),
@@ -63,7 +61,7 @@ selectPar_ui <- function(id) {
 
 # Server -----------------------------------------------------------------------
 
-selectPar_server <- function(id, input_shp) {
+selectPar_server <- function(id, input_shp, percentile_type) {
   moduleServer(id, function(input, output, session) {
     
     ns <- NS(id)  # Set namespace
@@ -80,8 +78,10 @@ selectPar_server <- function(id, input_shp) {
     btn_reset <- reactive({ input$btn_advanced })
     
     # * Add module ----
-    adv_opt <- advancedSelect_server('advanced_options', metrics_list, 
-                                     btn_reset)
+    adv_opt <- advancedSelect_server('advanced_options', 
+      metric_list = metrics_list,
+      percentile_type = percentile_type,
+      btn_reset = btn_reset)
 
     # * Show/hide button ----
     observeEvent(input$btn_advanced, {
@@ -135,14 +135,14 @@ selectPar_server <- function(id, input_shp) {
     values <- reactiveValues(
       df_metric = metric_table, 
       df_cat = cat_table,
-      min_percentile = 80,
-      percentile_type = "N_",
+      percentile_min = 80,
+      percentile_type = percentile_type[1],
       min_pass = 4,
       min_ej = 0)
     observe({ 
       values$df_metric <- adv_opt$df_metric()
       values$df_cat <- adv_opt$df_cat()
-      values$min_percentile <- adv_opt$percentile_min()
+      values$percentile_min <- adv_opt$percentile_min()
       values$percentile_type <- adv_opt$percentile_type()
       values$min_pass <- adv_opt$min_pass()
       values$min_ej <- as.numeric(input$min_ej)
@@ -155,7 +155,7 @@ selectPar_server <- function(id, input_shp) {
         output_shp = reactive({ shp_output() }),
         df_metric = reactive({ values$df_metric }),
         df_cat = reactive({ values$df_cat }),
-        percentile_min = reactive({ values$min_percentile }),
+        percentile_min = reactive({ values$percentile_min }),
         percentile_type = reactive({ values$percentile_type }),
         min_pass = reactive({ values$min_pass }),
         min_ej = reactive({ values$min_ej }),
