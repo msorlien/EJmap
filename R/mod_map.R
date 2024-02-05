@@ -1,7 +1,7 @@
 #  TITLE: mod_map.R
 #  DESCRIPTION: Module to display EJ map
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2024-01-30
+#  DATE LAST UPDATED: 2024-02-05
 #  GIT REPO: NBEP/EJmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
@@ -48,6 +48,8 @@ map_server <- function(id, ejvar, active_tab, map_tab,
       colnames(input_shp) <- gsub("N_", "_", colnames(input_shp))
       colnames(input_shp) <- gsub("P_", "_", colnames(input_shp))
       
+      input_shp <- add_popup_text(input_shp, "_")
+      
       return(input_shp)
     })
     
@@ -73,6 +75,17 @@ map_server <- function(id, ejvar, active_tab, map_tab,
       display_layer <- input_shp()[[layer_name]]
 
       return(display_layer)
+    })
+    
+    popup_text <- reactive({
+      req(input$select_layer)
+      
+      cat_code <- dplyr::filter(column_table, COL_CODE == input$select_layer)
+      popup_column <- paste0("T_", cat_code$CAT_CODE)
+      
+      popup_text <- input_shp()[[popup_column]]
+      
+      return(popup_text)
     })
     
     # Color ramp ----
@@ -167,11 +180,7 @@ map_server <- function(id, ejvar, active_tab, map_tab,
                          display_layer()),
           labelOptions = labelOptions(textsize = '15px'),
           # Popup
-          popup = ~paste0('<b>Block Group: </b>', BlockGroup,
-                          '<br/><b>Town: </b>', Town, ', ', State,
-                          '<br/><b>Watersheds: </b>', HUC10_Name,
-                          '<br/><br/><b>', input$select_layer, ': </b>',
-                          display_layer()),
+          popup = ~popup_text(),
           # Stroke
           color = '#000000',
           weight = 0.5,

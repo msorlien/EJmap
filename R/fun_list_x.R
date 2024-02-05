@@ -2,12 +2,12 @@
 #' 
 #' `list_indicator_codes()` lists codes for all indicators in shapefile. Helper
 #' function for [list_category_codes()], [list_indicators_grouped()], 
-#' [list_indicators_ungrouped()]
+#' [list_category_indicators()]
 #'
 #' @param input_shp A shapefile.
 #' @returns A list.
 #' @seealso [list_category_codes()], [list_percentile_codes()], 
-#'   [list_indicators_grouped()], [list_indicators_ungrouped()]
+#'   [list_indicators_grouped()], [list_category_indicators()]
 list_indicator_codes <- function(input_shp) {
   col_list <- input_shp %>%
     sf::st_drop_geometry() %>%
@@ -28,7 +28,7 @@ list_indicator_codes <- function(input_shp) {
 #' @param input_shp A shapefile.
 #' @returns A list.
 #' @seealso [list_indicator_codes()], [list_percentile_codes()], 
-#'   [list_indicators_grouped()], [list_indicators_ungrouped()]
+#'   [list_indicators_grouped()], [list_category_indicators()]
 list_category_codes <- function(input_shp) {
   metric_list <- list_indicator_codes(input_shp)
   
@@ -48,7 +48,7 @@ list_category_codes <- function(input_shp) {
 #' @param input_percentiles A list. Acceptable values are "N_", "P_".
 #' @returns A named list.
 #' @seealso [list_indicator_codes()], [list_category_codes()], 
-#'   [list_indicators_grouped()], [list_indicators_ungrouped()]
+#'   [list_indicators_grouped()], [list_category_indicators()]
 list_percentile_codes <- function(input_percentiles){
   
   percentile_codes <- c("N_", "P_")
@@ -73,7 +73,7 @@ list_percentile_codes <- function(input_percentiles){
 #' @param input_shp A shapefile.
 #' @returns A grouped list with named elements.
 #' @seealso [list_category_codes()], [list_indicator_codes()], 
-#'   [list_percentile_codes()], [list_indicators_ungrouped()]
+#'   [list_percentile_codes()], [list_category_indicators()]
 list_indicators_grouped <- function(input_shp){
   
   # Filter column_table for selected indicators
@@ -119,9 +119,9 @@ list_indicators_grouped <- function(input_shp){
 
 #' List indicators in category
 #' 
-#' `list_indicators_ungrouped()` creates list of indicator codes and names 
+#' `list_category_indicators()` creates list of indicator codes and names 
 #' within a single category. If category is set to "EJ", lists all category and
-#' EJ columns instead. Formats data for table in `table_ui`, `table_server`.
+#' EJ columns instead. Formats data for table in `mod_table`.
 #'
 #' @param input_shp A shapefile.
 #' @param category A string. Acceptable values are "SOCVUL", "HEALTH", 
@@ -129,7 +129,7 @@ list_indicators_grouped <- function(input_shp){
 #' @returns A list with named elements.
 #' @seealso [list_category_codes()], [list_indicator_codes()], 
 #'   [list_percentile_codes()], [list_indicators_grouped()]
-list_indicators_ungrouped <- function(input_shp, category){
+list_category_indicators <- function(input_shp, category){
   
   # Filter column table for col in input_shp
   input_col <- list_indicator_codes(input_shp)

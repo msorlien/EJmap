@@ -62,8 +62,8 @@ table_server <- function(id, ejvar) {
     filter_shp <- reactive({
       req(input$select_col)
       
-      col_list <- list_indicators_ungrouped(ejvar$output_shp(), 
-                                            input$select_col)
+      col_list <- list_category_indicators(ejvar$output_shp(),
+                                           input$select_col)
       
       filter_shp <- input_shp() %>%
         select(c("Block Group", Town, "Population", col_list))
