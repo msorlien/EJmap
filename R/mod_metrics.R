@@ -1,13 +1,5 @@
-################################### HEADER ###################################
 #  TITLE: select_metrics.R
 #  DESCRIPTION: Module to select parameters
-#  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2024-02-01
-#  GIT REPO:
-#  R version 4.2.3 (2023-03-15 ucrt)  x86_64
-##############################################################################.
-
-library(shinyWidgets)
 
 # UI --------------------------------------------------------------------------
 
@@ -17,7 +9,7 @@ selectPar_ui <- function(id) {
   
   tagList(
     # Enable javascript ----
-    useShinyjs(),
+    shinyjs::useShinyjs(),
     
     # Secret tabs ----
     bslib::navset_hidden(
@@ -35,19 +27,25 @@ selectPar_ui <- function(id) {
         
         # Minimum score ----
         h3('Minimum Score'),
-        numericInput(ns('min_ej'),
+        numericInput(
+          ns('min_ej'),
           'Set minimum EJ score for environmental justice areas.',
           value = 0,
           min = 0,
-          max = 100),
+          max = 100
+        ),
         
         # * Advanced Options Button ----
-        actionButton(ns('btn_advanced'),
-                     label = 'Show Advanced Options'),
+        actionButton(
+          ns('btn_advanced'),
+          label = 'Show Advanced Options'
+        ),
         
         # * Calculate Button ----
-        actionButton(ns('btn_calculate'),
-                     label = 'Calculate Score')
+        actionButton(
+          ns('btn_calculate'),
+          label = 'Calculate Score'
+        )
       ),
       # Tab 2 ----
       bslib::nav_panel_hidden(
@@ -78,10 +76,12 @@ selectPar_server <- function(id, input_shp, percentile_type) {
     btn_reset <- reactive({ input$btn_advanced })
     
     # * Add module ----
-    adv_opt <- advancedSelect_server('advanced_options', 
+    adv_opt <- advancedSelect_server(
+      'advanced_options', 
       metric_list = metrics_list,
       percentile_type = percentile_type,
-      btn_reset = btn_reset)
+      btn_reset = btn_reset
+    )
 
     # * Show/hide button ----
     observeEvent(input$btn_advanced, {
@@ -110,8 +110,11 @@ selectPar_server <- function(id, input_shp, percentile_type) {
       
       # Drop pre-existing score columns
       shp_output <- input_shp %>%
-        select(-contains(c('_SOCVUL', '_HEALTH', '_ENVBUR', '_CLIMATE', 
-                           '_SCORE', '_ISEJ')))
+        dplyr::select(
+          !tidyselect::contains(
+            c('_SOCVUL', '_HEALTH', '_ENVBUR', '_CLIMATE', '_SCORE', '_ISEJ')
+          )
+        )
       
       # Calculate score
       shp_output <- calculate_score(
@@ -122,11 +125,16 @@ selectPar_server <- function(id, input_shp, percentile_type) {
         min_ej = as.numeric(input$min_ej),
         df_metrics = adv_opt$df_metric(), 
         df_categories = adv_opt$df_cat()
-        ) 
+      ) 
       
       # Set -999999 to NA
       shp_output <- shp_output %>%
-        mutate(across(where(is.numeric), ~na_if(., -999999)))
+        dplyr::mutate(
+          dplyr::across(
+            tidyselect::where(is.numeric), 
+            ~na_if(., -999999)
+          )
+        )
       
       return(shp_output)
     })

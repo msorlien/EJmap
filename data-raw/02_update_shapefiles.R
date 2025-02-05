@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 
 library(sf)
-library(tidyverse)
+library(dplyr)
 
 source('R/fun_calculate_score.R')
 source('R/fun_add_metadata.R')
@@ -31,10 +31,10 @@ df_cats <- df_metrics %>%
 shp_raw <- read_sf(dsn = 'data-raw', 
                    layer = 'EJMETRICS_2023_NBEP2023') %>%
   # Rename column
-  rename(BlockGroup=GEOID) %>%
+  dplyr::rename(BlockGroup=GEOID) %>%
   # Add new column (Town_Code)
   add_column(Town_Code = 'ABC', .after='State') %>%
-  mutate(
+  dplyr::mutate(
     Town_Code = case_when(
       State == 'Rhode Island' ~ paste0(Town, ', RI'),
       State == 'Massachusetts' ~ paste0(Town, ', MA'),
@@ -43,7 +43,7 @@ shp_raw <- read_sf(dsn = 'data-raw',
     )
   ) %>%
   # Replace -999999 with NA
-  mutate(across(where(is.numeric), ~na_if(., -999999)))
+  dplyr::mutate(across(where(is.numeric), ~na_if(., -999999)))
 
 usethis::use_data(shp_raw, overwrite=TRUE)
 
@@ -55,7 +55,7 @@ shp_raw_simple <- read_sf(dsn='data-raw',
   rename(BlockGroup=GEOID) %>%
   # Add new column (Town_Code)
   add_column(Town_Code = 'ABC', .after='State') %>%
-  mutate(
+  dplyr::mutate(
     Town_Code = case_when(
       State == 'Rhode Island' ~ paste0(Town, ', RI'),
       State == 'Massachusetts' ~ paste0(Town, ', MA'),
@@ -64,7 +64,7 @@ shp_raw_simple <- read_sf(dsn='data-raw',
     )
   ) %>%
   # Replace -999999 with NA
-  mutate(across(where(is.numeric), ~na_if(., -999999)))
+  dplyr::mutate(across(where(is.numeric), ~na_if(., -999999)))
 
 # Shp default (simple) --------------------------------------------------------
 

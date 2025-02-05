@@ -2,12 +2,10 @@
 #  TITLE: mod_sidebar.R
 #  DESCRIPTION: Module to select location & parameters
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2024-02-01
+#  DATE LAST UPDATED: 2025-02-05
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
-
-library(shinyjs)
 
 # UI --------------------------------------------------------------------------
 
@@ -18,7 +16,7 @@ map_sidebar_ui <- function(id) {
   tagList(
     
     # Enable javascript ----
-    useShinyjs(),
+    shinyjs::useShinyjs(),
     
     # Accordion ----
     bslib::accordion(

@@ -2,12 +2,12 @@
 #  TITLE: metric_table.R
 #  DESCRIPTION: Imports table of metric column names and metadata
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-08-25
+#  DATE LAST UPDATED: 2025-02-05
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt) x86_64
 ##############################################################################.
 
-library(tidyverse)
+library(dplyr)
 
 # Create metric table ---------------------------------------------------------
 
@@ -19,7 +19,7 @@ usethis::use_data(metric_table, overwrite=TRUE)
 # Create category table -------------------------------------------------------
 
 cat_table <- metric_table %>%
-  select(CATEGORY, CAT_CODE) %>%
+  dplyr::select(CATEGORY, CAT_CODE) %>%
   distinct() %>% # Drop duplicate rows
   add_column(WEIGHT = 1, MIN_SCORE = 0)
 
@@ -29,16 +29,16 @@ usethis::use_data(cat_table, overwrite=TRUE)
 
 # List metrics
 df_cats <- cat_table %>%
-  select(CATEGORY, CAT_CODE) %>%
-  rename(COL_NAME = CATEGORY) %>%
+  dplyr::select(CATEGORY, CAT_CODE) %>%
+  dplyr::rename(COL_NAME = CATEGORY) %>%
   add_column(TYPE = 'CATEGORY', COL_CODE = 'placeholder') %>%
-  mutate(COL_CODE = CAT_CODE)
+  dplyr::mutate(COL_CODE = CAT_CODE)
 
 # List categories
 df_metrics <- metric_table %>%
-  select(METRIC, METRIC_CODE, CAT_CODE) %>%
-  rename(COL_CODE = METRIC_CODE, COL_NAME = METRIC) %>%
-  mutate(COL_NAME = paste('-', COL_NAME)) %>%
+  dplyr::select(METRIC, METRIC_CODE, CAT_CODE) %>%
+  dplyr::rename(COL_CODE = METRIC_CODE, COL_NAME = METRIC) %>%
+  dplyr::mutate(COL_NAME = paste('-', COL_NAME)) %>%
   add_column(TYPE = 'METRIC')
 
 # Join tables
@@ -52,7 +52,7 @@ type_order = c('CATEGORY', 'METRIC')
 column_table <- df_all %>%
   arrange(match(CAT_CODE, cat_order), 
           match(TYPE, type_order))%>%
-  select(COL_CODE, COL_NAME, CAT_CODE) %>%
+  dplyr::select(COL_CODE, COL_NAME, CAT_CODE) %>%
   add_row(COL_CODE = 'SCORE', COL_NAME = 'EJ Score', CAT_CODE = 'EJ') %>%
   add_row(COL_CODE = 'EJAREA', COL_NAME = 'EJ Areas', CAT_CODE = 'EJ')
 

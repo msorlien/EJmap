@@ -1,12 +1,7 @@
 #  TITLE: app.R
 #  DESCRIPTION: R shiny app for mapping EJ areas
-#  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2024-01-30
-#  GIT REPO: NBEP/EJmap
-#  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
 
-library(shiny)
 library(dplyr)
 
 EJmap <- function(...){
@@ -14,7 +9,6 @@ EJmap <- function(...){
   # UI ------------------------------------------------------------------------
   
   ui <- bslib::page_navbar(
-    # shinya11y::use_tota11y(),
     
     theme = bslib::bs_theme(version = 5),
     

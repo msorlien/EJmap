@@ -2,13 +2,10 @@
 #  TITLE: filter_location.R
 #  DESCRIPTION: Filters data for selected towns/watersheds
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-24
+#  DATE LAST UPDATED: 2025-02-05
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 ##############################################################################.
-
-library(dplyr)
-library(glue)
 
 # VARIABLES
 # input_shp: input shapefile

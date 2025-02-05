@@ -2,19 +2,20 @@
 #  TITLE: list_town_watershed.R
 #  DESCRIPTION: Generates list of towns, watersheds
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-05-15
+#  DATE LAST UPDATED: 2025-02-05
 #  GIT REPO:
 #  R version 4.2.3 (2023-03-15 ucrt) x86_64
 ##############################################################################.
 
-library(tidyverse)
+library(dplyr)
+library(stringr)
 
 # Import shapefile
 input_shp <- read_sf(dsn = 'data-raw',
                      layer = 'EJMETRICS_2023_NBEP2023') %>%
   # Add new column (Town_Code)
   add_column(Town_Code = 'ABC', .after='State') %>%
-  mutate(
+  dplyr::mutate(
     Town_Code = case_when(
       State == 'Rhode Island' ~ paste0(Town, ', RI'),
       State == 'Massachusetts' ~ paste0(Town, ', MA'),

@@ -25,7 +25,6 @@ Imports:
     rhandsontable,
     sf,
     shiny,
-    shinya11y,
     shinycssloaders,
     shinyjs,
     shinyWidgets,

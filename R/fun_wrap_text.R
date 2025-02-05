@@ -1,11 +1,9 @@
 #  TITLE: fun_wrap_text.R
 #  DESCRIPTION: Wrap text, add custom divisor
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-21
+#  DATE LAST UPDATED: 2025-02-05
 #  GIT REPO: nbep/ejmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
-
-library(stringr)
 
 # VARIABLES
 # old_list: input list

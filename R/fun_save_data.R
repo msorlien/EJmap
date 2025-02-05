@@ -1,13 +1,10 @@
 #  TITLE: fun_save_data.R
 #  DESCRIPTION: Update dataframe with new data
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-25
+#  DATE LAST UPDATED: 2025-02-05
 #  GIT REPO: nbep/ejmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
-
-library(dplyr)
-library(tibble)
 
 # VARIABLES
 # df_old: dataframe with saved data

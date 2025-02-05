@@ -2,12 +2,10 @@
 #  DESCRIPTION: Module to produce table ui to select var weight, min score for
 #    advanced options
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-21
+#  DATE LAST UPDATED: 2025-02-05
 #  GIT REPO: nbep/ejmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
-
-library(shinyWidgets)
 
 # UI --------------------------------------------------------------------------
 

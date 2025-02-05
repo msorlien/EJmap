@@ -1,10 +1,5 @@
 #  TITLE: mod_map.R
 #  DESCRIPTION: Module to display EJ map
-#  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2024-02-05
-#  GIT REPO: NBEP/EJmap
-#  R version 4.2.3 (2023-03-15 ucrt)  x86_64
-# -----------------------------------------------------------------------------.
 
 # UI --------------------------------------------------------------------------
 
@@ -60,10 +55,12 @@ map_server <- function(id, ejvar, active_tab, map_tab,
       col_codes <- list_indicators_grouped(input_shp())
 
       # Update layer list
-      shinyWidgets::updatePickerInput(session = session,
-                        inputId = 'select_layer',
-                        choices = col_codes,
-                        selected = default_layer)
+      shinyWidgets::updatePickerInput(
+        session = session,
+        inputId = 'select_layer',
+        choices = col_codes,
+        selected = default_layer
+      )
     })
     
     # Selected layer ----
@@ -93,21 +90,22 @@ map_server <- function(id, ejvar, active_tab, map_tab,
       req(input$select_layer)
       
       pal_colors(input$select_layer, ejvar$percentile_min()) 
-      })
+    })
 
     # Leaflet basemap ----
-    output$map <- renderLeaflet({
+    output$map <- leaflet::renderLeaflet({
       leaflet::leaflet() %>%
-        # * Set map dimensions ----
+      # * Set map dimensions ----
       leaflet::fitBounds(
         -71.9937973, # Lon min
         41.29999924, # Lat min
         -70.5164032, # Lon max
         42.43180084 # Lat max
-        ) %>%
+      ) %>%
       # * Add basemap tiles ----
       leaflet::addProviderTiles(
-        leaflet::providers$Esri.WorldTopoMap) %>%
+        leaflet::providers$Esri.WorldTopoMap
+      ) %>%
       # * Add spinner ----
       leaflet.extras2::addSpinner() %>%
       # * Add scale bar ----
@@ -143,7 +141,8 @@ map_server <- function(id, ejvar, active_tab, map_tab,
             title = 'EJ Areas',
             colors = c('#F03B20', '#FFEDA0', '#B1B1B1'),
             labels = c('EJ Area', 'Not an EJ Area', 'No Data'),
-            position = 'bottomright')
+            position = 'bottomright'
+          )
       } else {
         leaflet::leafletProxy('map') %>%
           leaflet::addLegend(
@@ -151,7 +150,8 @@ map_server <- function(id, ejvar, active_tab, map_tab,
             title = stringr::str_to_title(legend_type()),
             pal = pal(),
             values = c(0,100),
-            position = 'bottomright')
+            position = 'bottomright'
+          )
       }
     })
 
@@ -165,7 +165,7 @@ map_server <- function(id, ejvar, active_tab, map_tab,
         leaflet::clearShapes()
 
       # * Add EJ map ----
-      leafletProxy('map') %>%
+      leaflet::leafletProxy('map') %>%
         # Start spinner
         leaflet.extras2::startSpinner(
           list('length' = 0, 'lines' = 8, 'width' = 20, 'radius' = 40,
@@ -176,9 +176,8 @@ map_server <- function(id, ejvar, active_tab, map_tab,
           data = input_shp(),
           layerId = input_shp(),
           # Label
-          label = ~paste(Town, State,
-                         display_layer()),
-          labelOptions = labelOptions(textsize = '15px'),
+          label = ~paste(Town, State, display_layer()),
+          labelOptions = leaflet::labelOptions(textsize = '15px'),
           # Popup
           popup = ~popup_text(),
           # Stroke
@@ -190,9 +189,11 @@ map_server <- function(id, ejvar, active_tab, map_tab,
           fillOpacity = 0.8,
           fillColor = ~pal()(display_layer()),
           # Highlight
-          highlightOptions = highlightOptions(fillColor = '#ffffff',
-                                              weight = 2,
-                                              bringToFront = TRUE)
+          highlightOptions = leaflet::highlightOptions(
+            fillColor = '#ffffff',
+            weight = 2,
+            bringToFront = TRUE
+            )
         ) %>%
         # Stop spinner
         leaflet.extras2::stopSpinner()

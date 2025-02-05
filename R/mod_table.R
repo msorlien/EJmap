@@ -62,11 +62,13 @@ table_server <- function(id, ejvar) {
     filter_shp <- reactive({
       req(input$select_col)
       
-      col_list <- list_category_indicators(ejvar$output_shp(),
-                                           input$select_col)
+      col_list <- list_category_indicators(
+        ejvar$output_shp(),
+        input$select_col
+      )
+      col_list <- c("Block Group", "Town", "Population", col_list)
       
-      filter_shp <- input_shp() %>%
-        select(c("Block Group", Town, "Population", col_list))
+      filter_shp <- dplyr::select(input_shp(), dplyr::all_of(col_list))
       
       return(filter_shp)
     })
@@ -92,8 +94,10 @@ table_server <- function(id, ejvar) {
       shinyWidgets::updatePickerInput(
         session = session,
         inputId = "select_col",
-        choices = c("Summary" = "EJ", 
-                    list_category_codes(ejvar$output_shp())),
+        choices = c(
+          "Summary" = "EJ", 
+          list_category_codes(ejvar$output_shp())
+        ),
         selected = "EJ")
     })
     

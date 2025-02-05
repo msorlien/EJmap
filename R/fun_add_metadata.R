@@ -1,15 +1,10 @@
 #  TITLE: fun_add_metadata.R
 #  DESCRIPTION: Generates metadata for shapefile
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-12-12
+#  DATE LAST UPDATED: 2025-02-05
 #  GIT REPO: nbep/ejmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
-
-library(dplyr)
-library(tibble)
-library(glue)
-library(xml2)
 
 # function: add_metadata ------------------------------------------------------
 # Adds DATA_SOURCE, SOURCE_YEAR columns to shapefile

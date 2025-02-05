@@ -1,14 +1,10 @@
 #  TITLE: fun_calculate_score.R
 #  DESCRIPTION: Calculates scores
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2024-01-30
+#  DATE LAST UPDATED: 2025-02-05
 #  GIT REPO: nbep/ejmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
 # -----------------------------------------------------------------------------.
-
-library(dplyr)
-library(tidyr)
-library(glue)
 
 # VARIABLES
 # input_shp: input shapefile

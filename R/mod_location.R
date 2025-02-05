@@ -1,11 +1,9 @@
 #  TITLE: mod_location.R
 #  DESCRIPTION: Module to select location
 #  AUTHOR(S): Mariel Sorlien
-#  DATE LAST UPDATED: 2023-07-14
+#  DATE LAST UPDATED: 2025-02-05
 #  GIT REPO: NBEP/EJmap
 #  R version 4.2.3 (2023-03-15 ucrt)  x86_64
-
-library(shinyjs)
 
 # UI --------------------------------------------------------------------------
 
@@ -73,11 +71,12 @@ select_location_server <- function(id, input_shp) {
     })
     
     observeEvent(input$select_state, {
-      shinyWidgets::updatePickerInput(session = session,
-                        inputId = 'select_town',
-                        choices = town_list_filtered(),
-                        selected = town_list_filtered()
-                        )
+      shinyWidgets::updatePickerInput(
+        session = session,
+        inputId = 'select_town',
+        choices = town_list_filtered(),
+        selected = town_list_filtered()
+      )
     })
     
     
@@ -95,11 +94,9 @@ select_location_server <- function(id, input_shp) {
     # Output reactive values ----
     return(
       list(
-        
         selected_towns = reactive({ input$select_town }),
         selected_watersheds = reactive ({ input$select_watershed }),
         output_shp = reactive({ shp_output() })
-        
       )
     )
   })
